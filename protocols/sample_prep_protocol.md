@@ -60,12 +60,24 @@
 ## Lyophilize samples
 * Be sure to reserve the lyophilizer before using it.
 * From the freezer, collect a matched set of roots, soil, and rhizosphere from each of 12 samples, for a total of 36 tubes.
-* Remove caps from tubes and discard. 
-* Stretch Parafilm over the mouth of each tube, stab three or four small holes in each film, and return all 36 tubes to the -80 for at least 30 minutes.
-* Place 5 tubes in each lyophilizer jar.
-* **(More specific lyophilizer instructions here)**
-* Once finished, cap each tube with another layer of Parafilm and store **(on shelf? In freezer?)** until ready to use.
-* Record the sample IDs in the logbook.
+* Remove cap from each tube, stretch Parafilm over the mouth, and stab three or four small holes in each film. Recap loosely. 
+* Return all 36 tubes to the -80 for at least 30 minutes -- preferably overnight, but not more than 24 hours.
+* Before removing samples from the -80: 
+	* Check that the freeze dryer is at full vacuum and has six ports available.
+	* Set out six jar-top connectors, checking for a good filter in each one.
+* Retrieve samples from -80.
+* Remove caps and set aside.
+* Place 5 tubes in each lyophilizer jar, carefully attach to any port not already in use, and slowly open valve.
+* After adding each jar, wait for machine to come to full vacuum before attaching the next one. After the final jar, watch for full vacuum before leaving the room.
+* Wash caps immediately, rinse with ethanol, let dry, and save in a sealed container.
+* Drying will take about 3 days. Better to run long than short.
+* When removing samples, close each valve slowly -- the rush of incoming air can blow particles around inside the jar.
+* As you remove each tube from the jar, remove & discard Parafilm and recap with the saved clean caps. 
+* Wash lyophilizer jars if needed. 
+* Store samples at room temperature until ready to grind.
+* Record sample IDs in the logbook as "lyoph".
 
+## Grind roots
+	**(This section TK. Short version: ethanol-cleaned mortars and pestles, liquid N, elbow grease, patience. Samples will take on water in the process -- store them in the -80 afterwards.)**
 
 ## Extract DNA! See Scott's DNA extraction protocol.
