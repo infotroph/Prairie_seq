@@ -1,0 +1,27 @@
+120 soil & root samples: 
+	5 blocks, 8 locations in block 0, 4 locations in blocks 1-4 = 24 locations
+
+	5 depths: 0-10, 10-30, 30-50, 50-75, 75-100 cm
+
+	24*5 = 120 samples
+
+
+Sampling was performed from July 15-18 (CHECK THIS AGAINST DRY SOIL BAG DATES), 2013.
+
+3 cores from an 8 cm bucket auger pooled at each location, all from within 2 m of each other. A ~1 kg subsample of mixed roots and soil was collected from each depth increment, and the remaining soil was returned to the holes. Samples were placed on ice in Ziplok bags for transport back to the lab, then frozen at -80° C the same day and stored until analysis.
+
+
+single-species vouchers:
+	Collected 2013-08-31 and 2013-09-01. Leaf and root tissue of each species we could find.
+	Identification by Xiaohui Feng.
+	Leaf tissue from separate individuals packed in separate packets. No attempt to sample from every block; collected most samples from block 3 near trailer, moved to other blocks as needed to find less abundant species. 
+	Why did we do it this way? Because not all species are present in every block and all were planted from the same seed mix, so we assume individuals within one block have the same genetic diversity as we'd see between blocks.
+
+		--> how many of each species did we collect?? 
+				- made 5 foil packs for leaves of each species. Did we get that many?
+				- prepared 1 ziplock bag, but I believe we hand-labeled a bunch and collected... 3 of each root? Count samples in freezer.
+		2014-04-21: Empty root bags still on bench, presumably species we couldn't find (but maybe just couldn't find the bag in the pile and labeled a fresh one): 
+			Pycnanthemum virginianum
+			Sorghastrum nutans
+			Baptisia spp2
+

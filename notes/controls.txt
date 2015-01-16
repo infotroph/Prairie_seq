@@ -1,0 +1,50 @@
+The primary goal of the prairie root project is to identify which plant species are present in the roots recovered from differing depths and locations within the field. Using these data, we can ask:
+	* Is the root biomass of the prairie plots dominated by the same species as the aboveground biomass?
+	* Are there detectable pairs/groups of species that co-occur more (guild) or less (competitor) often than expected by chance?
+	* How many species, on average, does a single sample contain?
+
+A key methodological question is whether we can go beyond presence and absence to infer the relative (or even absolute) quantities of each species in a sample. What conditions would need to hold for this to be possible?
+
+
+Thinking of the analytical chain as a set of unit conversions, we want to work backwards from number of reads of a given sequence to grams of root per m^2. Let's work forward through this:
+
+We start from some true state of the world, 
+collect a noisy but statistically defensible and asymptotically unbiased sample, 
+near-quantitatively recover roots from the sample,
+extract gDNA from a subsample of tissue, Yield need not be 100% *IF* mg root <=> y ng gDNA relationship is reliable within a species
+Amplify ITS region (or whatever other barcode(s) we pick). *IF* there is no PCR bias, proportion of species in amplified fragments should be the same as proportion in gDNA. 
+Identify species by Illumina sequencing of PCR products. *IF*  all sequences are read equally, then number of reads from a given species in output is proportional to amount in PCR product-->gDNA->recovered root->sample->field population.
+
+
+We assert that sample collection, root recovery, drying, grinding, etc should all be unbiased -- they may add statistical noise, but any losses will apply similarly to every species, so that
+
+(g root_i)/(m^3 field)	  	(mg root_i)/(mg ground sample)
+----------------------- =  	------------------------------
+(g root_j)/(m^3 field)		(mg root_j)/(mg ground sample)
+
+for all root species pairs i,j.
+
+This ratio is unlikely to hold in downstream steps -- it's a priori unlikely that species i and j even CONTAIN the same number of ng gDNA per mg root, let alone yielding the same amount from a given extraction. So we need to characterize the behavior of each species:
+
+(ng gDNA_i)		ng barcode_i		reads seq_i			reads seq_i
+-----------	*	------------	*	------------ 	==	------------
+(mg root_i)		ng gDNA_i			ng barcode_i		(mg root_i)
+
+Then as long as each of these species-specific conversions is reliable, and as long as each one is unchanged by analysis within a multi-species sample, then reads can be connected to the mass of each species in the ground prepared sample, and then the ratio of masses gives their overall proportion in the sample.
+
+Hypothesis: 
+	-- the gDNA extraction step will be easy and robust to quantify -- each species will have a distinctive, hopefully linear mass vs DNA yield curve.
+	-- PCR will be troublesome, either because amplified yield isn't proportional to input concentration or because it's a competitive reaction and rare species in the mixed samples will be completely swamped by common ones.
+	-- sequencing error will demand some attention but we'll be able to use existing methods to deal with it.
+
+
+
+So: what controls do we need?
+	-- negatives: water extraction to find contaminants in the pathway.
+	-- artificial communities: known amount of material from pairs (or 3ples or more) of species, should see reads in proportion similar to known amounts.
+		species pairs in 10:90, 50:50, 90:10 ratios
+		triples in 10:45:45, 33:33:33
+		one five-way, all 20%?
+		Can do some from root tissue, some from DNA.s
+
+
