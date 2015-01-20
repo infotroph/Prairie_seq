@@ -34,6 +34,7 @@ rows = []
 lanes = []
 ids = []
 with open(argv[2], 'r') as lanefile:
+    # skipinitialspace strips whitespace in CSV name fields, e.g. ' id'->'id'
     laneiter = csv.DictReader(lanefile, delimiter=',', skipinitialspace=True)
     for lane in laneiter:
         rows.append(int(lane['row']))    
