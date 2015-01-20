@@ -71,6 +71,4 @@ for i in range(len(lanes)):
 # ...and the name of the output file. 
 cmd.append(argv[3])
 
-print(" ".join(cmd))
-
 subprocess.call(cmd)
