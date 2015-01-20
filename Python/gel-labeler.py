@@ -55,7 +55,7 @@ cmd = [
     "convert", 
     argv[1], 
     "-auto-level", 
-    "-fill", "red", 
+    "-fill", "white", 
     "-pointsize", "18"]
 
 # ...then an annotation for each lane...
