@@ -8,7 +8,8 @@ above (or at least vaguely near) each lane.
 Usage: ./gel-labeler.py my_gel.tif ids_for_my_gel.csv my_labeled_gel.jpg
 
 Input image must be TIFF or at least have the same EXIF tag names.
-Output image need not be JPEG -- ImageMagick will produce any format you specify.
+Output need not be JPEG; ImageMagick will match image type to the 
+filename you provide.
 
 NOTE: This script makes no attempt to confirm the placement of the lanes,
 it just assumes they're evenly spread across the image area.
