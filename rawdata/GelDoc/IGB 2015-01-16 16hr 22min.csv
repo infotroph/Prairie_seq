@@ -1,0 +1,18 @@
+row, lane, id
+1, 1, 1 KB
+1, 2, CaBi TLP
+1, 3, PaIn TLP
+1, 4, DaPu TLP
+1, 5, SiIn TLP
+1, 6, DeCa TLP
+1, 7, AnGe TLP
+1, 8, H2O TLP
+2, 1, 1 KB
+2, 2, DaPu CRS
+2, 3, SiIn CRS
+2, 4, AnGe CRS
+2, 5, PaIn CRS
+2, 6, DeCa CRS
+2, 7, CaBi CRS
+2, 8, H2O CRS
+
