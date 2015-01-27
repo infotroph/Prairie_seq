@@ -33,8 +33,8 @@ Day 2:
 20. Let dry until pellets turn from white to clear (probably 20-45 minutes).
 21. Add 50 µL TE and incubate on bench at least 30 minutes or in 65 °C water bath for 5-10 minutes. 
 22. Check that pellet is fully resuspended, flick once or twice to mix, and take a Nanodrop reading.
-23. Put 10 µL of sample into a fresh tube. Add enough TE to make a 10 ng/µL working stock (e.g. if Nanodrop reads 145 ng/L, add 145 µL TE) and store at -20 °C.
-24. Store the remainder of the high-concentration master stock at -80 °C.
+23. Put 10 µL of sample into a fresh tube. Add (Nanodrop reading - 10) µL of TE to make a 10 ng/µL working stock. For example, if Nanodrop reads 145 ng/L, add 135 µL of TE so that (145 ng/µL * 10 µL)/(10 µL sample + 135 µL TE) = 1450 ng/145 µL = 10 ng/µL. 
+24. Store working stock at -20 °C, and high-concentration master stock at -80 °C.
 
 
 Extraction buffer:
