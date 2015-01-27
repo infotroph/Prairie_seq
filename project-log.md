@@ -41,3 +41,13 @@ _NOTE_ an error message that confused me for hours today and will surely bite us
 	make: *** No rule to make target `data/GelDoc/foo.jpg', needed by `gels'.  Stop.
 
 This does _not_ mean there's a problem with the make rule, it means it can't find foo.tif or foo.csv! Why doesn't it say, like, ``"cannot find foo.csv, needed by `gels'"`` instead? Beats me.
+
+## 2015-01-26, CKB
+
+Updated CTAB protocol to clarify that we save all the supernatant from each chloroform separation step, even if some samples yield more supernatant than others.
+
+Updated README: protocols directory was missing from explanation of project layout.
+
+Planning for soil DNA extraction: Scott suggests double-extracting each sample to recover more of the harder-to-extract community, will circulate a paper that shows this makes a difference.
+
+
