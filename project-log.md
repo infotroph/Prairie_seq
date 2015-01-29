@@ -64,3 +64,7 @@ Testing gamma adjustment flags for gel image conversion.
 	* No one value seems ideal for all images, but gammas between 1.6 and 2.2 seem generally acceptable on my screen. 
 	* Saving script with `-gamma 2.0` for the moment, can revisit as needed.
 
+## 2015-01-29, CKB
+
+Added all gels run up to now: raw images as tiffs, lane IDs and notes as CSV, both in rawdata/GelDoc/. Processed images as jpeg in data/GelDoc/.
+
