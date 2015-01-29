@@ -58,3 +58,9 @@ Modified gel labeleling script to skip any line of the CSV beginning with '#' Th
 
 Makefile bug fix: jpgs were not being remade when gel-labeler.py was updated. Fixed by adding script name to prerequisite list for data/GelDoc/*.jpg.
 
+Testing gamma adjustment flags for gel image conversion. 
+	* Tried adding `-auto-gamma` to options passed to convert by gel-labeler.py, but contrast of resulting images is reliably too low. 
+	* Tried explicit values from `-gamma 0.5` up to `-gamma 2.3` and beyond.
+	* No one value seems ideal for all images, but gammas between 1.6 and 2.2 seem generally acceptable on my screen. 
+	* Saving script with `-gamma 2.0` for the moment, can revisit as needed.
+

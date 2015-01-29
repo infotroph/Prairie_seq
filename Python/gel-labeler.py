@@ -55,11 +55,12 @@ vspace = (height - 1.5*hspace) / max(rows)
 
 
 # Construct a shell command to do the actual conversion. First the invariants...
-# TODO: consider more careful gamma adjustment--still pretty dark on my screen
+# TODO: responsive gamma adjustment? Not -auto-gamma, that's usually too dark. 
 cmd = [
     "convert",
     argv[1],
     "-auto-level",
+    "-gamma", "2.0",
     "-fill", "white",
     "-pointsize", "18"]
 
