@@ -53,3 +53,8 @@ Planning for soil DNA extraction: Scott suggests double-extracting each sample t
 ## 2015-01-27, CKB
 
 Modified gel labeleling script to skip any line of the CSV beginning with '#' This resolves the question posed 2015-01-20 of how to store gel metadata: Add it to the beginning of the CSV as a comment line, the script will just ignore it and it will be there if we need it later.
+
+## 2015-01-28, CKB
+
+Makefile bug fix: jpgs were not being remade when gel-labeler.py was updated. Fixed by adding script name to prerequisite list for data/GelDoc/*.jpg.
+
