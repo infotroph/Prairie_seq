@@ -1,3 +1,8 @@
+# Testing Brunner et al. CTAB extraction protocol on 6 species
+# 2% BME as published, not 0.2% as previously tested
+# Tissue is ~30 mg ground root voucher material, extracted 2015-01-15 by TLP & CRS
+# Gel: 0.8% agarose with 0.01% ethidium bromide
+# Run at 75 V for 45 min
 row, lane, id
 1, 1, 1 KB
 1, 2, CaBi TLP
