@@ -4,9 +4,8 @@ GELS := $(addprefix data/GelDoc/,$(subst tif,jpg,$(RAWGELS)))
 
 gels: $(GELS)
 
-data/GelDoc/%.jpg: rawdata/GelDoc/%.tif rawdata/GelDoc/%.csv
-	./Python/gel-labeler.py $^ $@
-
+data/GelDoc/%.jpg: Python/gel-labeler.py rawdata/GelDoc/%.tif rawdata/GelDoc/%.csv
+	./$^ $@
 
 all: gels 
 

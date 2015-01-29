@@ -41,3 +41,26 @@ _NOTE_ an error message that confused me for hours today and will surely bite us
 	make: *** No rule to make target `data/GelDoc/foo.jpg', needed by `gels'.  Stop.
 
 This does _not_ mean there's a problem with the make rule, it means it can't find foo.tif or foo.csv! Why doesn't it say, like, ``"cannot find foo.csv, needed by `gels'"`` instead? Beats me.
+
+## 2015-01-26, CKB
+
+Updated CTAB protocol to clarify that we save all the supernatant from each chloroform separation step, even if some samples yield more supernatant than others.
+
+Updated README: protocols directory was missing from explanation of project layout.
+
+Planning for soil DNA extraction: Scott suggests double-extracting each sample to recover more of the harder-to-extract community, will circulate a paper that shows this makes a difference.
+
+## 2015-01-27, CKB
+
+Modified gel labeleling script to skip any line of the CSV beginning with '#' This resolves the question posed 2015-01-20 of how to store gel metadata: Add it to the beginning of the CSV as a comment line, the script will just ignore it and it will be there if we need it later.
+
+## 2015-01-28, CKB
+
+Makefile bug fix: jpgs were not being remade when gel-labeler.py was updated. Fixed by adding script name to prerequisite list for data/GelDoc/*.jpg.
+
+Testing gamma adjustment flags for gel image conversion. 
+	* Tried adding `-auto-gamma` to options passed to convert by gel-labeler.py, but contrast of resulting images is reliably too low. 
+	* Tried explicit values from `-gamma 0.5` up to `-gamma 2.3` and beyond.
+	* No one value seems ideal for all images, but gammas between 1.6 and 2.2 seem generally acceptable on my screen. 
+	* Saving script with `-gamma 2.0` for the moment, can revisit as needed.
+

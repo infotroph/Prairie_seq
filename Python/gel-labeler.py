@@ -36,7 +36,10 @@ lanes = []
 ids = []
 with open(argv[2], 'r') as lanefile:
     # skipinitialspace strips whitespace in CSV name fields, e.g. ' id'->'id'
-    laneiter = csv.DictReader(lanefile, delimiter=',', skipinitialspace=True)
+    laneiter = csv.DictReader(
+        (row for row in lanefile if row[0]!='#'), # skip comments
+        delimiter=',', 
+        skipinitialspace=True) # 'row, id' gives name 'id' instead of ' id'
     for lane in laneiter:
         rows.append(int(lane['row']))
         lanes.append(int(lane['lane']))
@@ -52,11 +55,12 @@ vspace = (height - 1.5*hspace) / max(rows)
 
 
 # Construct a shell command to do the actual conversion. First the invariants...
-# TODO: consider more careful gamma adjustment--still pretty dark on my screen
+# TODO: responsive gamma adjustment? Not -auto-gamma, that's usually too dark. 
 cmd = [
     "convert",
     argv[1],
     "-auto-level",
+    "-gamma", "2.0",
     "-fill", "white",
     "-pointsize", "18"]
 
