@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# Written by Rich FitzJohn for the BAAD plant biomass and 
+# Originally written by Rich FitzJohn for the BAAD plant biomass and 
 # allometry database (https://github.com/dfalster/baad).
-# Modifications by Chris Black ($'\r$' -> $'\r').
+# Modifications by Chris Black.
 
 # Copyright (c) 2014, Daniel Falster All rights reserved.
 #

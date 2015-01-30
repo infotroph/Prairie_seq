@@ -7,6 +7,10 @@ Code and data for sequencing of root & soil samples from the restored prairie at
 This analysis is intended to be fully automated and repeatable. If I succeed in that, any change to the code or data should propagate through the downstream parts of the analysis simply by running $(make).
 
 Repository layout:
+- bash/
+	Shell scripts.
+- data/
+	Fully processed, cleaned-up, ready-to-analyze datasets. Everything in this dataset should be reproducible at any time by rerunning the relevant set of scripts. 
 - Makefile	
 	The script that runs the whole analysis. After making any change to data or code, update outputs by running the command $(make) in this directory. All analyses that need updating after the change, and none of the ones that don't need updating, will be rerun.
 - notes/
@@ -23,7 +27,21 @@ Repository layout:
 - README.txt
 	This file. Keep it up-to-date.
 
-Items that will exist soon, but don't yet:
-- data/
-	Fully processed, cleaned-up, ready-to-analyze datasets. Everything in this dataset should be reproducible at any time by rerunning the relevant set of scripts. 
+
+## Note on line endings:
+
+Most Unix tools, including the ones we rely on to see line-by-line changes between commits, assume that every line of a text file ends with a newline character ("LF" or "\n"). Files generated in Windows usually have a carriage return *and* a newline ("CRLF" or "\r\n"), which causes other annoyances but does get recognized as the end of a line.
+
+Excel for Mac, on the other hand, creates CSVs that use CR with no LF as their line ending (the Classic Mac standard, abandoned everywhere else for ~20 years). This makes diff treat the entire file as one long line, making it near-impossible to see what actually changed.
+
+If you use this repository on a Mac, you should:
+
+* set up a pre-commit hook so that Git will check CSV files and warn you before committing one with CR-only line endings. In the project root directory, run
+
+	ln -s ../../bash/check_line_endings.sh .git/hooks/pre-commit
+
+* To change the line endings in any CSVs created by Excel before you commit them, run
+
+	./bash/fix-eol.sh your_file_here.csv
+
 

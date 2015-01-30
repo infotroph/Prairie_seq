@@ -68,3 +68,8 @@ Testing gamma adjustment flags for gel image conversion.
 
 Added all gels run up to now: raw images as tiffs, lane IDs and notes as CSV, both in rawdata/GelDoc/. Processed images as jpeg in data/GelDoc/.
 
+## 2015-01-30, CKB
+
+Added scripts from Rich FitzJohn to deal with between-OS differences in CSV line endings. 
+
+
