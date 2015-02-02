@@ -72,4 +72,18 @@ Added all gels run up to now: raw images as tiffs, lane IDs and notes as CSV, bo
 
 Added scripts from Rich FitzJohn to deal with between-OS differences in CSV line endings. 
 
+## 2015-02-02, CKB
 
+Added a log for all CTAB extractions. Note that other scripts will rely on this log to map sample IDs to correct samples for e.g. Nanodrop results, so use the same ID in every file the sample touches. Leave not-yet-filled fields blank, enter "NA" for fields which cannot be filled.
+
+* ID: What the tube is actually labeled. IDs should always be unique within a day, even if the day's extractions were done in several batches.
+* CTAB date: What day did we do the chloroform extraction?
+* Nanodrop date: What day was it Nanodropped?
+* Gel date: What day did we run it on a gel?
+* Tech: Who did the extraction? (even if someone else did Nanodrop or gel)
+* mg tissue: How much powdered material went into the tube?
+* Exclude: One-word reason to remove this sample from final analysis, blank if sample is believed OK. A non-exhaustive set of examples:
+	- "Protocol" for substantial deviations from CTAB-BC protocol (e.g. tests of buffer variants, wrong volume added/removed, major timing error).
+	- "Failed" if protocol followed but no DNA recovered.
+	- "Outlier" if yield is way out of line with expectation (only declare this for extreme cases!)
+* Notes: anything else, probably including more details on any exclude flag.

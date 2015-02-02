@@ -1,0 +1,112 @@
+Sample ID,CTAB date,Nanodrop date,Gel date,Tech,Species,mg tissue,exclude,notes
+SiIn 30,2015-01-08,2015-01-12,2015-01-12,CKB,SiIn,27.0,Protocol,Testing Brown lab CTAB protocol
+SiIn 50,2015-01-08,2015-01-12,2015-01-12,CKB,SiIn,47.6,Protocol,Testing Brown lab CTAB protocol
+SiIn 70,2015-01-08,2015-01-12,2015-01-12,CKB,SiIn,75.8,Protocol,Testing Brown lab CTAB protocol
+H2O CKB,2015-01-08,2015-01-12,2015-01-12,CKB,H2O,0.0,Protocol,Testing Brown lab CTAB protocol
+DaPu 30,2015-01-08,2015-01-12,2015-01-12,TLP,DaPu,28.0,Protocol,Testing Brown lab CTAB protocol
+DaPu 50,2015-01-08,2015-01-12,2015-01-12,TLP,DaPu,46.1,Protocol,Testing Brown lab CTAB protocol
+DaPu 70,2015-01-08,2015-01-12,2015-01-12,TLP,DaPu,72.6,Protocol,Testing Brown lab CTAB protocol
+H2O TLP,2015-01-08,2015-01-12,2015-01-12,TLP,H2O,0.0,Protocol,Testing Brown lab CTAB protocol
+AnGe 30,2015-01-08,2015-01-12,2015-01-12,CRS,AnGe,29.1,Protocol,Testing Brown lab CTAB protocol
+AnGe 50,2015-01-08,2015-01-12,2015-01-12,CRS,AnGe,54.5,Protocol,Testing Brown lab CTAB protocol
+AnGe 70,2015-01-08,2015-01-12,2015-01-12,CRS,AnGe,78.9,Protocol,Testing Brown lab CTAB protocol
+H2O CRS,2015-01-08,2015-01-12,2015-01-12,CRS,H2O,0.0,Protocol,Testing Brown lab CTAB protocol
+SiIn 30,2015-01-13,2015-01-14,2015-01-14,CRS&TLP,SiIn,28.6,Protocol,"Testing Brunner CTAB, 0.2% BME"
+SiIn 50,2015-01-13,2015-01-14,2015-01-14,CRS&TLP,SiIn,49.5,Protocol,"Testing Brunner CTAB, 0.2% BME"
+SiIn 70,2015-01-13,2015-01-14,2015-01-14,CRS&TLP,SiIn,69.9,Protocol,"Testing Brunner CTAB, 0.2% BME"
+DaPu 30,2015-01-13,2015-01-14,2015-01-14,CRS&TLP,DaPu,301.0,Protocol,"Testing Brunner CTAB, 0.2% BME"
+DaPu 50,2015-01-13,2015-01-14,2015-01-14,CRS&TLP,DaPu,52.1,Protocol,"Testing Brunner CTAB, 0.2% BME"
+DaPu 70,2015-01-13,2015-01-14,2015-01-14,CRS&TLP,DaPu,71.8,Protocol,"Testing Brunner CTAB, 0.2% BME"
+AnGe 30,2015-01-13,2015-01-14,2015-01-14,CRS&TLP,AnGe,34.1,Protocol,"Testing Brunner CTAB, 0.2% BME"
+AnGe 50,2015-01-13,2015-01-14,2015-01-14,CRS&TLP,AnGe,52.4,Protocol,"Testing Brunner CTAB, 0.2% BME"
+AnGe 70,2015-01-13,2015-01-14,2015-01-14,CRS&TLP,AnGe,69.8,Protocol,"Testing Brunner CTAB, 0.2% BME"
+CRS H2O,2015-01-13,2015-01-14,2015-01-14,CRS,H2O,0.0,Protocol,"Testing Brunner CTAB, 0.2% BME"
+TLP H2O,2015-01-13,2015-01-14,2015-01-14,TLP,H2O,0.0,Protocol,"Testing Brunner CTAB, 0.2% BME"
+TLP 1,2015-01-15,2015-01-16,2015-01-16,TLP,CaBi,33.6,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+TLP 2,2015-01-15,2015-01-16,2015-01-16,TLP,PaIn,37.3,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+TLP 3,2015-01-15,2015-01-16,2015-01-16,TLP,DaPu,33.5,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+TLP 4,2015-01-15,2015-01-16,2015-01-16,TLP,SiIn,34.6,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+TLP 5,2015-01-15,2015-01-16,2015-01-16,TLP,DeCa,36.4,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+TLP 6,2015-01-15,2015-01-16,2015-01-16,TLP,AnGe,36.3,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+TLP 7,2015-01-15,2015-01-16,2015-01-16,TLP,H2O,0.0,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS A,2015-01-15,2015-01-16,2015-01-16,CRS,DaPu,35.0,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS B,2015-01-15,2015-01-16,2015-01-16,CRS,SiIn,35.7,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS C,2015-01-15,2015-01-16,2015-01-16,CRS,AnGe,35.8,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS D,2015-01-15,2015-01-16,2015-01-16,CRS,PaIn,31.8,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS E,2015-01-15,2015-01-16,2015-01-16,CRS,DeCa,34.9,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS F,2015-01-15,2015-01-16,2015-01-16,CRS,CaBi,30.3,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS G,2015-01-15,2015-01-16,2015-01-16,CRS,H2O,0.0,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+TLP 1,2015-01-19,2015-01-20,2015-01-20,TLP,CaBi,32.3,Protocol,Testing no-PVPP CTAB
+TLP 2,2015-01-19,2015-01-20,2015-01-20,TLP,PaIn,28.2,Protocol,Testing no-PVPP CTAB
+TLP 3,2015-01-19,2015-01-20,2015-01-20,TLP,DaPu,25.9,Protocol,Testing no-PVPP CTAB
+TLP 4,2015-01-19,2015-01-20,2015-01-20,TLP,SiIn,34.4,Protocol,Testing no-PVPP CTAB
+TLP 5,2015-01-19,2015-01-20,2015-01-20,TLP,DeCa,27.7,Protocol,Testing no-PVPP CTAB
+TLP 6,2015-01-19,2015-01-20,2015-01-20,TLP,AnGe,31.3,Protocol,Testing no-PVPP CTAB
+TLP 7,2015-01-19,2015-01-20,2015-01-20,TLP,H2O,0.0,Protocol,Testing no-PVPP CTAB
+TLP A,2015-01-19,2015-01-20,2015-01-20,TLP,CaBi,33.5,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+TLP B,2015-01-19,2015-01-20,2015-01-20,TLP,PaIn,32.8,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+TLP C,2015-01-19,2015-01-20,2015-01-20,TLP,DaPu,33.3,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+TLP D,2015-01-19,2015-01-20,2015-01-20,TLP,SiIn,27.7,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+TLP E,2015-01-19,2015-01-20,2015-01-20,TLP,DeCa,30.6,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+TLP F,2015-01-19,2015-01-20,2015-01-20,TLP,AnGe,34.4,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+TLP G,2015-01-19,2015-01-20,2015-01-20,TLP,H2O,0.0,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS 1,2015-01-19,2015-01-21,2015-01-21,CRS,CaBi,34.2,Protocol,Testing no-PVPP CTAB. Note ~48-hr precipitation time instead of usual overnight.
+CRS 2,2015-01-19,2015-01-21,2015-01-21,CRS,PaIn,33.2,Protocol,Testing no-PVPP CTAB. Note ~48-hr precipitation time instead of usual overnight.
+CRS 3,2015-01-19,2015-01-21,2015-01-21,CRS,DaPu,26.3,Protocol,Testing no-PVPP CTAB. Note ~48-hr precipitation time instead of usual overnight.
+CRS 4,2015-01-19,2015-01-21,2015-01-21,CRS,SiIn,29.3,Protocol,Testing no-PVPP CTAB. Note ~48-hr precipitation time instead of usual overnight.
+CRS 5,2015-01-19,2015-01-21,2015-01-21,CRS,DeCa,29.1,Protocol,Testing no-PVPP CTAB. Note ~48-hr precipitation time instead of usual overnight.
+CRS 6,2015-01-19,2015-01-21,2015-01-21,CRS,AnGe,31.9,Protocol,Testing no-PVPP CTAB. Note ~48-hr precipitation time instead of usual overnight.
+CRS 7,2015-01-19,2015-01-21,2015-01-21,CRS,H2O,0.0,Protocol,Testing no-PVPP CTAB. Note ~48-hr precipitation time instead of usual overnight.
+CRS A,2015-01-19,2015-01-21,2015-01-21,CRS,CaBi,32.7,Protocol,"Testing Brunner CTAB, partial supernatent recovery. Note ~48-hr precipitation time instead of usual overnight.Pellet never fully resuspended."
+CRS B,2015-01-19,2015-01-21,2015-01-21,CRS,PaIn,28.4,Protocol,"Testing Brunner CTAB, partial supernatent recovery. Note ~48-hr precipitation time instead of usual overnight."
+CRS C,2015-01-19,2015-01-21,2015-01-21,CRS,DaPu,34.4,Protocol,"Testing Brunner CTAB, partial supernatent recovery. Note ~48-hr precipitation time instead of usual overnight."
+CRS D,2015-01-19,2015-01-21,2015-01-21,CRS,SiIn,33.0,Protocol,"Testing Brunner CTAB, partial supernatent recovery. Note ~48-hr precipitation time instead of usual overnight."
+CRS E,2015-01-19,2015-01-21,2015-01-21,CRS,DeCa,29.1,Protocol,"Testing Brunner CTAB, partial supernatent recovery. Note ~48-hr precipitation time instead of usual overnight."
+CRS F,2015-01-19,2015-01-21,2015-01-21,CRS,AnGe,38.9,Protocol,"Testing Brunner CTAB, partial supernatent recovery. Note ~48-hr precipitation time instead of usual overnight."
+CRS G,2015-01-19,2015-01-21,2015-01-21,CRS,H2O,0.0,Protocol,"Testing Brunner CTAB, partial supernatent recovery. Note ~48-hr precipitation time instead of usual overnight."
+CRS 1,2015-01-22,2015-01-23,2015-01-23,CRS,CaBi,18.0,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS 2,2015-01-22,2015-01-23,2015-01-23,CRS,PaIn,17.8,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS 3,2015-01-22,2015-01-23,2015-01-23,CRS,DeCa,17.7,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS 4,2015-01-22,2015-01-23,2015-01-23,CRS,AsCa,18.5,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS 5,2015-01-22,2015-01-23,2015-01-23,CRS,TaOf,18.4,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS 6,2015-01-22,2015-01-23,2015-01-23,CRS,VeVi,18.8,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS 7,2015-01-22,2015-01-23,2015-01-23,CRS,SiTe,30.6,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS A,2015-01-22,2015-01-23,2015-01-23,CRS,CaBi,46.1,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS B,2015-01-22,2015-01-23,2015-01-23,CRS,PaIn,46.7,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS C,2015-01-22,2015-01-23,2015-01-23,CRS,DeCa,42.4,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS D,2015-01-22,2015-01-23,2015-01-23,CRS,AsCa,42.7,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS E,2015-01-22,2015-01-23,2015-01-23,CRS,TaOf,46.2,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS F,2015-01-22,2015-01-23,2015-01-23,CRS,VeVi,47.1,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+CRS G,2015-01-22,2015-01-23,2015-01-23,CRS,H2O,0.0,Protocol,"Testing Brunner CTAB, partial supernatent recovery"
+01A,2015-01-26,2015-01-27,2015-01-27,CRS,AnGe,19.8,,
+01B,2015-01-26,2015-01-27,2015-01-27,CRS,AnGe,16.6,,
+11A,2015-01-26,2015-01-27,2015-01-27,CRS,AnGe,34.4,,
+11B,2015-01-26,2015-01-27,2015-01-27,CRS,AnGe,32.4,,
+21A,2015-01-26,2015-01-27,2015-01-27,CRS,AnGe,42.9,,
+21B,2015-01-26,2015-01-27,2015-01-27,CRS,AnGe,47.2,,
+02A,2015-01-26,2015-01-27,2015-01-27,CRS,SiIn,15.3,,
+02B,2015-01-26,2015-01-27,2015-01-27,CRS,SiIn,16.4,,
+12A,2015-01-26,2015-01-27,2015-01-27,CRS,SiIn,32.8,,
+12B,2015-01-26,2015-01-27,2015-01-27,CRS,SiIn,27.7,,
+22A,2015-01-26,2015-01-27,2015-01-27,CRS,SiIn,43.7,,
+22B,2015-01-26,2015-01-27,2015-01-27,CRS,SiIn,46.5,,
+03A,2015-01-26,2015-01-27,2015-01-27,CRS,DaPu,19.9,,
+03B,2015-01-26,2015-01-27,2015-01-27,CRS,DaPu,16.8,,
+13A,2015-01-26,2015-01-27,2015-01-27,CRS,DaPu,30.0,,
+13B,2015-01-26,2015-01-27,2015-01-27,CRS,DaPu,32.2,,
+23A,2015-01-26,2015-01-27,2015-01-27,CRS,DaPu,49.4,,
+23B,2015-01-26,2015-01-27,2015-01-27,CRS,DaPu,43.2,,
+34A,2015-01-26,2015-01-27,2015-01-27,CRS,H2O,0.0,,
+1A,2015-01-29,2015-01-30,2015-01-30,CRS,CaBi,17.9,,
+2A,2015-01-29,2015-01-30,2015-01-30,CRS,CaBi,30.5,,
+3A,2015-01-29,2015-01-30,2015-01-30,CRS,CaBi,47.3,,
+1B,2015-01-29,2015-01-30,2015-01-30,CRS,PaIn,18.8,,
+2B,2015-01-29,2015-01-30,2015-01-30,CRS,PaIn,33.7,,
+3B,2015-01-29,2015-01-30,2015-01-30,CRS,PaIn,45.4,,
+1C,2015-01-29,2015-01-30,2015-01-30,CRS,AsCa,16.4,,
+2C,2015-01-29,2015-01-30,2015-01-30,CRS,AsCa,32.7,,
+3C,2015-01-29,2015-01-30,2015-01-30,CRS,AsCa,42.6,,
+1D,2015-01-29,2015-01-30,2015-01-30,CRS,TaOf,16.0,,
+2D,2015-01-29,2015-01-30,2015-01-30,CRS,TaOf,27.0,,
+3D,2015-01-29,2015-01-30,2015-01-30,CRS,TaOf,45.6,,
+4E,2015-01-29,2015-01-30,2015-01-30,CRS,H2O,0.0,,
