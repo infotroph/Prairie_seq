@@ -15,5 +15,5 @@ clean: rm $(ALL)
 data/GelDoc/%.jpg: Python/gel-labeler.py rawdata/GelDoc/%.tif rawdata/GelDoc/%.csv
 	./$^ $@
 
-data/nanodrop.csv: R/nanodrop_clean.R rawdata/nanodrop/*.txt
-	Rscript $^
+data/nanodrop.csv: R/nanodrop_clean.R rawdata/nanodrop/*
+	Rscript R/nanodrop_clean.R rawdata/nanodrop/*.txt
