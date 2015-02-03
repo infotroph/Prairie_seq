@@ -88,3 +88,11 @@ Added a log for all CTAB extractions. Note that other scripts will rely on this 
 	- "Failed" if protocol followed but no DNA recovered.
 	- "Outlier" if yield is way out of line with expectation (only declare this for extreme cases!)
 * Notes: anything else, probably including more details on any exclude flag.
+
+## 2015-02-03, CKB
+
+Added raw Nanodrop files for 01-08 through 01-27. Note that these have Windows line endings, so I committed them with $(git commit --no-verify) to bypass the pre-commit hook that checks for discrepancies in line endings. Now that they are committed, any future edits to these files (hopefully few if any --don't edit the raw outputs!) will only complain if the line endings change.
+
+In same commit, added a corrections file (rawdata/nanodrop/nanodrop_corrections.csv). This is a look-up table: Any Nanodrop reading whose timestamp and sample ID match a `datetime` and `savedID` in the corrections file will have its sample ID changed to the value of `newID`. If `newID` is empty, the observation will be deleted. Still working on the script that will perform these corrections.
+
+
