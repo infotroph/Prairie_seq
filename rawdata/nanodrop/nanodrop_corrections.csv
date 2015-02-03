@@ -28,6 +28,6 @@ datetime, savedID, newID, note
 2015-01-23 05:16, H2O,, checking instrument blank
 2015-01-23 05:28, H2O,, checking instrument blank
 2015-01-27 05:40, H2O,, checking instrument blank
-2015-01-27 06:14, 02B,, suspect poor mixing
-2015-01-27 06:16, 02B.1, 02B, reread after mixing with little change
+2015-01-27 06:14, CRS 02B,, suspect poor mixing
+2015-01-27 06:16, CRS 02B.1, CRS 02B, reread after mixing with little change
 2015-01-27 06:57, H2O,, checking instrument blank
