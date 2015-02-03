@@ -1,34 +1,33 @@
-date, time, savedID, newID, note
-2015-01-14, 02:04, AnGe 70,, path length error
-2015-01-14, 02:07, AnGe 70 2, AnGe 70, remeasured after path length error
-2015-01-16, 01:22, TLP 1,, poor mixing
-2015-01-16, 01:24, TLP 1.2,, poor mixing
-2015-01-16, 01:25, TLP 1.3, TLP 1, Believed best-mixed of 3 readings
-2015-01-16, 01:38, CRS A,, noisy reading
-2015-01-16, 01:40, CRS A.1, CRS A, reread after noisy reading
-2015-01-16, 01:44, CRS C,, poor mixing
-2015-01-16, 01:45, CRS C.1, CRS C, reread after poor mixing
-2015-01-16, 01:27, TLP 2,, poor mixing
-2015-01-16, 02:01, TLP 2.1, TLP 2, reread after mixing
-2015-01-20, 04:42, TLP 5,, path length warning
-2015-01-20, 04:43, TLP 5.1, TLP 5, reread after path length warning
-2015-01-21, 04:40, H2O,, checking instrument blank
-2015-01-21, 04:44, CRS 1,, Suspect poor instrument blanking
-2015-01-21, 04:45, H2O,, checking instrument blank
-2015-01-21, 05:34, H2O,, checking instrument blank
-2015-01-21, 05:35, H2O,, checking instrument blank
-2015-01-21, 05:36, H2O,, checking instrument blank
-2015-01-21, 05:36, H2O,, checking instrument blank
-2015-01-21, 05:37, H2O,, checking instrument blank
-2015-01-21, 05:38, CRS 1.1, CRS 1, reread after checking instrument blank
-2015-01-21, 05:49, H2O,, checking instrument blank
-2015-01-21, 05:49, H2O.2,, checking instrument blank
-2015-01-21, 05:50, H2O.3,, checking instrument blank
-2015-01-23, 05:02, H2O,, checking instrument blank
-2015-01-23, 05:16, H2O,, checking instrument blank
-2015-01-23, 05:28, H2O,, checking instrument blank
-2015-01-27, 05:40, H2O,, checking instrument blank
-2015-01-27, 06:14, 02B,, suspect poor mixing
-2015-01-27, 06:16, 02B.1, 02B, reread after mixing with little change
-2015-01-27, 06:57, H2O,, checking instrument blank
-
+datetime, savedID, newID, note
+2015-01-14 02:04, AnGe 70,, path length error
+2015-01-14 02:07, AnGe 70 2, AnGe 70, remeasured after path length error
+2015-01-16 01:22, TLP 1,, poor mixing
+2015-01-16 01:24, TLP 1.2,, poor mixing
+2015-01-16 01:25, TLP 1.3, TLP 1, Believed best-mixed of 3 readings
+2015-01-16 01:38, CRS A,, noisy reading
+2015-01-16 01:40, CRS A.1, CRS A, reread after noisy reading
+2015-01-16 01:44, CRS C,, poor mixing
+2015-01-16 01:45, CRS C.1, CRS C, reread after poor mixing
+2015-01-16 01:27, TLP 2,, poor mixing
+2015-01-16 02:01, TLP 2.1, TLP 2, reread after mixing
+2015-01-20 04:42, TLP 5,, path length warning
+2015-01-20 04:43, TLP 5.1, TLP 5, reread after path length warning
+2015-01-21 04:40, H2O,, checking instrument blank
+2015-01-21 04:44, CRS 1,, Suspect poor instrument blanking
+2015-01-21 04:45, H2O,, checking instrument blank
+2015-01-21 05:34, H2O,, checking instrument blank
+2015-01-21 05:35, H2O,, checking instrument blank
+2015-01-21 05:36, H2O,, checking instrument blank
+2015-01-21 05:36, H2O,, checking instrument blank
+2015-01-21 05:37, H2O,, checking instrument blank
+2015-01-21 05:38, CRS 1.1, CRS 1, reread after checking instrument blank
+2015-01-21 05:49, H2O,, checking instrument blank
+2015-01-21 05:49, H2O.2,, checking instrument blank
+2015-01-21 05:50, H2O.3,, checking instrument blank
+2015-01-23 05:02, H2O,, checking instrument blank
+2015-01-23 05:16, H2O,, checking instrument blank
+2015-01-23 05:28, H2O,, checking instrument blank
+2015-01-27 05:40, H2O,, checking instrument blank
+2015-01-27 06:14, 02B,, suspect poor mixing
+2015-01-27 06:16, 02B.1, 02B, reread after mixing with little change
+2015-01-27 06:57, H2O,, checking instrument blank
