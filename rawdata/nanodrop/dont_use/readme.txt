@@ -1,0 +1,5 @@
+This directory is for nanodrop readings that we want to keep, but for whatever reason don't want to include in the main CTAB-yield analysis. If some-but-not-all readings should be included in the main analysis, leave the file in rawdata/nanodrop/ and add all excluded readings to rawdata/nanodrop/nanodrop_corrections.csv. If NO readings from the file should be included, put it in this directory and add a note below explaining why.
+
+CTAB-BC_15mg_20mg_45mg_AB_WORKING_STOCK_CRS_2015-01-29.txt: 
+	These are 10 ng/µL working stocks, remeasured 2015-01-29 as a first-order check on how reliable the 2015-01-27 readings on the master stocks were. The dilutions for these stocks were computed based on the master-stock readings, so if the master stock readings were correct then we expect all these dilutions to read very near 10 ng/µL. 
+	Observed range: 8.64 - 12.49 ng/µL, median 10.83. No sign of correlation between full-strength and diluted readings. Conclusion: Not perfect, but cumulative nanodrop->dilution->nanodrop error seems to be generally < 15%, so we *probably* didn't base any of our dilutions on wild outlier readings. This time. 
