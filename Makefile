@@ -1,12 +1,15 @@
 # Lists o' targets.
 RAWGELS := $(notdir $(wildcard rawdata/GelDoc/*.tif))
 GELS := $(addprefix data/GelDoc/,$(subst tif,jpg,$(RAWGELS)))
-NANODROP = data/nanodrop.csv
+
+NANODROP = data/nanodrop.csv \
+	figs/ctab_yield.pdf
+
 ALL = $(GELS) $(NANODROP)
 
 # phony rules to let us build subsets by themselves
 all: $(ALL)
-nandrop: $(NANODROP)
+nanodrop: $(NANODROP)
 gels: $(GELS)
 clean: rm $(ALL)
 .PHONY: all gels nanodrop clean 
@@ -20,3 +23,6 @@ data/nanodrop.csv: \
 		rawdata/nanodrop/*.txt \
 		rawdata/nanodrop/nanodrop_corrections.csv
 	Rscript R/nanodrop_clean.R rawdata/nanodrop/*.txt
+
+figs/ctab_yield.pdf: R/ctab_yield.R data/nanodrop.csv 
+	Rscript $^

@@ -11,6 +11,8 @@ Repository layout:
 	Scripts, with each language in its own directory.
 - data/
 	Fully processed, cleaned-up, ready-to-analyze datasets. Everything in this dataset should be reproducible at any time by rerunning the relevant set of scripts. 
+- figs/
+	Graphs plotted from clean datasets. Everything in this directory should be reproducible at any time by rerunning the relevant set of scripts.
 - Makefile	
 	The script that runs the whole analysis. After making any change to data or code, update outputs by running the command $(make) in this directory. All analyses that need updating after the change, and none of the ones that don't need updating, will be rerun.
 - notes/
