@@ -1,0 +1,97 @@
+,Well,Fluor,Target,Content,Sample,End RFU,Call,Sample Type,CallType,Is Control
+,A01,SYBR,,Unkn,A1,-1.47918432736578,,Unknown,NoCall,False
+,A02,SYBR,,Unkn,A1,1134.37375027761,(+) Positive,Unknown,Positive,False
+,A03,SYBR,,Unkn,E1,1867.97211310218,(+) Positive,Unknown,Positive,False
+,A04,SYBR,,Unkn,E1,662.587149501338,(+) Positive,Unknown,Positive,False
+,A05,SYBR,,Unkn,G1,679.661825669898,(+) Positive,Unknown,Positive,False
+,A06,SYBR,,Unkn,G1,792.22023508209,(+) Positive,Unknown,Positive,False
+,A07,SYBR,,Unkn,,-0.169980246777686,,Unknown,NoCall,False
+,A08,SYBR,,Unkn,,-0.0463254771381798,,Unknown,NoCall,False
+,A09,SYBR,,Unkn,R.sph,842.864638192935,(+) Positive,Unknown,Positive,False
+,A10,SYBR,,Unkn,R.sph,639.70930365661,(+) Positive,Unknown,Positive,False
+,A11,SYBR,,Unkn,E.coli,1975.81237814316,(+) Positive,Unknown,Positive,False
+,A12,SYBR,,Unkn,E.coli,2642.99599582756,(+) Positive,Unknown,Positive,False
+,B01,SYBR,,Unkn,A2,168.099260966347,,Unknown,NoCall,False
+,B02,SYBR,,Unkn,A2,2105.38815394986,(+) Positive,Unknown,Positive,False
+,B03,SYBR,,Unkn,E2,1443.7579885948,(+) Positive,Unknown,Positive,False
+,B04,SYBR,,Unkn,E2,298.900892007756,,Unknown,NoCall,False
+,B05,SYBR,,Unkn,G2,374.479131473174,(+) Positive,Unknown,Positive,False
+,B06,SYBR,,Unkn,G2,529.633204199828,(+) Positive,Unknown,Positive,False
+,B07,SYBR,,Unkn,,-1.55802988242558,,Unknown,NoCall,False
+,B08,SYBR,,Unkn,,0.54154947382649,,Unknown,NoCall,False
+,B09,SYBR,,Unkn,H.flu,1184.25916823066,(+) Positive,Unknown,Positive,False
+,B10,SYBR,,Unkn,H.flu,1344.4691510328,(+) Positive,Unknown,Positive,False
+,B11,SYBR,,Unkn,mixed bac,945.904583665441,(+) Positive,Unknown,Positive,False
+,B12,SYBR,,Unkn,mixed bac,1466.04812365922,(+) Positive,Unknown,Positive,False
+,C01,SYBR,,Unkn,A3,864.792629788796,(+) Positive,Unknown,Positive,False
+,C02,SYBR,,Unkn,A3,2020.83660409059,(+) Positive,Unknown,Positive,False
+,C03,SYBR,,Unkn,E3,1625.85832109958,(+) Positive,Unknown,Positive,False
+,C04,SYBR,,Unkn,E3,716.406748638028,(+) Positive,Unknown,Positive,False
+,C05,SYBR,,Unkn,G3,504.761585495705,(+) Positive,Unknown,Positive,False
+,C06,SYBR,,Unkn,G3,651.05275232307,(+) Positive,Unknown,Positive,False
+,C07,SYBR,,Unkn,,0.942606797254757,,Unknown,NoCall,False
+,C08,SYBR,,Unkn,,-0.723918019323082,,Unknown,NoCall,False
+,C09,SYBR,,Unkn,,-0.488352529264921,,Unknown,NoCall,False
+,C10,SYBR,,Unkn,,0.401373391853213,,Unknown,NoCall,False
+,C11,SYBR,,Neg Ctrl,TE,1.60328379724297,,ControlNegative,Negative,True
+,C12,SYBR,,Neg Ctrl,H2O,4.25983700152292,,ControlNegative,Negative,True
+,D01,SYBR,,Unkn,A4,772.567490644485,(+) Positive,Unknown,Positive,False
+,D02,SYBR,,Unkn,A4,2099.74472934649,(+) Positive,Unknown,Positive,False
+,D03,SYBR,,Unkn,E4,1710.24384793878,(+) Positive,Unknown,Positive,False
+,D04,SYBR,,Unkn,E4,1054.28067441048,(+) Positive,Unknown,Positive,False
+,D05,SYBR,,Unkn,G4,677.754053501784,(+) Positive,Unknown,Positive,False
+,D06,SYBR,,Unkn,G4,477.972434280814,(+) Positive,Unknown,Positive,False
+,D07,SYBR,,Unkn,,-2.72182057935979,,Unknown,NoCall,False
+,D08,SYBR,,Unkn,,-0.597297676836115,,Unknown,NoCall,False
+,D09,SYBR,,Unkn,,-2.7479717132147,,Unknown,NoCall,False
+,D10,SYBR,,Unkn,,-4.49482339006872,,Unknown,NoCall,False
+,D11,SYBR,,Unkn,,-5.62588974558357,,Unknown,NoCall,False
+,D12,SYBR,,Unkn,,-3.99547025830752,,Unknown,NoCall,False
+,E01,SYBR,,Unkn,C1,2788.89460420062,(+) Positive,Unknown,Positive,False
+,E02,SYBR,,Unkn,C1,2975.22089395708,(+) Positive,Unknown,Positive,False
+,E03,SYBR,,Unkn,F1,2054.80506178464,(+) Positive,Unknown,Positive,False
+,E04,SYBR,,Unkn,F1,1177.15496273293,(+) Positive,Unknown,Positive,False
+,E05,SYBR,,Unkn,H1,2279.66024764847,(+) Positive,Unknown,Positive,False
+,E06,SYBR,,Unkn,H1,1793.37750376407,(+) Positive,Unknown,Positive,False
+,E07,SYBR,,Unkn,,-4.05232508502631,,Unknown,NoCall,False
+,E08,SYBR,,Unkn,,144.924470630789,,Unknown,NoCall,False
+,E09,SYBR,,Unkn,,-2.48396594539035,,Unknown,NoCall,False
+,E10,SYBR,,Unkn,,-2.88508144183479,,Unknown,NoCall,False
+,E11,SYBR,,Unkn,,-4.40323596637008,,Unknown,NoCall,False
+,E12,SYBR,,Unkn,,-4.60246944431519,,Unknown,NoCall,False
+,F01,SYBR,,Unkn,C2,2880.26577768923,(+) Positive,Unknown,Positive,False
+,F02,SYBR,,Unkn,C2,3211.17718771855,(+) Positive,Unknown,Positive,False
+,F03,SYBR,,Unkn,F2,1446.22501656486,(+) Positive,Unknown,Positive,False
+,F04,SYBR,,Unkn,F2,756.821246855413,(+) Positive,Unknown,Positive,False
+,F05,SYBR,,Unkn,H2,1361.60399082867,(+) Positive,Unknown,Positive,False
+,F06,SYBR,,Unkn,H2,1672.73627605868,(+) Positive,Unknown,Positive,False
+,F07,SYBR,,Unkn,,-3.60622050896855,,Unknown,NoCall,False
+,F08,SYBR,,Unkn,,-1.59532423501887,,Unknown,NoCall,False
+,F09,SYBR,,Unkn,,-4.3649782394582,,Unknown,NoCall,False
+,F10,SYBR,,Unkn,,122.166679800979,,Unknown,NoCall,False
+,F11,SYBR,,Unkn,,-3.05326155511357,,Unknown,NoCall,False
+,F12,SYBR,,Unkn,,-1.56251236041462,,Unknown,NoCall,False
+,G01,SYBR,,Unkn,C3,2674.3044479212,(+) Positive,Unknown,Positive,False
+,G02,SYBR,,Unkn,C3,3341.24549112313,(+) Positive,Unknown,Positive,False
+,G03,SYBR,,Unkn,F3,1873.86277089141,(+) Positive,Unknown,Positive,False
+,G04,SYBR,,Unkn,F3,906.823608175563,(+) Positive,Unknown,Positive,False
+,G05,SYBR,,Unkn,H3,1374.23991000747,(+) Positive,Unknown,Positive,False
+,G06,SYBR,,Unkn,H3,1904.60242255742,(+) Positive,Unknown,Positive,False
+,G07,SYBR,,Unkn,,-5.00370837203473,,Unknown,NoCall,False
+,G08,SYBR,,Unkn,,-2.11953222304628,,Unknown,NoCall,False
+,G09,SYBR,,Unkn,,-3.90838643187644,,Unknown,NoCall,False
+,G10,SYBR,,Unkn,,-4.90156156909197,,Unknown,NoCall,False
+,G11,SYBR,,Unkn,,-2.69494692856661,,Unknown,NoCall,False
+,G12,SYBR,,Unkn,,-3.03135654591133,,Unknown,NoCall,False
+,H01,SYBR,,Unkn,C4,1587.59853015525,(+) Positive,Unknown,Positive,False
+,H02,SYBR,,Unkn,C4,3057.49049956546,(+) Positive,Unknown,Positive,False
+,H03,SYBR,,Unkn,F4,1449.55104189389,(+) Positive,Unknown,Positive,False
+,H04,SYBR,,Unkn,F4,1006.44795287441,(+) Positive,Unknown,Positive,False
+,H05,SYBR,,Unkn,H4,1530.24933790562,(+) Positive,Unknown,Positive,False
+,H06,SYBR,,Unkn,H4,2039.80638503233,(+) Positive,Unknown,Positive,False
+,H07,SYBR,,Unkn,,-3.28983210812594,,Unknown,NoCall,False
+,H08,SYBR,,Unkn,,-4.46398522127556,,Unknown,NoCall,False
+,H09,SYBR,,Unkn,,-3.52295811824997,,Unknown,NoCall,False
+,H10,SYBR,,Unkn,,-3.28549509942013,,Unknown,NoCall,False
+,H11,SYBR,,Unkn,,-3.93819819005803,,Unknown,NoCall,False
+,H12,SYBR,,Unkn,,-2.28401314034827,,Unknown,NoCall,False
