@@ -29,6 +29,8 @@ Repository layout:
 	nanodrop/
 		Text files are raw output from the Nanodrop (in ND1000 data viewer, choose Reports > "Save Report..." > "Export Report Table Only"). Record all readings in the paper lab notebook as well.
 		Save corrections to individual readings in nanodrop_corrections.csv: timestamp and `savedID` must match timestamp and ID in raw output. If `newID` is specified, the cleanup script will use it to replace the sample ID. If newID is blank, the script will delete that observation from the cleaned dataset.
+	qpcr/
+		CSV output from the Bio-Rad droplet PCR machine, for melting temperature analysis and checking template concentrations. Each run produces 12 CSV files, many of which we may never use but might as well save -- they're all small. For each run, you'll need to make and add a 13th file named "<date>_platekey.csv", which should have 96 lines mapping sample characteristics for each well of the plate. 
 - README.txt
 	This file. Keep it up-to-date.
 
