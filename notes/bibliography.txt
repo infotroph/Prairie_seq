@@ -59,3 +59,10 @@ The main working source for our CTAB DNA extraction protocol.
 Chang, S., Puryear, J. & Cairney, J. (1993) A simple and efficient method for isolating RNA from pine trees. Plant Molecular Biology Reporter, 11, 113–116.
 
 The CTAB RNA extraction protocol that Brunner et al (2001) started from.
+-----------
+
+Beauchamp, V.B., Walz, C. & Shafroth, P.B. (2009) Salinity tolerance and mycorrhizal responsiveness of native xeroriparian plants in semi-arid western USA. Applied Soil Ecology, 43, 175–184.
+
+Paper sent by Neil Anderson of Reforestation Technologies International, who made the mycorrhizal inoculant that Pizzo and Associates sold us for Energy Farm prairies at planting time. 
+
+
