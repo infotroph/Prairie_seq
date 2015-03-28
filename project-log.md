@@ -126,4 +126,6 @@ First pass at a set of scripts to analyze the melting temperature results from m
 
 Started an annotated bibliography for the project in `notes/bibliography.txt`. Current contents: Every paper I can find that any of us has emailed around to the group in the past year. Current format: Citation in utterly plain text, blank line, any notes about the paper (as long or short as you like), blank line, row of at least ten dashes. 
 
-I picked this because it's dead simple and easy for me to *export* from Papers, but we should eventually change it to something machine-readable that each of our reference management software can read *in*, because if you made me choose between "buried in an anthill" and "retype even one more list of author names ever", I'd have to think hard.
+I picked this format because it's dead simple and easy for me to *export* from Papers, but we should eventually change it to something machine-readable that each of our reference management software can read *in*, because if you made me choose between "buried in an anthill" and "retype even one more list of author names ever", I'd have to think hard.
+
+New file: messages from CKB's correespondence thus far with Pizzo and Associates, the providers of the seed for the prairie plots, about the makeup of their inoculant mix. Bottom line so far: it's probably just a single strain of _Glomus intraradices_, but there's a possibility it was a 3-species _G. intraradices_, _G. etunicatum_,  _G. deserticola_ mix. In either case, the inoculant was grown outdoors under nonsterile conditions.

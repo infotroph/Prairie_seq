@@ -1,0 +1,215 @@
+From: Chris Black <black11@igb.illinois.edu>
+Subject: Mycorrhizal inoculant details
+Date: Wed, 18 Mar 2015 15:03:26 -0500
+To: jack@pizzo.info
+
+Mr. Pizzo,
+
+I'm a graduate student at the University of Illinois and I'm working on =
+a project that involves the prairie plantings at the Energy Bioscience =
+Institute farm. I understand that Pizzo & Associates provided the seed =
+and the mycorrhizal inoculant for these plantings and I'm hoping I can =
+get some more details about the inoculant. The very short version of my =
+questions:=20
+
+	* Do you know what fungal and bacterial species are present in =
+your mycorrhizal inoculant mix?
+	* Can you tell us anything about where this inoculant came from =
+and how you produced it?
+	* If the inoculant you have on hand now is similar to what you =
+had in 2008, we're interested in obtaining a small sample of it.
+
+If you don't know these yourself but know of someone else who could =
+answer them, I'd appreciate you  forwarding this message to them.
+
+Still with me? Great. Here's a more detailed explanation:
+
+ My group is studying how the different species within a prairie =
+interact or avoid each other belowground -- for example, we might very =
+frequently find bluestem roots right next to rosinweed roots, or at the =
+other extreme we only find one or the other in a given sample. We also =
+want to ask the same question for fungi and bacteria: Since many plants =
+have very specific mycorrhizal partners, we expect that the fungi we =
+find in the soil around a bluestem root will be very different from the =
+fungi next to a bush clover root.=20
+
+Since it's very hard to tell tell plant species apart by their roots, =
+we're taking a DNA sequencing approach to answer these questions. We =
+have taken soil cores from across the prairie plots at the Energy Farm, =
+divided them up by depth, separated roots from soil, extracted DNA, and =
+we're now preparing to have everything sequenced. We can then match the =
+sequences we see against those from known species and use that =
+information to identify which species of plant, fungus, and bacteria are =
+present in each of our mixed-species soil & root samples.=20
+
+Once we know who is there, one followup question we'd love to ask is =
+something like "where did the microbes come from?" Does the community we =
+see look more like what was in the soil before planting, more like the =
+inoculant, or does it contain species that came in from elsewhere =
+without our help?=20
+
+That's where Pizzo & Associates  comes in: Do you know what species of =
+microbes you sold us in the inoculant? Note that I'm not implying you =
+"should" know--whatever the mix is, the plants have been very =
+successful, so it did its job! But if you *do* know what's in the mix, =
+it would let us ask a very cool question, and we'd be happy to share our =
+results with you so you know which species within the mix did and didn't =
+stick around until year 5 after planting.
+
+Besides species names, it would be helpful if you can tell us anything =
+else about how you prepare the inoculant: Is it a mix of known species, =
+or is it cultured from a native prairie soil, or some other process? Has =
+your production process or source material changed since 2008? If we =
+were to sequence a sample of your current stock, do you think it would =
+contain the same species as the stuff we bought in 2008? If so, is there =
+a chance we could obtain such a sample?
+
+Thanks for your time. If you have other questions, let me know by email =
+(black11@igb.illinois.edu) or phone (503 929-9421). I look forward to =
+hearing from you.
+
+Thanks,
+Chris
+
+
+
+
+Christopher K. Black
+PhD Candidate
+University of Illinois Plant Biology
+black11@igb.illinois.edu
+503 929-9421
+Room 1500, Institute for Genomic Biology
+1206 W Gregory Drive
+Urbana, IL 61801
+
+
+
+
+
+
+
+
+From: Jack Pizzo <jackp@pizzo.info>
+To: Chris Black <black11@igb.illinois.edu>
+CC: "Neil Anderson (neil@reforest.com)" <neil@reforest.com>
+Subject: RE: Mycorrhizal inoculant details
+Date: Sun, 22 Mar 2015 23:42:42 +0000
+
+Hi Chris,
+
+Happy to help! I am glad to hear the plantings are doing well. I always see=
+m to get down to Urbana after the growing season. I will be there more ofte=
+n as  my daughter will be a student in the fall. I would love to see the pl=
+antings.=20
+
+The inoculant was purchased from RTI. http://reforest.com/  I am copying Ne=
+il Anderson the president of RTI. He can give you the specifics on the prod=
+uct(s).=20
+
+What else can I help with?
+
+
+Jack Pizzo, MS, PLA, ASLA, ICN=20
+THE PIZZO GROUP  =20
+136 Railroad Street   |   P.O. Box 98   |   Leland, IL 60531
+Mobile: 815.351.3250   |   Office:  815.495.2300  |   Fax: 815.498.4406
+jackp@pizzo.info   |   www.pizzogroup.com
+
+ =20
+ Ecology + Vision, LLC.  Pizzo Native Plant Nursery, LLC.  Native Landscape=
+ Contractors, LLC.  Pizzo and Associates, Ltd.
+  Jack Pizzo
+
+26 years of service to people and the environment.
+
+JOIN US FOR THE 2015 SPRING SEMINAR SERIES: "GREEN AND NATURAL SPACES IN YO=
+UR COMMUNITY"
+http://pizzogroup.com/2015seminarseries/=20
+
+SAVE THE DATE:  June 26th, 2015 for our annual restoration event and annive=
+rsary party.
+
+
+
+
+
+
+
+
+From: Neil Anderson <neil@reforest.com>
+To: black11@igb.illinois.edu
+Cc: Jack Pizzo <jackp@pizzo.info>
+Date: Tue, 24 Mar 2015 17:03:11 -0700
+Subject: Fwd: Mycorrhizal inoculant details
+
+Dear Chris,
+
+I am happy to enlighten you to the best of my ability.  According to our
+records, the inoculum that was purchased in 2008 by Pizzo and Associates
+was a single species *Glomus intraradices*.  We do also offer multiple
+species products so it may possibly have been a three species blend of *G
+intraradices, G etunicatum and G deserticola,* but I believe it was the *G
+intraradices* only.  We do not add any bacteria or other organisms to the
+medium, however the culturing is done outdoors and is exposed to elements
+and the messy kind of environment you find in open spaces (we believe this
+adds to the conditioning of the inoculum).  We closely monitor the culture
+to assure that it is pathogen and pest free.  Other than that, any microbes
+that might blow in are uncontrollable and will likely become part of a food
+chain.
+
+We produce it here in California and during that time around 2008, we had
+two production sites, one near Indio, CA in the Coachella Valley, Riverside
+Co. for winter production and one near Salinas, Monterey Co for summer
+production.  We now have one consolidated year round growing facility in
+Gilroy, CA, Santa Clara, Co.
+
+It was produced in a sterile medium, using host plants to distribute the
+inocula through carrier and then cultured until our propagule counts met or
+exceeded the claims that are made on the label.  AM 120 stands for
+"Arbuscular Mycorrhizae @ 120 propagules per gram".  Our lab counts are
+generally much higher.
+
+We will gladly forward you a sample for trials if you provide us with a
+shipping address.
+
+With respect to plant specific mycorrhizal associations within an endo
+mycorrhizal community, that may be occasionally the case, but in general we
+refer to most arbuscular mycorrhizal species as  *"Cosmopolitan"
+and"Adaptive"*.  This means that organisms have the genetic potential to
+express a different set of genes as necessary to adapt to different
+environments and to form mutualistic associations with different plants.
+That being said, some species just naturally do better from the get go at
+higher or lower soil pH, etc.  Soils with varying chemical compositions
+will influence the makeup of the plant communities above ground and the
+types of microbes present below ground.  The biological makeup of most soil
+is messy, influenced by edaphic conditions that are not well understood and
+microbes are living in a continuous version of the *"Hunger Games"*.  For
+this reason, we offer a multiple species approach as an option in soil
+restoration.  In agriculture, landscaping and restoration projects that are
+done on sites containing soil as opposed to parent material or mine
+tailings, we recommend our single species *G intraradices 801*.
+
+Why?  Because *G. intraradices* has been isolated on the Arctic Tundra of
+the Canadian Northwest Territories, in the Amazonian jungle, the Sonora
+Desert and the the Andes.  It is truly adaptive.  we have data that
+demonstrates early germination and biomass benefits to several western
+native plants.  It has also been used to grow the last eight world record
+giant pumpkins (currently 2,058 lbs), the world's largest watermelon (350
+lbs) and the world's largest tomato (8.4 lbs).  It leads the pack at
+being *"Cosmopolitan"
+and "Adaptive"*.
+
+With respect to the DNA sequencing of the fungi, we work with the USDA /
+ARS in Albany, CA and they have most of the "markers" necessary to identify
+the more common species of mycorrhizal fungi.  The USDA / ARS in Peoria, IL
+should have access to the same sets.  It will be interesting to see what
+you find.  There are suggestions by some researchers that the Glomus genus
+are mostly "pioneer" species and will be replaced by other species
+overtime.  After seven years, it would be interesting to find out some of
+these answers.  Good luck on your research.
+
+Neil C. Anderson,
+
+President,
+Reforestation Technologies International
