@@ -122,4 +122,8 @@ First pass at a set of scripts to analyze the melting temperature results from m
 	4. A redundancy analysis plot, showing the same pattern of points in black, and the red ~ring is the temperatures (if you zoom way in you may be able to see a few digits.) Again, I'm not convinced I did this right; the temperature structure looks artifactual.
 	5. Only in the text file: A multivariate permutation test for effects of sample source (`Tissue`) and number of extractions expressed as a cubic function (`poly(Extractions,3)`). The significance of the Extractions term seems to vary a lot depending exactly how I set up the test. Here as well check my work before you trust me.
 
-* 
+2015-03-28, CKB: 
+
+Started an annotated bibliography for the project in `notes/bibliography.txt`. Current contents: Every paper I can find that any of us has emailed around to the group in the past year. Current format: Citation in utterly plain text, blank line, any notes about the paper (as long or short as you like), blank line, row of at least ten dashes. 
+
+I picked this because it's dead simple and easy for me to *export* from Papers, but we should eventually change it to something machine-readable that each of our reference management software can read *in*, because if you made me choose between "buried in an anthill" and "retype even one more list of author names ever", I'd have to think hard.

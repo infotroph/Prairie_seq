@@ -1,0 +1,61 @@
+Raynaud, X. & Nunan, N. (2014) Spatial Ecology of Bacteria at the Microscale in Soil. Plos One, 9, e87217.
+
+This is a cool read because it's the first paper I've seen that seriously considers how bacterial distributions might change across depth. I don't think they steal any of our thunder, though -- they show that there are fewer cells in deeper soil, which won't surprise anyone, but mostly they're looking at micron-scale clustering. 
+
+Bottom lines: (1) Bacterial cells are clustered rather than randomly dispersed, but less so at lower overall cell densities. (2) Each individual bacterium in the soil probably interacts with fewer individuals, and *many* fewer species,  than you'd expect if you're only thinking about how many billions of cells each gram of soil contains.
+
+-----------
+Rissanen, A., Kurhela, E., Aho, T., Oittinen, T. & Tiirola, M. (2010) Storage of environmental samples for guaranteeing nucleic acid yields for molecular microbiological studies. Applied Microbiology and Biotechnology, 88, 977–984.
+
+The main finding of this paper is cool but not tremendously interesting to us. Their bottom line is "Freeze your samples until processing if you can, otherwise try PCIAA"; We froze ours, hooray!
+
+However, I'm sending it around because it's useful for at least three other reasons:
+
+* Nice example of using length heterogeneity PCR to show changes in community makeup. Taylor, see the supplementary material for a look at what a raw LH-PCR result actually looks like.
+
+* The references given in the intro contain good resources on the various ways that other links in the collect / store / prepare / extract / PCR chain can bias results.
+
+* They use what I think is a very elegant approach to answer the question Chris keeps asking: "How do we disentangle extraction bias from PCR bias?" Chris, I assign you to find that approach and summarize it for us. Do you agree with their interpretation?
+
+----------
+Feinstein, L.M., Sul, W.J. & Blackwood, C.B. (2009) Assessment of Bias Associated with Incomplete Extraction of Microbial DNA from Soil. Applied and Environmental Microbiology, 75, 5428–5433.
+
+In a nutshell, there are advantages to doing multiple extractions on a single soil sample. From the first attempt/fraction, you likely pick up those species that are easiest to extract while leaving others behind. If you add more buffer and repeat the initial steps 2 or 3 more times, you not only get more DNA, you recover more species and remove what can be a major source of bias in the community analyses. In the end, you pool everything on the column or after DNA elution.
+
+While Feinstein et al. covered soil, there has been less work (if any) on
+whether the same patterns hold for root endophytes. 
+
+-----------
+Bjerketorp, J., Ng Tze Chiang, A., Hjort, K., Rosenquist, M., Liu, W.-T. & Jansson, J.K. (2008) Rapid lab-on-a-chip profiling of human gut bacteria. Journal Of Microbiological Methods, 72, 82–90.
+
+Good example of Length Heterozygosity PCR.
+
+------------
+Kim, J. & Lee, C. (2014) Bioresource Technology. Bioresource Technology, 174, 321–327.
+
+Good example of High Resolution Melting analysis.
+
+-----------
+Schloss, P.D. & Westcott, S.L. (2011) Assessing and Improving Methods Used in Operational Taxonomic Unit-Based Approaches for 16S rRNA Gene Sequence Analysis. Applied and Environmental Microbiology, 77, 3219–3226.
+
+Our ultimate goal in extracting all this DNA is to use 16S sequences to ask "who's there and how does that vary from sample to sample?", but the process of turning a pile of 16S sequences into a list of who's there requires that we make a lot of assumptions. This paper is a good read on what those assumptions are and why we might want to change them.
+
+-----------
+Zuur, A.F., Ieno, E.N. & Elphick, C.S. (2010) A protocol for data exploration to avoid common statistical problems. Methods in Ecology and Evolution, 1, 3–14.
+
+No matter how careful we are during the sample collection and processing, real datasets are always 'weird' in some way. This paper paper is a great resource for the process of finding out how your data are weird and deciding what to do about it. Note that this paper assumes small-to-medium-sized datasets -- when we're faced with a giant pile of sequencing data, we'll need to modify some of these approaches, but the procedure they outline is an excellent way to think about the process. It's pretty much how I do all my data analysis and the other day I described it to some colleagues as "required reading for all ecologists", so here it is.
+
+------------
+Jumpponen, A. & Jones, K.L. (2014) Tallgrass prairie soil fungal communities are resilient to climate change. Fungal Ecology, 10, 44–57.
+
+This is a good example of the kind of the kind of paper we're hoping to write at the end of the project. Our treatments are depths and plots rather than water availability manipulations, but the extraction methods and the bioinformatics will be fairly similar. Since they're also working in a prairie community, it will be interesting to directly compare our results to theirs -- will the fungal community in our plots look similar to the community in theirs?
+
+------------
+Brunner, I., Brodbeck, S., Büchler, U. & Sperisen, C. (2001) Molecular identification of fine roots of trees from the Alps: reliable and fast DNA extraction and PCR-RFLP analyses of plastid DNA. Molecular Ecology, 10, 2079–2087.
+
+The main working source for our CTAB DNA extraction protocol.
+
+-------------
+Chang, S., Puryear, J. & Cairney, J. (1993) A simple and efficient method for isolating RNA from pine trees. Plant Molecular Biology Reporter, 11, 113–116.
+
+The CTAB RNA extraction protocol that Brunner et al (2001) started from.
