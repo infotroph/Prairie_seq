@@ -129,3 +129,8 @@ Started an annotated bibliography for the project in `notes/bibliography.txt`. C
 I picked this format because it's dead simple and easy for me to *export* from Papers, but we should eventually change it to something machine-readable that each of our reference management software can read *in*, because if you made me choose between "buried in an anthill" and "retype even one more list of author names ever", I'd have to think hard.
 
 New file: messages from CKB's correespondence thus far with Pizzo and Associates, the providers of the seed for the prairie plots, about the makeup of their inoculant mix. Bottom line so far: it's probably just a single strain of _Glomus intraradices_, but there's a possibility it was a 3-species _G. intraradices_, _G. etunicatum_,  _G. deserticola_ mix. In either case, the inoculant was grown outdoors under nonsterile conditions.
+
+2015-05-21, CKB:
+
+Bioanalyzer results, and a quick plotting script, for TLP's Undergrad Research Symposium poster. Length calls not yet considered, no stats yet -- just pictures. TODO: These figures are NOT yet built by make! To recreate: `Rscript R/overlay_bioanalyzer_traces.R rawdata/bioanalyzer/*.csv`
+
