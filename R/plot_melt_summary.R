@@ -12,7 +12,7 @@ theme_set(theme_ggEHD())
 peak_summary = read.csv(commandArgs(trailingOnly=TRUE)[[1]])
 
 pdf(
-	file="figs/multi_ctab_melt_npeak_tm.pdf", 
+	file="figs/multi_ctab_melt_npeak_tm-20150421.pdf", #FIXME hard-coded path
 	width=9,
 	height=6,
 	pointsize=24)

@@ -8,9 +8,9 @@ theme_set(theme_ggEHD())
 fitted = read.csv(commandArgs(trailingOnly=TRUE)[[1]], stringsAsFactors=FALSE)
 
 pdf(
-	file="figs/multi_ctab_melt_curves.pdf", 
 	width=11,
 	height=8.5,
+	file="figs/multi_ctab_melt_curves-20150421.pdf", #FIXME hard-coded filenames
 	pointsize=12)
 plt=(ggplot(
 		fitted,

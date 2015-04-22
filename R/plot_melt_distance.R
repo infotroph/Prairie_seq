@@ -26,11 +26,12 @@ clustlabel=paste(keydat$Tissue, keydat$Extractions)
 # Compute Euclidean distance between each curve and some reference curve. 
 # I'm using the first E. coli curve here, but this is arbitrary.
 # TODO: maybe use mean of both E. coli instead -- calculate mean, add to matrix, take diff, remove from result vector.
-fluor_dist_ec = as.matrix(dist(norm_fluor))["A11",]
+# FIXME: Whatever you use, stop using hardcoded well numbers
+fluor_dist_ec = as.matrix(dist(norm_fluor))["G3",]
 fluor_dist_ec = data.frame(FluoDist=fluor_dist_ec, Well=names(fluor_dist_ec))
 fluor_dist_ec = merge(fluor_dist_ec, keydat)
 
-slope_dist_ec = as.matrix(dist(norm_slope))["A11",]
+slope_dist_ec = as.matrix(dist(norm_slope))["G3",]
 slope_dist_ec = data.frame(SlopeDist=slope_dist_ec, Well=names(slope_dist_ec))
 
 dist_ec = merge(fluor_dist_ec, slope_dist_ec, all=TRUE)
@@ -88,7 +89,7 @@ capture.output(
 		print(fluo_test),
 		print("adonis: Slope"),
 		print(slope_test),
-	file="data/multi_ctab_melt_distance_ordresults.txt"
+	file="data/multi_ctab_melt_distance_ordresults-20150421.txt" #FIXME hardcoded filenames
 )
 
 fluo_rda = rda(
@@ -101,7 +102,7 @@ slope_rda = rda(
 	scale=F)
 
 pdf(
-	file="figs/multi_ctab_melt_distance.pdf", 
+	file="figs/multi_ctab_melt_distance-20150421.pdf", #FIXME hardcoded filenames
 	width=10,
 	height=8,
 	pointsize=12)
