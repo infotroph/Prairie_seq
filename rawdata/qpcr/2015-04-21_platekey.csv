@@ -1,8 +1,8 @@
-Well,Sample,Censor,Tissue,Extraction
+Well,Sample,Censor,Tissue,Extractions
 A1,A1,,Dalea purpurea,1
 A2,A1,,Dalea purpurea,1
-A3,H1,,Andropogan gerardii,1
-A4,H1,,Andropogan gerardii,1
+A3,H1,,Andropogon gerardii,1
+A4,H1,,Andropogon gerardii,1
 A5,,,,
 A6,,,,
 A7,,,,
@@ -13,8 +13,8 @@ A11,,,,
 A12,,,,
 B1,A2,,Dalea purpurea,2
 B2,A2,,Dalea purpurea,2
-B3,H2,,Andropogan gerardii,2
-B4,H2,,Andropogan gerardii,2
+B3,H2,,Andropogon gerardii,2
+B4,H2,,Andropogon gerardii,2
 B5,,,,
 B6,,,,
 B7,,,,
@@ -25,8 +25,8 @@ B11,,,,
 B12,,,,
 C1,A3,,Dalea purpurea,3
 C2,A3,,Dalea purpurea,3
-C3,H3,,Andropogan gerardii,3
-C4,H3,,Andropogan gerardii,3
+C3,H3,,Andropogon gerardii,3
+C4,H3,,Andropogon gerardii,3
 C5,,,,
 C6,,,,
 C7,,,,
@@ -49,8 +49,8 @@ D11,,,,
 D12,,,,
 E1,C1,,Silphium integrifolium,1
 E2,C1,,Silphium integrifolium,1
-E3,R. Sph,,Rhodobacter sphaenoides,1
-E4,R. Sph,,Rhodobacter sphaenoides,1
+E3,R. Sph,,Rhodobacter sphaeroides,1
+E4,R. Sph,,Rhodobacter sphaeroides,1
 E5,,,,
 E6,,,,
 E7,,,,
@@ -73,8 +73,8 @@ F11,,,,
 F12,,,,
 G1,C3,,Silphium integrifolium,3
 G2,C3,,Silphium integrifolium,3
-G3,E. Coli,,E. Coli K12,1
-G4,E. Coli,,E. Coli K12,1
+G3,E. Coli,,E. coli K12,1
+G4,E. Coli,,E. coli K12,1
 G5,,,,
 G6,,,,
 G7,,,,
