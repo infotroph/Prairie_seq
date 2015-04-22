@@ -130,7 +130,9 @@ I picked this format because it's dead simple and easy for me to *export* from P
 
 New file: messages from CKB's correespondence thus far with Pizzo and Associates, the providers of the seed for the prairie plots, about the makeup of their inoculant mix. Bottom line so far: it's probably just a single strain of _Glomus intraradices_, but there's a possibility it was a 3-species _G. intraradices_, _G. etunicatum_,  _G. deserticola_ mix. In either case, the inoculant was grown outdoors under nonsterile conditions.
 
-2015-05-21, CKB:
+2015-04-21, CKB:
 
 Bioanalyzer results, and a quick plotting script, for TLP's Undergrad Research Symposium poster. Length calls not yet considered, no stats yet -- just pictures. TODO: These figures are NOT yet built by make! To recreate: `Rscript R/overlay_bioanalyzer_traces.R rawdata/bioanalyzer/*.csv`
+
+QPCR results, and plot output, for CRS's Undergrad Research Symposium poster. All these changes committed in branch `sligar-URS-poster`, and the changes are messy -- ALL of the qPCR plotting scripts have hard-coded filepaths in them, at least one of them assumed E.coli is in well A11, etc. I kicked the problem down the road by editing all scripts to write to versions of filenames with `-20150421` appended, then commented out all the existing Makefile entries and replaced them with date-specific ones. This will be no easier to fix later on, but maybe we'll be less up against a deadline.
 
