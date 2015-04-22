@@ -55,7 +55,7 @@ slopeplt = (ggplot(
 	+ylab("Change in line slope (Euclidean distance from E. coli curve)"))
 
 # Drop unamplified samples for ordination
-fitted = droplevels(fitted[fitted$Censor == "",])
+fitted = droplevels(fitted[fitted$Censor == "" | is.na(fitted$Censor),])
 norm_fluor = t(unstack(fitted, Fluo ~ Well))
 norm_slope = t(unstack(fitted, df.dT ~ Well))
 colnames(norm_fluor) = fitted$Temperature[fitted$Well == fitted$Well[1]]
@@ -108,8 +108,10 @@ pdf(
 	pointsize=12)
 plot(fluor_clust, main="fluorescence", labels=clustlabel)
 plot(slope_clust, main="d(fluorescence)/d(Temperature)", labels=clustlabel)
-plot(mirror.ticks(fluorplt))
-plot(mirror.ticks(slopeplt))
+#plot(mirror.ticks(fluorplt))
+plot(fluorplt)
+#plot(mirror.ticks(slopeplt))
+plot(slopeplt)
 plot(fluo_mds, main="Fluorescence", type="text")
 plot(fluo_env)
 plot(slope_mds, main="Slope", type="text")
