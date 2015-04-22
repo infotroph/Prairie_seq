@@ -1,0 +1,100 @@
+[1] "envfit: Fluorescence"
+
+***VECTORS
+
+                          NMDS1    NMDS2     r2 Pr(>r)
+poly(Extractions, 3).1 -0.47617  0.87935 0.0658  0.400
+poly(Extractions, 3).2  0.05192  0.99865 0.0804  0.327
+poly(Extractions, 3).3  0.93357 -0.35840 0.0158  0.807
+Permutation: free
+Number of permutations: 999
+
+***FACTORS:
+
+Centroids:
+                                NMDS1   NMDS2
+TissueAndropogan gerardii     -1.1355  0.7258
+TissueDalea purpurea          -0.7662  0.1314
+TissueE. Coli K12             -1.6986 -0.7731
+TissueHaemophilus influenzae   5.8053  1.1786
+TissueMixed Bacterial Sample   1.7258 -0.0834
+TissueRhodobacter sphaenoides  0.4061 -1.5496
+TissueSilphium integrifolium   0.0581 -0.3688
+
+Goodness of fit:
+           r2 Pr(>r)    
+Tissue 0.7927  0.001 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Permutation: free
+Number of permutations: 999
+
+
+[1] "envfit: Slope"
+
+***VECTORS
+
+                          NMDS1    NMDS2     r2 Pr(>r)
+poly(Extractions, 3).1 -0.81137 -0.58453 0.0615  0.445
+poly(Extractions, 3).2  0.34940 -0.93697 0.0995  0.242
+poly(Extractions, 3).3  0.50453  0.86340 0.0392  0.595
+Permutation: free
+Number of permutations: 999
+
+***FACTORS:
+
+Centroids:
+                                NMDS1   NMDS2
+TissueAndropogan gerardii     -0.4952 -0.9515
+TissueDalea purpurea          -0.6065 -0.2698
+TissueE. Coli K12             -1.7511  0.1765
+TissueHaemophilus influenzae   5.4531 -0.7398
+TissueMixed Bacterial Sample   1.0676  0.3413
+TissueRhodobacter sphaenoides -0.0709  2.3525
+TissueSilphium integrifolium  -0.1968  0.4508
+
+Goodness of fit:
+           r2 Pr(>r)    
+Tissue 0.7523  0.001 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Permutation: free
+Number of permutations: 999
+
+
+[1] "adonis: Fluorescence"
+
+Call:
+adonis(formula = norm_fluor ~ Tissue * poly(Extractions, 3),      data = keydat, permutations = 5000, method = "euclidean") 
+
+Permutation: free
+Number of permutations: 5000
+
+Terms added sequentially (first to last)
+
+                            Df SumsOfSqs MeanSqs F.Model      R2 Pr(>F)    
+Tissue                       6   108.876 18.1460  362.94 0.78305  2e-04 ***
+poly(Extractions, 3)         3    13.447  4.4823   89.65 0.09671  2e-04 ***
+Tissue:poly(Extractions, 3)  5    15.967  3.1935   63.87 0.11484  2e-04 ***
+Residuals                   15     0.750  0.0500         0.00539           
+Total                       29   139.041                 1.00000           
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+[1] "adonis: Slope"
+
+Call:
+adonis(formula = norm_slope ~ Tissue * poly(Extractions, 3),      data = keydat, permutations = 5000, method = "euclidean") 
+
+Permutation: free
+Number of permutations: 5000
+
+Terms added sequentially (first to last)
+
+                            Df SumsOfSqs MeanSqs F.Model      R2 Pr(>F)    
+Tissue                       6   102.514 17.0857  431.43 0.72650  2e-04 ***
+poly(Extractions, 3)         3    16.866  5.6220  141.96 0.11953  2e-04 ***
+Tissue:poly(Extractions, 3)  5    21.132  4.2264  106.72 0.14976  2e-04 ***
+Residuals                   15     0.594  0.0396         0.00421           
+Total                       29   141.106                 1.00000           
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
