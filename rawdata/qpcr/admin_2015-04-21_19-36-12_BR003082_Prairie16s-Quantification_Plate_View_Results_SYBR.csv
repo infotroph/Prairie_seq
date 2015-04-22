@@ -1,0 +1,33 @@
+,,1,2,3,4,5,6,7,8,9,10,11,12
+A,Content,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn
+A,Sample,A1,A1,H1,H1,,,,,,,,
+A,Cq,19.2233119387692,19.3297121860642,19.5798327709889,19.7569872927281,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+A,,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+B,Content,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn
+B,Sample,A2,A2,H2,H2,,,,,,,,
+B,Cq,19.9841943673006,19.9129597831805,21.0062801782072,20.5853052461641,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+B,,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+C,Content,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Neg Ctrl,Neg Ctrl
+C,Sample,A3,A3,H3,H3,,,,,,,,
+C,Cq,19.919437906703,20.027804004975,19.4028342119824,19.3724048415849,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+C,,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+D,Content,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn
+D,Sample,A4,A4,NO SAMPLE,NO SAMPLE,,,,,,,,
+D,Cq,30.5418607690271,27.7970793820153,33.0595307102075,34.6715746115222,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+D,,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+E,Content,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn
+E,Sample,C1,C1,R.Sph,R.Sph,,,,,,,,
+E,Cq,18.1922368942259,17.7597916478639,13.3317273517616,13.438193642922,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+E,,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+F,Content,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn
+F,Sample,C2,C2,H.Flu,H.Flu,,,,,,,,
+F,Cq,17.9291260320949,17.6259067819256,11.0634537282109,11.7018878549705,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+F,,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+G,Content,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn
+G,Sample,C3,C3,E.coli,E.coli,,,,,,,,
+G,Cq,19.6143634776882,19.7040335700404,12.1555607598514,12.2813177597797,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+G,,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+H,Content,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn
+H,Sample,C4,C4,Mixed_Bact,Mixed_Bact,,,,,,,,
+H,Cq,26.6855427262048,25.8768104706491,12.0208949701326,11.7804859827538,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+H,,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
