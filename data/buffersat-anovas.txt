@@ -1,0 +1,61 @@
+
+Call:
+lm(formula = ng.mg ~ Species * mins * uLs, data = merged.sum[merged.sum$Species != 
+    "H2O", ])
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-267.10  -36.27   -8.36   41.35  187.00 
+
+Coefficients:
+                           Estimate Std. Error t value Pr(>|t|)  
+(Intercept)                  97.402     62.233   1.565    0.131  
+SpeciesDaPu                 170.874     88.011   1.942    0.064 .
+SpeciesSiIn                 102.671     88.011   1.167    0.255  
+mins90                      136.225     88.011   1.548    0.135  
+uLs1300                       6.458     88.011   0.073    0.942  
+SpeciesDaPu:mins90           85.620    124.466   0.688    0.498  
+SpeciesSiIn:mins90          -40.906    124.466  -0.329    0.745  
+SpeciesDaPu:uLs1300          91.570    124.466   0.736    0.469  
+SpeciesSiIn:uLs1300          58.987    124.466   0.474    0.640  
+mins90:uLs1300              -22.628    124.466  -0.182    0.857  
+SpeciesDaPu:mins90:uLs1300  215.582    176.021   1.225    0.233  
+SpeciesSiIn:mins90:uLs1300  228.936    176.021   1.301    0.206  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 107.8 on 24 degrees of freedom
+Multiple R-squared:  0.8254,	Adjusted R-squared:  0.7454 
+F-statistic: 10.32 on 11 and 24 DF,  p-value: 1.244e-06
+
+
+
+Analysis of Variance Table
+
+Response: ng.mg
+                 Df Sum Sq Mean Sq F value    Pr(>F)    
+Species           2 590385  295193 25.4065 1.188e-06 ***
+mins              1 411785  411785 35.4413 3.823e-06 ***
+uLs               1 128342  128342 11.0461  0.002843 ** 
+Species:mins      2  57183   28591  2.4608  0.106628    
+Species:uLs       2  70503   35251  3.0340  0.066878 .  
+mins:uLs          1  35463   35463  3.0522  0.093413 .  
+Species:mins:uLs  2  24766   12383  1.0658  0.360203    
+Residuals        24 278851   11619                      
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+    uLs mins Species      fit         lwr       upr
+1   650   30    AnGe  97.4020 -159.482585  354.2866
+2  1300   30    AnGe 103.8604 -153.024170  360.7450
+3   650   90    AnGe 233.6268  -23.257785  490.5114
+4  1300   90    AnGe 217.4571  -39.427482  474.3417
+5   650   30    DaPu 268.2757   11.391086  525.1603
+6  1300   30    DaPu 366.3045  109.419906  623.1891
+7   650   90    DaPu 490.1201  233.235475  747.0046
+8  1300   90    DaPu 781.1025  524.217903 1037.9871
+9   650   30    SiIn 200.0725  -56.812039  456.9571
+10 1300   30    SiIn 265.5179    8.633354  522.4025
+11  650   90    SiIn 295.3912   38.506618  552.2758
+12 1300   90    SiIn 567.1442  310.259592  824.0288
