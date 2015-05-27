@@ -134,3 +134,10 @@ New file: messages from CKB's correespondence thus far with Pizzo and Associates
 
 Bioanalyzer results, and a quick plotting script, for TLP's Undergrad Research Symposium poster. Length calls not yet considered, no stats yet -- just pictures. TODO: These figures are NOT yet built by make! To recreate: `Rscript R/overlay_bioanalyzer_traces.R rawdata/bioanalyzer/*.csv`
 
+2015-04-21, not recorded until 2015-05-26, CKB and CRS:
+
+qPCR results for CRS's Undergrad Research Symposium poster, committed in a new `sligar-URS-poster` branch, with ugly hacks to do it -- most of the melt analysis scripts have hard-coded paths that I didn't want to overwrite, so I duplicated a *lot* of code. This will need care and thought before merging back into master.
+
+2015-05-26 (really 27 now), CKB:
+
+Nanodrop readings from a test of how extraction time and buffer quantity affect CTAB results. Some code duplication compared to existing CTAB processing code, but this test has multiple Nanodrop readings per weighed sample, so it's probably easier to keep as a separate dataset.
