@@ -85,6 +85,7 @@ merged.sum$ng.mg = merged.sum$ng.dna/merged.sum$mg.tissue
 merged.sum$extraction = factor(
 	paste(merged.sum$minutes.incubation, merged.sum$uL.buffer),
 	levels=c("30 650", "30 1300", "90 650", "90 1300"))
+merged.sum$Species = factor(merged.sum$Species)
 merged.sum$mins = factor(merged.sum$minutes.incubation)
 merged.sum$uLs = factor(merged.sum$uL.buffer)
 rownames(merged.sum) = merged.sum$sample
@@ -117,8 +118,7 @@ print(
 	+geom_boxplot()
 	+geom_point()
 	+facet_wrap(~Species))
-plot(buffertest, which=c(1:4, 6), cex=0.8)
-	# skip 5 (resid-vs-leverage) because it's throwing "nonconformable arguments"--???
+plot(buffertest, which=c(1:6), cex=0.8)
 plot(
 	resid(buffertest) ~ extraction,
 	subset(merged.sum, Species != "H2O"))
