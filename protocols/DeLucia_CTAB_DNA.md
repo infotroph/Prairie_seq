@@ -13,15 +13,15 @@ Day 1:
 3. Weigh previously ground sample tissue into round-bottomed 2 mL tubes. For root tissue, use 15-45 mg and record exact weight in notebook. Keep tissue on dry ice and weigh *quickly* so it doesn't thaw during handling.
 4. Mix 1300 µL extraction buffer with tissue and flick or vortex briefly to mix.
 5. Incubate for 90 minutes in 65 °C water bath, inverting tubes every 10 minutes.
-6. Centrifuge briefly until solid tissue stays at bottom of tube. 
+6. Blot water off the outsides of the tubes, then centrifuge 5 minutes at 10000 g. 
 7. Remove 650 uL of buffer to a fresh tube. You now have two fractions from each sample: tube A contains buffer and tissue, tube B contains buffer and no tissue.
 8. Add 650 µL of chloroform/isoamyl alcohol (24:1) to each fraction.
 9. Invert to mix throroughly and centrifuge for 10 minutes at 10000 g.
 10. Pipet the supernatant into new tubes. Be sure to collect the entire top layer from every sample, but do not disturb the proteins at the interface layer.
-11. Add 1 volume of chloroform/isoamyl alcohol (24:1) to the previous supertanant. Calculate volume from the largest sample, probably ~400 µL.
+11. Add 1 volume of chloroform/isoamyl alcohol (24:1) to the previous supertanant. Calculate volume from the largest sample, probably ~600 µL.
 12. Invert to mix throroughly and centrifuge for 10 minutes at 10000 g.
 13. Combine the supernatant from both fractions into one 2 mL tube. Collect no more than 400 µL of supernatant from each fraction, but do not disturb the proteins at the interface layer.
-14. Put tubes in a pre-chilled tube rack, add 1.5 volumes of ice-cold isopropanol, and invert to mix. Calculate volume from the largest sample, probably ~300 * 1.5 = ~750 µL.
+14. Put tubes in a pre-chilled tube rack, add 1.5 volumes of ice-cold isopropanol, and invert to mix. Calculate volume from the largest sample, probably ~800 * 1.5 = ~1200 µL.
 15. Incubate overnight at -20 °C to precipitate DNA.
 16. Put all chloroform/BME contaminated waste into correctly marked waste containers in the fume hood.
 
