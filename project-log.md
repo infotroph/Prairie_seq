@@ -147,3 +147,9 @@ Nanodrop readings from a test of how extraction time and buffer quantity affect 
 Changed code for buffer saturation analysis to explictly convert 'Species' from a character vector to a factor. No change in ANOVA results, but the residuals-vs-factor-levels diagnostic plot now works correctly.
 
 Updated CTAB protocol to use 90-minute incubation and 1300-µL buffer volume as per saturation analysis results.
+
+2015-07-07, CKB: 
+
+LOTS of benchwork last month not recorded here -- see paper notebook! Most resulting files are still kicking around uncommitted, will annotate as I clean them up and save them.
+
+Today's commit: started weighing bulk soil for C & N combustion analysis. Only 12 samples in; will update `bulksoil_CHN_weights.csv` as I go.
