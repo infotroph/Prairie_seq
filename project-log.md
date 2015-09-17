@@ -153,3 +153,7 @@ Updated CTAB protocol to use 90-minute incubation and 1300-µL buffer volume as 
 LOTS of benchwork last month not recorded here -- see paper notebook! Most resulting files are still kicking around uncommitted, will annotate as I clean them up and save them.
 
 Today's commit: started weighing bulk soil for C & N combustion analysis. Only 12 samples in; will update `bulksoil_CHN_weights.csv` as I go.
+
+2015-09-17:
+
+Weighing more bulk soil. First commit: samples weighed on 2015-07-14 but not typed in until now.
