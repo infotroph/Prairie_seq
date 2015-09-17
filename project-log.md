@@ -156,4 +156,4 @@ Today's commit: started weighing bulk soil for C & N combustion analysis. Only 1
 
 2015-09-17:
 
-Weighing more bulk soil. First commit: samples weighed on 2015-07-14 but not typed in until now.
+Weighing more bulk soil. First commit: samples weighed on 2015-07-14 but not typed in until now. Second commit: Samples weighed today.
