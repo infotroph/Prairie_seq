@@ -157,3 +157,122 @@ Today's commit: started weighing bulk soil for C & N combustion analysis. Only 1
 2015-09-17:
 
 Weighing more bulk soil. First commit: samples weighed on 2015-07-14 but not typed in until now. Second commit: Samples weighed today.
+
+
+## 2016-08-01, CKB
+
+Picking this project up again after long pause. Have spent the last month doing some exploratory poking without committing anything, in either the Git sense or the sense of deciding for sure what I'm doing. Game plan for today: commit the intermediate versions I went through as I explored, with short notes on each version.
+
+* Very first pass 2016-06-30, theoretically closely following QIIME Illumina tutorial. 
+	
+	- Made a QIIME mapping file as per http://qiime.org/documentation/file_formats.html#metadata-mapping-files: 
+		* Tab separated
+		* First three columns must be "#SampleID", "BarcodeSequence", "LinkerPrimerSequence", in that order. 
+		* SampleID must only contain alphanumerics and "." (no underscores!)
+		* Last column must be "Description", and "should be kept brief, if possible". I pasted the underscore-separated version of my SampleIDs here.
+		* I added optional columns ReversePrimer, Block, Location (=replicate within block), Depth1 (=top of layer), Depth2 (=bottom of layer), and SampleType (root, rhizosphere, control).
+	Confirmed that qiime can read it with `validate_mapping_file.py -m plant_ITS_map.txt`.
+
+	- Working on Biocluster, starting from the already-demultiplexed Plant ITS reads in `~/no_backup/Fluidigm_2015813/Delucia_Fluidigm_PrimerSortedDemultiplexed_2015813.tgz`. First uncompressing the files (but not those from other primers):
+
+		```
+		qsub -I
+		cd no_backup/Fluidigm_2015813/
+		mkdir plant_demult
+		tar -xvf Delucia_Fluidigm_PrimerSortedDemultiplexed_2015813.tgz --wildcards 'Plant_ITS2*' -C plant_demult
+		```
+
+	- Testing end-joining on a subset, chosen the really dumb way by asking R for 10 SampleIDs from my local copy of the barcode file:
+		
+		```
+		bc = read.csv("~/UI/prairie_seq/rawdata/sequences/barcode_key.csv")
+		sample(bc$Barcode, 10) # ==> returns
+		# [1] ATGGAGCACT TTGCTTAGTC ACGTGCTCTG CACGAGATGA CGATCCTATA 
+		# [6] ACGGTGCTAG TCATCATGCG GACGTGCTTC TACATGATAG GTAGCCAGTA
+		```
+
+	- Pasted those into shell array format:
+		
+		```
+		SUBSET=(ATGGAGCACT TTGCTTAGTC ACGTGCTCTG CACGAGATGA CGATCCTATA ACGGTGCTAG TCATCATGCG GACGTGCTTC TACATGATAG GTAGCCAGTA)
+		mkdir sandbox
+		for b in ${SUBSET[*]}; do
+			cp plant_demult/Plant_ITS2*"$b"*.fastq sandbox/
+		done
+
+		mkdir sandbox_join
+		time multiple_join_paired_ends.py \
+			--input_dir sandbox \
+			--output_dir sandbox_join \
+			--read1_indicator _R1 \
+			--read2_indicator _R2
+		```
+
+	- Runs in 21 sec. Let's try it on the whole dataset!
+
+		```
+		mkdir plant_demult_join
+		time multiple_join_paired_ends.py \
+			--input_dir plant_demult \
+			--output_dir plant_demult_join \
+			--read1_indicator _R1 \
+			--read2_indicator _R2
+		```
+
+	- Runs in 7:27. How many ends did we pair? Each sample is written to its own directory containing separate fastq files for joined and unjoined reads, and fastq format uses 4 lines per sequence, so:
+
+		```
+		cd plant_demult_join/
+		echo "file,n_joined,n_un1,n_un2" >> join_counts.csv
+		for dir in *; do
+			JOINED=`wc -l "$dir"/fastqjoin.join.fastq | awk '{print $1/4}'`
+			UN1=`wc -l "$dir"/fastqjoin.un1.fastq | awk '{print $1/4}'`
+			UN2=`wc -l "$dir"/fastqjoin.un2.fastq | awk '{print $1/4}'`
+			echo $dir,$JOINED,$UN1,$UN2 >> join_counts.csv
+		done
+		```
+
+	- Stem graph of the result in R (code not saved, but probably just `counts = read.csv("join_counts.csv"); stem(counts$n_joined/counts$n_un1)`) shows mode is ~50% of reads joined, but skewed left -- barely any with more than 60% paired, many 30-40% ==> Probably need to do some quality trimming *before* pairing ends, so that mismatches from bad base calls don't prevent assembly. 
+	
+	- Now let's look at quality filtering. First, copy joined output to own folder... Or rather, copy whole folder and delete unjoined, because it's easier.
+
+		```
+		cp -R plant_demult_join plant_demult_joinonly
+		rm plant_demult_joinonly/*/fastqjoin.un1.fastq
+		rm plant_demult_joinonly/*/fastqjoin.un2.fastq
+
+		time multiple_split_libraries_fastq.py \
+			--input_dir plant_demult_joinonly \
+			--output_dir plant_demult_joinonly_sl \
+			--include_input_dir_path \
+			--remove_filepath_in_name
+		```
+
+	- Resulting reads are mostly near 480 bases long, including primers, which is in the neighborhood I was expecting. 
+
+	- Default quality filters doesn't remove much: a few reads with too many Ns and a few more 'read too short after quality truncation', but 'barcode errors exceed max', Illumina quality digit', and 'Barcode not in mapping file' are always zero. That last is expected because I didn't give it a mapping file -- all sample IDs are being decoded from filenames. ==> Either these reads are all very high-quality, or I need to try more stringent quality settings. Let's forge ahead and see how many OTUs they sort into.
+
+		```
+		#!/bin/bash
+
+		#PBS -S /bin/bash
+		#PBS -q default
+		#PBS -l nodes=1:ppn=10,mem=8000mb
+		#PBS -M black11@igb.illinois.edu
+		#PBS -m abe
+		#PBS -j oe
+		#PBS -N seq_sandbox
+		#PBS -d /home/a-m/black11/no_backup/Fluidigm_2015813/
+
+		module load qiime
+
+		time pick_de_novo_otus.py \
+		        --input_fp sandbox_joinonly_sl/seqs.fna \
+		        --output_dir sandbox_denovo_otu \
+		        --parallel \
+		        --jobs_to_start 10
+		```
+
+	- picks 729 OTU at default similarity level of 97%, 370 of which are singletons. Definitely more than the number of species I'm expecting! ==> Try playing more with quality filters, both before and after assembling.
+
+	- `pick_de_novo_otus.py` attempts taxonomy assignment by default. All OTUs fail, but this is expected -- it's trying to assign against the Greengenes 16S database, so I'd be worried if our ITS sequences *did* match any of it. 
