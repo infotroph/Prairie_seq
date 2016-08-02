@@ -323,3 +323,39 @@ Picking this project up again after long pause. Have spent the last month doing 
 
 	- 939133 reads survive filtering, mean length 260 +/- 20 De novo clustering assigns 18409 OTU, with 8674 singletons.
 	==> Yes, more stringent qiuality filtering does seem to help somewhat, but de novo clustering still reports orders of magnitude more OTUs than I expect to actually be present. It seems likely that our primers are picking up ITS sequences from other, more diverse groups, especially fungi. Need to filter down to just things that look like real plants.
+
+* 2016-07-06:
+	
+	- Attempting to bootleg a set of representative plant ITS sequences. My basic approach is to search the NCBI nucleotide database for "internal transcribed spacer 2" and restrict it to either all green plants or to the plant genera that are known (from Xiaohui Feng's aboveground abundance surveys) to occur in the prairie -- see `rawdata/ncbi_its2/search_string.txt` for the list. Did the searches in my browser at [http://www.ncbi.nlm.nih.gov/nuccore], downloaded results as `rawdata/ncbi_its2/ncbi_all_plant_its2_longid.fasta` and `rawdata/ncbi_its2/present_genera_its2_longid.fasta`, containing 244249 and 6508 sequences respectively. Not adding the raw all-plants files to Git yet, because it's 380 MB large!
+
+	- Shortened FASTA headers to just the accession-version ID:
+		
+		```
+		sed -E 's/gi\|.*\|.*\|(.*)\|.*/\1/' ncbi_all_plant_its2_longid.fasta > ncbi_all_plant_its2.fasta
+		sed -E 's/gi\|.*\|.*\|(.*)\|.*/\1/' present_genera_its2_longid.fasta > present_genera_its2.fasta
+		```
+
+	- Installed R package 'taxize', retrieved taxonomy assignments for every sequence using `R/make_taxonomy.R`. **BEWARE**: this script takes a VERY long time to run! It has to make thousands of calls to the NCBI taxonomy API, which is rate-limited, and I didn't do a good job of error-handling -- every transient network error produces a script crash. It does write the results out as it goes, so I spent a weekend leaving it to run and restarting it as needed with manually-updated loop indices.
+
+	- Noticed afterward that this produces FASTA files with multiple lines per sequence and empty lines between entries. Fixed in shell: 
+		```
+		for f in *fasta; do
+			mv "$f" "$f"_0
+			awk '/^>/ {print "\n"$0; next} {printf("%s", $0)}' "$f"_0 > "$f"
+			rm "$f"_0
+		done
+		```	
+
+	**BEWARE** that this modified my original `*_longid.fasta` as well! If I'd run this on the raw files before `make_taxonomy.R`, I bet the fix would have carried over, but not about to rerun it to find out.
+
+	- My loop indexing was off and I ended up double-writing all line numbers of `ncbi_all_plant_its2_accessions_taxids.csv` ending in 001. Fixed in shell:
+
+		```
+		mv ncbi_all_plant_its2_accessions_taxids.csv ncbi_all_plant_its2_accessions_taxids_.csv
+		uniq ncbi_all_plant_its2_accessions_taxids_.csv > ncbi_all_plant_its2_accessions_taxids.csv
+		rm ncbi_all_plant_its2_accessions_taxids_.csv
+		```
+
+	I *think* I fixed this in the script too, but did not test.
+
+	- Not saving most of the intermediate files, but `*_accessions_taxids.csv` and `*_its2_unique_taxonomy.txt` contain all the identities that were most time-consuming to produce. If updating this database in the future with new sequences from NCBI, should be able to take set differences against these files to avoid slow taxid/taxonomy lookups -- Unless you want to check for updated taxonomies, which might be wise to do!
