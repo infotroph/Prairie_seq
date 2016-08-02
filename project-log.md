@@ -359,3 +359,5 @@ Picking this project up again after long pause. Have spent the last month doing 
 	I *think* I fixed this in the script too, but did not test.
 
 	- Not saving most of the intermediate files, but `*_accessions_taxids.csv` and `*_its2_unique_taxonomy.txt` contain all the identities that were most time-consuming to produce. If updating this database in the future with new sequences from NCBI, should be able to take set differences against these files to avoid slow taxid/taxonomy lookups -- Unless you want to check for updated taxonomies, which might be wise to do!
+
+	- Attempted to compare OTU picked five ways: open-reference with all NCBI plant sequences as the reference, open-reference with present genera as the reference, closed-reference with all plants, closed-reference with present genera, and de novo OTU picking as I've done before. Both open-reference attempts error out with `option --otu_picking_method: invalid choice: 'blast' (choose from 'uclust', 'usearch61', 'sortmerna_sumaclust')`, both closed-reference attempts error out with `no such option: --otu_picking_method`. Not saving code changes, will try again tomorrow.
