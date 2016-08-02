@@ -305,4 +305,8 @@ Picking this project up again after long pause. Have spent the last month doing 
 
 	- Started with 1286163 raw reads from plant ITS primers, only 398722 seqs (31%) survive end-pairing and quality filtering. This includes reads with unrecognized barcodes, which arguably ought to be thrown out! Paired length is extremely consistent, though: 486 ± 13 bases.
 
-	- de novo picking produces 5456 OTU, 2953 of which are singletons!
+	- de novo picking produces 5456 OTU, 2953 of which are singletons! ==> Either the demultiplexing removed lots of novel plant diversity (unlikely), or this filtering approach is letting a lot of junk through. Let's see what happens if I skip end-pairing and try to analyze read 1 by itself.
+
+	- Modified `run_qiime.sh` to skip paired-end joining. First retaining unassigned reads as before: 389842 OTU!! OK, what if we throw out unassigned reads? I don't know how much barcode read quality correlates with sequence read quality, but "we're not sure which sample this sequence came from" is a pretty sound reason to exclude no matter how confident the base calls are. Result: 354771 OTU.
+
+	- How are these OTU distributed between samples? Core diversity analyses still error out expecting a non-empty `otu_table_mc2_w_tax_no_pynast_failures.biom`, but obtained alpha/beta diversity plots by going through the QIIME log and hand-editing the individual commands. Rarefaction curves show thousands of OTU in every sample, little difference by group. ==> I think I really need to clean up samples more before clustering. Did not save any of my hand-run diversity analysis code.
