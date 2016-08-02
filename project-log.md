@@ -314,3 +314,12 @@ Picking this project up again after long pause. Have spent the last month doing 
 * 2016-07-02:
 
 	- One more check before leaving diversity analyses for the moment: Added breakdowns by block, depth, sampleType. Predictably, no visible difference there either. Yes, next step is definitely to try harsher upstream quality filtering.
+
+* 2016-07-05:
+
+	- Stripping primers (using `extract_barcodes.py`) before splitting libraries, on the grounds that invariant sequences aren't informative and we might as well get rid of them early for smaller files/faster analyses.
+
+	- the default quality threshold for `split_libraries_fastq.py` is to remove bases where Q <= 3 -- which translates to only a 60% chance of a correct base call! added `--phred_quality_threshold 19` to trim at Q20 as recommended by <some citations I forgot to write down, like an idiot>.
+
+	- 939133 reads survive filtering, mean length 260 +/- 20 De novo clustering assigns 18409 OTU, with 8674 singletons.
+	==> Yes, more stringent qiuality filtering does seem to help somewhat, but de novo clustering still reports orders of magnitude more OTUs than I expect to actually be present. It seems likely that our primers are picking up ITS sequences from other, more diverse groups, especially fungi. Need to filter down to just things that look like real plants.

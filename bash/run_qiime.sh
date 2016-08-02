@@ -13,11 +13,24 @@ module load qiime
 
 SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
 
+# Strip PCR primers (not barcodes! Those are in a different file.)
+(time extract_barcodes.py \
+	--fastq1 plant_its/Plant_ITS2_Delucia_Fluidigm_R1.fastq \
+	--fastq2 plant_its/Plant_ITS2_Delucia_Fluidigm_R2.fastq \
+	--input_type barcode_paired_end \
+	--bc1_len 20 \
+	--bc2_len 20 \
+	--mapping_fp plant_ITS_map.txt \
+	--output_dir plant_its_noprimer ) 2>&1 | tee -a "$SHORT_JOBID".log
+
+
 (time split_libraries_fastq.py \
-	--sequence_read_fps plant_its/Plant_ITS2_Delucia_Fluidigm_R1.fastq \
+	--sequence_read_fps plant_its_noprimer/reads1.fastq \
 	--barcode_read_fps plant_its/Plant_ITS2_Delucia_Fluidigm_I1.fastq \
-	--output_dir plant_its_unpaired_nounassigned_sl \
+	--output_dir plant_its_unpaired_nounassigned_noprimer_q20_sl \
 	--mapping_fps plant_ITS_map.txt \
+	--phred_quality_threshold 19 \
+	--store_qual_scores \
 	--barcode_type 10 ) 2>&1 | tee -a "$SHORT_JOBID".log
 
 (count_seqs.py -i plant_its_unpaired_nounassigned_sl/seqs.fna ) 2>&1 | tee -a "$SHORT_JOBID".log
