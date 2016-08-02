@@ -310,3 +310,7 @@ Picking this project up again after long pause. Have spent the last month doing 
 	- Modified `run_qiime.sh` to skip paired-end joining. First retaining unassigned reads as before: 389842 OTU!! OK, what if we throw out unassigned reads? I don't know how much barcode read quality correlates with sequence read quality, but "we're not sure which sample this sequence came from" is a pretty sound reason to exclude no matter how confident the base calls are. Result: 354771 OTU.
 
 	- How are these OTU distributed between samples? Core diversity analyses still error out expecting a non-empty `otu_table_mc2_w_tax_no_pynast_failures.biom`, but obtained alpha/beta diversity plots by going through the QIIME log and hand-editing the individual commands. Rarefaction curves show thousands of OTU in every sample, little difference by group. ==> I think I really need to clean up samples more before clustering. Did not save any of my hand-run diversity analysis code.
+
+* 2016-07-02:
+
+	- One more check before leaving diversity analyses for the moment: Added breakdowns by block, depth, sampleType. Predictably, no visible difference there either. Yes, next step is definitely to try harsher upstream quality filtering.

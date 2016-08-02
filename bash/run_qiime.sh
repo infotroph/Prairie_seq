@@ -36,9 +36,10 @@ SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
 	-i plant_its_unpaired_nounassigned_denovo_otu/otu_table.biom ) 2>&1 | tee -a "$SHORT_JOBID".log
 
 (time core_diversity_analyses.py \
-	-o plant_its_unpaired_nounassigned_corediv \
+	-o plant_its_unpaired_nounassigned_corediv2 \
 	-i plant_its_unpaired_nounassigned_denovo_otu/otu_table.biom \
 	-m plant_ITS_map.txt \
 	-t plant_its_unpaired_nounassigned_denovo_otu/rep_set.tre \
 	--nonphylogenetic_diversity \
+	-c Block,Depth1,SampleType \
 	-e 1000 ) 2>&1 | tee -a "$SHORT_JOBID".log
