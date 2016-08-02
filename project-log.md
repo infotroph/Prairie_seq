@@ -276,3 +276,33 @@ Picking this project up again after long pause. Have spent the last month doing 
 	- picks 729 OTU at default similarity level of 97%, 370 of which are singletons. Definitely more than the number of species I'm expecting! ==> Try playing more with quality filters, both before and after assembling.
 
 	- `pick_de_novo_otus.py` attempts taxonomy assignment by default. All OTUs fail, but this is expected -- it's trying to assign against the Greengenes 16S database, so I'd be worried if our ITS sequences *did* match any of it. 
+
+* 2016-07-01: 
+
+	- Converting demultiplexed directory names into identifiers that QIIME will recognize seems to be harder than I expected. Let's try working from the multiplexed files instead. Extract just the Plant ITS reads from the raw tarball:
+
+		```
+		mkdir plant_its
+		tar -xvf Delucia_Fluidigm_PrimerSorted_2015813.tgz \
+			-C plant_its "Plant_ITS2_Delucia_Fluidigm_R1.fastq"
+		tar -xvf Delucia_Fluidigm_PrimerSorted_2015813.tgz \
+			-C plant_its "Plant_ITS2_Delucia_Fluidigm_R2.fastq"
+		tar -xvf Delucia_Fluidigm_PrimerSorted_2015813.tgz \
+			-C plant_its "Plant_ITS2_Delucia_Fluidigm_I1.fastq"
+		```
+
+	- Set up a new Torque script `run_qiime.sh` to pair ends, demultiplex and quality filter, pick de novo OTUs, and run core diversity analyses. First run exits with error:
+
+		"Reached end of index-reads file before iterating through joined paired-end-reads file! Except for missing paired-end reads that did not survive assembly, your index and paired-end reads files must be in the same order! Also, check that the index-reads and paired-end reads have identical headers. The last joined paired-end ID processed was: 'HWI-M01323:247:000000000-AH0K5:1:1101:14380:1000 1:N:0:'"
+
+	- As per https://groups.google.com/forum/#!topic/qiime-forum/z3DhLeO8ZyA, this is because QIIME is expecting the read 1 and index read headers to match *exactly*, but they differ by R1 headers ending in "1:N:0:" and index headers ending in "2:N:0:". Fixed that:
+
+		```
+		sed 's/2:N:0:/1:N:0:/g' plant_its/Plant_ITS2_Delucia_Fluidigm_I1.fastq  > plant_its/Plant_ITS2_Delucia_Fluidigm_I1_headers2to1.fastq
+		```
+
+	- Next run also exits with error: expects 12-base Golay (error-correcting) barcodes by default, need to specify that barcode length is 10. Fixed.
+
+	- Started with 1286163 raw reads from plant ITS primers, only 398722 seqs (31%) survive end-pairing and quality filtering. This includes reads with unrecognized barcodes, which arguably ought to be thrown out! Paired length is extremely consistent, though: 486 ± 13 bases.
+
+	- de novo picking produces 5456 OTU, 2953 of which are singletons!
