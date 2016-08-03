@@ -2,16 +2,19 @@
 
 #PBS -S /bin/bash
 #PBS -q default
-#PBS -l nodes=1:ppn=1,mem=40gb
+#PBS -l nodes=1:ppn=1,mem=2gb
 #PBS -M black11@igb.illinois.edu
 #PBS -m abe
 #PBS -j oe
-#PBS -N pair_pandaseq_20160711
+#PBS -N pair_pandaseq_20160712
 #PBS -d /home/a-m/black11/no_backup/Fluidigm_2015813/
 
-module load pandaseq
+module load pandaseq/2.10
 
 SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
+
+OUTDIR=plant_its_pandaseq_fq_joined
+mkdir -p "$OUTDIR"
 
 # Attempting to join paired-end reads from all reads sorted as 'Plant ITS2'
 # in primer-sorted files from sequencing center.
@@ -29,15 +32,16 @@ SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
 # -l (min length) unset
 # -L (max length) unset
 #
-# Non-default settings that aren't obvious from their names:
-# -B to allow files with no barcode/tag. TODO: consider converting index reads into tags before assembling?
 (time pandaseq \
 	-f plant_its/Plant_ITS2_Delucia_Fluidigm_R1.fastq \
 	-r plant_its/Plant_ITS2_Delucia_Fluidigm_R2.fastq \
-	-g plant_its_pandaseq_joined/log.txt \
+	-i plant_its/Plant_ITS2_Delucia_Fluidigm_I1.fastq \
+	-w "$OUTDIR"/plant_its2_pspaired.fastq \
+	-U "$OUTDIR"/unpaired.fastq \
+	-g "$OUTDIR"/log.txt \
 	-p ATGCGATACTTGGTGTGAAT \
 	-q GACGCTTCTCCAGACTACAAT \
-	-u plant_its_pandaseq_joined/unpaired.txt \
-	-B \
-	-w plant_its_pandaseq_joined/plant_its2_pspaired.fasta 
-) 2>&1 | tee -a plant_its_pandaseq_joined/torque_"$SHORT_JOBID".log
+	-k 10 \
+	-T 1 \
+	-F
+) 2>&1 | tee -a "$OUTDIR"/torque_"$SHORT_JOBID".log
