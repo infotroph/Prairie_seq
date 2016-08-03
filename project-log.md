@@ -361,3 +361,21 @@ Picking this project up again after long pause. Have spent the last month doing 
 	- Not saving most of the intermediate files, but `*_accessions_taxids.csv` and `*_its2_unique_taxonomy.txt` contain all the identities that were most time-consuming to produce. If updating this database in the future with new sequences from NCBI, should be able to take set differences against these files to avoid slow taxid/taxonomy lookups -- Unless you want to check for updated taxonomies, which might be wise to do!
 
 	- Attempted to compare OTU picked five ways: open-reference with all NCBI plant sequences as the reference, open-reference with present genera as the reference, closed-reference with all plants, closed-reference with present genera, and de novo OTU picking as I've done before. Both open-reference attempts error out with `option --otu_picking_method: invalid choice: 'blast' (choose from 'uclust', 'usearch61', 'sortmerna_sumaclust')`, both closed-reference attempts error out with `no such option: --otu_picking_method`. Not saving code changes, will try again tomorrow.
+
+* 2016-07-11:
+
+	- Leaving unpaired analysis for a bit to try end-pairing from a different angle. Let's try to pair up the reads using Pandaseq 2.8, which appears to have a smarter assembly agorithm than QIIME's paired-end assembler -- Pandaseq considers the FASTQ quality scores and maximizes the probability of correctly assembled reads even in the presence of middling-quality base calls. Intuitively: If you have an OK-quality call in read 1 and you align it with a matching low-quality call in read 2, this could still be stronger evidence the base is correct than if you had one excellent-quality call in read 1 and nothing from read 2.
+
+	- Pandaseq also trims primers in the assembly process. While working on this, noticed that the reverse Plant IT@ primer listed in the report from the sequencing center **apppears to be incorrect!** Their spreadsheet says primer 'Plant_ITS4R' is `5'-GGACTACVSGGGTATCTAAT`, but scrolling through the raw read 2 files most reads appear to start with `GACGCTTCTCCAGACTACAAT`, the Chen et al reverse primer we asked for. Assuming this is a copy/paste error in the report spreadsheet and telling Pandaseq to trim `GACGCTTCTCCAGACTACAAT`. TODO: Confirm this with the sequencing center, and update my QIIME mapping file--but not sure whether to update to Chen primer or to no primer, since they're trimmed before QIIME sees them.
+
+	- Oh hey, ~183k out of our 1.28M total reads start with `TCCTCCGCTTATTGATATGC`, which is our **fungal** ITS4R primer! For comparison, ~830k start with the intended `GACGCTTCTCCAGACTACAAT`. TODO: What's up with these -- are they plant or fungal? Do I need to remove them explicitly? Will Pandaseq or QIIME throw them out automatically? Does this mean I should check the "fungal ITS" reads for plant sequences too? Forward reads do seem to ~all be the Chen forward primer (1.1M of 1.28M start `ATGCGATACTTGGTGTGAAT`)
+
+	- First try at Pandaseq script saved as `bash/pair_pandaseq.sh`, with mostly default settings: minimum quality 0.6 (roughly equivalent to qiime's default minimum PHRED quality of 3), minimum overlap of 1 base (documentation says this setting doesn't make much difference because short overlaps tend to fail the quality filter anyway), no minimum or maximum assembled read length.
+
+	- Pandaseq 2.8 expects barcodes in the FASTQ headers, so ran it with `-B` ("no barcodes") option. Reports 1130304 reads as successfully paired and 151670 as unpaired, with most common overlap around 100-120 bp but a smaller peak around 205-225 bp. 
+
+	- On closer inspection, both peaks are really clusters --  next to none < 95, smooth increase 95-101, then a drop again followed by clearly separated 1-bp spikes at 108, 113, 116, 119, 130 and at 206, 218, 221, 224 bp. This seems promising -- I bet these are length polymorphisms of common species!
+
+	- Pandaseq spawns 24 threads by default even though I only reserved 1 processor! Need to reserve more or rerstrict threads by passing `-T`
+
+	- How to get these results back into QIIME without barcodes? Searched around for a while, learned that Pandaseq 2.10 was released a few weeks ago and adds the ability to read a separate barcode file. Emailed Biocluster staff to request they install Pandaseq 2.10.
