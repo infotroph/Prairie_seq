@@ -2,11 +2,11 @@
 
 #PBS -S /bin/bash
 #PBS -q default
-#PBS -l nodes=1:ppn=10,mem=40gb
+#PBS -l nodes=1:ppn=20,mem=100gb
 #PBS -M black11@igb.illinois.edu
 #PBS -m abe
 #PBS -j oe
-#PBS -N plant_its_pspaired-20160722
+#PBS -N plant_its_presentref_nounassigned-20160725
 #PBS -d /home/a-m/black11/no_backup/Fluidigm_2015813/
 
 module load qiime
@@ -16,51 +16,118 @@ SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
 # Starting from joined-end reads assembled by Pandaseq --
 # prep these by running pair_pandaseq.sh before calling this script.
 
-# Note quality threshold of 0 (should mean no filtering) --
-# Proceeding on the assumptions that:
-#	1. Pandaseq's quality scores are conceptually different from the raw Illumima scores, and using them for further quality filtering is explicitly discouraged in the Pandaseq documentation,
-# 	2. Pandaseq should have already thrown out the low quality reads because they didn't pair well.
-# TEST THESE ASSUMPTIONS!
-# QIIME should still filter out sequences with N's in them,
-# because --sequence_max_n defaults to 0.
-# TEST THAT ASSUMPTION TOO!
+# Split libraries, assuming pandaseq did most of our quality filtering already.
+# But do throw out unassigned sequences (=bad barcode reads).
+# (Yes, I KNOW there seem like a lot of them, bub.
+# But we don't know what sample they came from.
+# There's nothing you can do, just let them go.)
 (time split_libraries_fastq.py \
 	--sequence_read_fps plant_its_pandaseq_joined/plant_its2_pspaired_cleanid.fastq \
 	--barcode_read_fps plant_its_pandaseq_joined/barcodes_pspaired.fastq \
-	--output_dir plant_its_sl_psp \
+	--output_dir plant_its_slnoun_psp \
 	--mapping_fps plant_ITS_map.txt \
 	--barcode_type 10 \
 	--phred_quality_threshold 0 \
-	--phred_offset 33 \
-	--retain_unassigned_reads
-) 2>&1 | tee -a "$SHORT_JOBID".log
+	--phred_offset 33
+) 2>&1 | tee -a split_nounassign-20160725.log
 
-(count_seqs.py -i plant_its_sl_psp/seqs.fna) 2>&1 | tee -a "$SHORT_JOBID".log
+count_seqs.py -i plant_its_sl_psp/seqs.fna >> split_nounassign-20160725.log
 
-# Runs most of the way through, but fails at filter alignment with
-# ValueError: An empty fasta file was provided. Did the alignment complete sucessfully? Did PyNAST discard all sequences due to too-stringent minimum length or minimum percent ID settings?
-(time pick_de_novo_otus.py \
-	--input_fp plant_its_sl_psp/seqs.fna \
-	--output_dir plant_its_denovo_otu_psp \
+(time pick_open_reference_otus.py \
+	--input_fps plant_its_slnoun_psp/seqs.fna \
+	--output_dir plant_its_presentref_noun_otu99_psp \
+	--otu_picking_method uclust \
+	--reference_fp ~black11/ncbi_its2/presentITS_otu_99/rep_set/99_otus_20160724.fasta  \
+	--parameter_fp qiime_parameters.txt \
 	--parallel \
-	--jobs_to_start 10 ) 2>&1 | tee -a "$SHORT_JOBID".log
+	--jobs_to_start 20 \
+	--suppress_align_and_tree
+) 2>&1 | tee -a presentref_otu99noun-20160725.log
 
-(biom summarize-table \
-	-i plant_its_denovo_otu/otu_table_mc2_w_tax_no_pynast_failures.biom
-) 2>&1 | tee -a "$SHORT_JOBID".log
+(time pick_open_reference_otus.py \
+	--input_fps plant_its_slnoun_psp/seqs.fna \
+	--output_dir plant_its_presentref_noun_otu97_psp \
+	--otu_picking_method uclust \
+	--reference_fp ~black11/ncbi_its2/presentITS_otu_97/rep_set/97_otus_20160724.fasta  \
+	--parameter_fp qiime_parameters.txt \
+	--parallel \
+	--jobs_to_start 20 \
+	--suppress_align_and_tree
+) 2>&1 | tee -a presentref_otu97noun-20160725.log
 
-time filter_samples_from_otu_table.py \
-	--input_fp plant_its_denovo_otu_psp/otu_table.biom \
-	--output_fp plant_its_denovo_otu_psp/otu_table_atleast1000reads.biom \
-	--output_mapping_fp plant_its_denovo_otu_psp/plant_ITS_map_atleast1000reads.txt \
-	--mapping_fp plant_ITS_map.txt \
-	--min_count 1000
+# Remaining steps are a manual version of the align-and-tree portions of pick_open_reference_otus.py.
+# Doing them by hand because pick_open_reference_otus has alignment method hard-coded to pynast,
+# which needs a reference alignment, which isn't available for plant ITS region.
+# Therefore:
 
+# align de novo using MUSCLE.
+(time align_seqs.py \
+	--input_fasta_fp plant_its_presentref_noun_otu97_psp/rep_set.fna \
+	--output_dir plant_its_presentref_noun_otu97_psp/muscle_aligned_seqs \
+	--alignment_method muscle \
+	--muscle_max_memory 80000
+) 2>&1 | tee -a presentref_align97noun-20160725.log
+
+(time align_seqs.py \
+	--input_fasta_fp plant_its_presentref_noun_otu99_psp/rep_set.fna \
+	--output_dir plant_its_presentref_noun_otu99_psp/muscle_aligned_seqs \
+	--alignment_method muscle \
+	--muscle_max_memory 80000
+) 2>&1 | tee -a presentref_align99noun-20160725.log
+
+# filter alignments to remove the parts of the template we didn't sequence
+( time filter_alignment.py \
+	--input_fasta_file plant_its_presentref_noun_otu97_psp/muscle_aligned_seqs/rep_set_aligned.fasta \
+	--output_dir plant_its_presentref_noun_otu97_psp/muscle_aligned_seqs \
+	--suppress_lane_mask_filter
+) 2>&1 | tee -a presentref_align97noun-20160725.log
+
+( time filter_alignment.py \
+	--input_fasta_file plant_its_presentref_noun_otu99_psp/muscle_aligned_seqs/rep_set_aligned.fasta \
+	--output_dir plant_its_presentref_noun_otu99_psp/muscle_aligned_seqs \
+	--suppress_lane_mask_filter
+) 2>&1 | tee -a presentref_align99noun-20160725.log
+
+# Build phylogenetic tree from aligned sequences
+# DISCLAIMER: I have no idea whether this tree will be informative!
+(time make_phylogeny.py \
+	--input_fp plant_its_presentref_noun_otu97_psp/muscle_aligned_seqs/rep_set_aligned_pfiltered.fasta \
+	--result_fp plant_its_presentref_noun_otu97_psp/rep_muscle.tre \
+	--log_fp plant_its_presentref_noun_otu97_psp/phylo_build.log
+) 2>&1 | tee -a presentref_tree97noun-20160725.log
+
+(time make_phylogeny.py \
+	--input_fp plant_its_presentref_noun_otu99_psp/muscle_aligned_seqs/rep_set_aligned_pfiltered.fasta \
+	--result_fp plant_its_presentref_noun_otu99_psp/rep_muscle.tre \
+	--log_fp plant_its_presentref_noun_otu99_psp/phylo_build.log
+) 2>&1 | tee -a presentref_tree99noun-20160725.log
+
+
+echo "\nDiversity analysis at 97%\n" >> "$SHORT_JOBID".log
 
 (time core_diversity_analyses.py \
-	-o plant_its_corediv_psp \
-	-i plant_its_denovo_otu_psp/otu_table_atleast1000reads.biom \
-	-m plant_its_denovo_otu_psp/plant_ITS_map_atleast1000reads.txt \
+	--output_dir plant_its_present97_noun_corediv \
+	--input_biom_fp plant_its_presentref_noun_otu97_psp/otu_table_mc2_w_tax.biom \
+	--mapping_fp plant_ITS_map.txt \
+	--parameter_fp qiime_parameters.txt \
 	--nonphylogenetic_diversity \
-	-c Block,Depth1,SampleType \
-	-e 1000 ) 2>&1 | tee -a "$SHORT_JOBID".log
+	--categories Block,Depth1,SampleType \
+	--sampling_depth 2000 \
+	--jobs_to_start 20 \
+	--parallel
+) 2>&1 | tee -a "$SHORT_JOBID".log
+
+
+echo "\nDiversity analysis at 99%\n" >> "$SHORT_JOBID".log
+
+(time core_diversity_analyses.py \
+	--output_dir plant_its_present99_noun_corediv \
+	--input_biom_fp plant_its_presentref_noun_otu99_psp/otu_table_mc2_w_tax.biom \
+	--mapping_fp plant_ITS_map.txt \
+	--parameter_fp qiime_parameters.txt \
+	--nonphylogenetic_diversity \
+	--categories Block,Depth1,SampleType \
+	--sampling_depth 2000 \
+	--jobs_to_start 20 \
+	--parallel
+) 2>&1 | tee -a "$SHORT_JOBID".log

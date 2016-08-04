@@ -444,3 +444,40 @@ Picking this project up again after long pause. Have spent the last month doing 
 	- `split_libraries.py` on paired reads returns 862070 seqs, length: 424 +/- 81.
 
 	- de novo clustering finishes and assigns 138076 OTU, with 121548 singletons -- better than before, but still not great. PyNAST filtering fails (empty file) and diversity plotting fails because of missing samples.
+
+* 2016-07-24:
+
+	- Looking for more information on how to use a non-default reference database. Followed some links from the [qiime fungal ITS analysis tutorial](http://qiime.org/tutorials/fungal_its_analysis.html) and eventually found an outdated but still helpful tutorial on how to [turn the UNITE fungal sequence database into a QIIME reference set](https://github.com/qiime/its-reference-otus). I installed the [nested reference workflow](https://github.com/qiime/nested_reference_otus) they mention and tried to follow along with my sequences:
+
+		1. Sort reference sequences by taxonomic depth, then by read length within depth. This way uclust will use the most informative sequences as the seeds for its clusters.
+		2. perform de novo OTU picking on the sorted reference sequences at your target similarity level, then pick the representative set to use as your reference sequences. Following the example workflow, I'll make a 97% version and a 99% version of both my all-plants ITS sequences and my genera-that-exist-in-the-plots sequences.
+		3. Filter the taxonomy file to contain only the taxa in the representative set. I'm guessing I can get away with skipping this step at the expense of a slightly larger reference taxonomy file and possibly slower lookups when assigning taxonomy later.
+		4. Make a QIIME parameter file and give it the filepaths to our new reference sequences -- watch out for steps that quietly default to using Greengenes, and override all of them!
+
+	- The sorting script seems to expects a different taxonomy file format than the rest of QIIME (??): Each line must have a sequence ID, Genbank ID, taxon string, and source string, and furthermore it's picky about the column headers. I duplicated Genbank IDs to also be sequence IDs, and used `ncbi_plants` or `ncbi_present` for the source:
+
+		```
+		awk 'BEGIN {print "ID Number\tGenBank Number\tNew Taxon String\tSource"}
+		{print $1"\t"$0"\tncbi_present"}' \
+		present_genera_its2_accession_taxonomy.txt > its2_taxonomy_present.txt
+		```
+
+	Saved sorting/clustering code as `bash/sort_ncbi_refs.sh`. TODO: currently have a copy of the reference seqs sitting in their own directory on the cluster; will want to rework this to point toward their `rawdata/` location.
+
+	- Picking reference seqs for present genera appears to succeed and produces 754 OTU at 97% similarity, 2284 OTU at 99% similarity. Given that the original file has 6508 seqs from 2349 taxa in it, this seems reasonable to me.
+
+	- Picking reference seqs for all plants fails at the clustering stage  -- both 97% and 99% throw "improperly formatted input file was provided". TODO: Debug this. Meanwhile, let's try to use the present set.
+
+* 2016-07-25:
+
+	- First try at a QIIME parameters file. It's just a plain text file, but I guess I'll save it as `bash/qiime_parameters.txt` so it lives next to the scripts it's controlling. Sets `uclust` as reference taxonomy assignment method, `~black11/ncbi_its2/present_genera_its2_accession_taxonomy.txt` as the reference txonomy file, MUSCLE as the alignment method, and allows reverse strand matching in the references. Oh, and starts 20 parallel jobs by default and tells the Emperor plots to not freak out about missing samples.
+
+	- Speaking of missing samples: What posesses me to keep adding `--retain_unassigned_reads` to my `split_libraries` calls anyway? If we don't know what sample it came from it's seriously no use to us and just causes trouble downstream.
+
+	- Trying open-reference OTU picking using uclust: tries to cluster against reference DB, then clusters failed reads de novo. 97% present genera database: 85 OTU in first-round cluster, but de novo rounds blow it up to 108712, with 102069 of those being singletons (=6643 with at least two observations). Similar story from 99%: 384 OTU in first-round closed-ref, but up to 110328 after de novo, with 104048 singletons = 6280 seen twice or more.
+
+	- alignment takes *foooooooreveeeer*: Left the script running, turned out to take 60 hours to run, or ~$50 of compute time! Probably should have killed this job rather than let it run, especially since you can probably already guess how bad an attempted multiple alignment of 6643 fairly-variable sequences looks (Pretty bad, that's how bad).
+
+	- Taxonomy assignment doesn't give any obvious error messages, but all OTU, whether from reference set or clustered de novo, come out as unassigned. Not sure what I'm doing wrong here.
+
+	- Ran core diversity analyses in separate scripts while waiting for alignment to finish, but saving them as part of `run_qiime.sh`. No particular surprises there -- same as in previous runs, there are too many OTUs and no visible patterns between groups.
