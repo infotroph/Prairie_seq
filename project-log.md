@@ -434,3 +434,13 @@ Picking this project up again after long pause. Have spent the last month doing 
 	... No, because this turns out to be VERY slow -- I'm searching all ~1.2M raw barcode reads for each one of the ~1M filtered read headers!
 
 	- Instead: Use sed to reshape headers, then filter the raw barcode file using `filter_fasta.py`, which is much faster than my naive grep approach. See new lines in `pair_pandaseq.sh` for the details.
+
+* 2016-07-22: 
+	
+	- Making `run_qiime.sh` work with Pandaseq paired input. If trying to do more with unpaired sequences in the future, the version of `run_qiime.sh` I overwrite in this commit is your place to start.
+
+	- Pandaseq produces a few empty seqs, which qiime doesn't like. Fixed by setting Pandaseq minimum sequence length -- using 25 as a fairly arbitary value; could probably even use 1.
+
+	- `split_libraries.py` on paired reads returns 862070 seqs, length: 424 +/- 81.
+
+	- de novo clustering finishes and assigns 138076 OTU, with 121548 singletons -- better than before, but still not great. PyNAST filtering fails (empty file) and diversity plotting fails because of missing samples.

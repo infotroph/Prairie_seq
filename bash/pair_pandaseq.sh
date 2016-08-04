@@ -13,7 +13,7 @@ module load pandaseq/2.10
 
 SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
 
-OUTDIR=plant_its_pandaseq_fq_joined
+OUTDIR=plant_its_pandaseq_joined
 mkdir -p "$OUTDIR"
 
 # Attempting to join paired-end reads from all reads sorted as 'Plant ITS2'
@@ -29,7 +29,6 @@ mkdir -p "$OUTDIR"
 # -o (min overlap) 1
 # -O (max overlap) unset
 # -t (aligment quality threshold) 0.6
-# -l (min length) unset
 # -L (max length) unset
 #
 (time pandaseq \
@@ -41,6 +40,7 @@ mkdir -p "$OUTDIR"
 	-g "$OUTDIR"/log.txt \
 	-p ATGCGATACTTGGTGTGAAT \
 	-q GACGCTTCTCCAGACTACAAT \
+	-l 25 \
 	-k 10 \
 	-T 1 \
 	-F
