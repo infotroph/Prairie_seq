@@ -45,3 +45,34 @@ mkdir -p "$OUTDIR"
 	-T 1 \
 	-F
 ) 2>&1 | tee -a "$OUTDIR"/torque_"$SHORT_JOBID".log
+
+# Pandaseq puts barcodes on the end of the sequence IDs.
+# qiime expects barcode read IDs to be *identical* to forward reads, so we:
+
+# * strip the barcodes off the Pandaseq IDs,
+sed -E 's/^(@HWI.*):.*/\1/' \
+	"$OUTDIR"/plant_its2_pspaired.fastq \
+	> "$OUTDIR"/plant_its2_pspaired_cleanid.fastq
+# 	(N.B. Don't delete this yet! Will need it for split_libraries_fastq)
+
+# * strip the run ID ("2:N:0:") off the raw barcode IDs,
+sed -E 's/^(@HWI.*) 2:N:0:$/\1/' \
+	plant_its/Plant_ITS2_Delucia_Fluidigm_I1.fastq \
+	> "$OUTDIR"/raw_barcode_tmp.fastq
+
+# * and store a table of clean read IDs.
+sed -En 's/^@(HWI.*):.*/\1/p' \
+	"$OUTDIR"/plant_its2_pspaired.fastq \
+	> "$OUTDIR"/tmp_readnames.txt
+
+
+# Now subset the barcodes to include only sequences pandaseq was able to assemble.
+module purge
+module load qiime
+time filter_fasta.py \
+	--input_fasta_fp "$OUTDIR"/raw_barcode_tmp.fastq \
+	--output_fasta_fp "$OUTDIR"/barcodes_pspaired.fastq \
+	--seq_id_fp "$OUTDIR"/tmp_readnames.txt
+
+rm "$OUTDIR"/raw_barcode_tmp.fastq \
+	"$OUTDIR"/tmp_readnames.txt

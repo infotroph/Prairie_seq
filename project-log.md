@@ -379,3 +379,58 @@ Picking this project up again after long pause. Have spent the last month doing 
 	- Pandaseq spawns 24 threads by default even though I only reserved 1 processor! Need to reserve more or rerstrict threads by passing `-T`
 
 	- How to get these results back into QIIME without barcodes? Searched around for a while, learned that Pandaseq 2.10 was released a few weeks ago and adds the ability to read a separate barcode file. Emailed Biocluster staff to request they install Pandaseq 2.10.
+
+* 2016-07-13:
+
+	- pandaseq 2.10 is now installed on the cluster. Revising to use it: Load module as `module load pandaseq/2.10`, limit to 1 thread (`-T 1` -- Plenty fast even single-threaded, and makes it easier to read/interpret both the output sequences and the log file), and use a larger k-mer table (`-k 10`) to avoid `FMER` errors on highly repetitive sequences.
+
+	- OK, now how do I get the output back into a QIIME-compatible format? First thought: Make barcode file by splitting barcodes back out of FASTA header. Sample input:
+
+		```
+		>HWI-M01323:247:000000000-AH0K5:1:2119:12329:25269:ATGTCATGCT
+		```
+
+	Sample output:
+
+		```
+		>HWI-M01323:247:000000000-AH0K5:1:2119:12329:25269
+		ATGTCATGCT
+		```
+
+	Method: Sed, of course! Note that the first `.*` is greedy and eats two `:`. This is as intended.
+
+		```
+		sed -En 's/^>HWI-M01323:247:000000000-AH0K5:1:(.*):(.*$)/>\1\n\2/p' plant_its2_pspaired.fasta > pspaired_barcodes.fasta
+		```
+
+	Now shorten the paired-sequence headers to match. Note no `-n` option, so sequence lines are passed through unchanged:
+
+		```
+		sed -E 's/^>HWI-M01323:247:000000000-AH0K5:1:(.*):(.*$)/>\1/' plant_its2_pspaired.fasta > pspaired_shorthead.fasta
+		```
+
+	... No, actually that's not very useful. Instead let's produce FASTQ output from pandaseq (`-F`), then extract the barcodes in qiime with `extract_barcodes.py`:
+
+		```
+		module load qiime
+
+		extract_barcodes.py \
+			--fastq1 plant_its_pandaseq_joined/plant_its2_pspaired.fastq \
+			--output_dir plant_its_pandaseq_joined \
+			--input_type barcode_in_label \
+			--bc1_len 10 \
+			--mapping_fp plant_ITS_map.txt
+		```
+
+	... no again, because this loses barcode quality information. OK, let's filter the raw barcode file on the headers from the paired file.
+
+		```
+		cd plant_its_pandaseq_joined
+		for read in `sed -En 's/(^@HWI.*):.*/\1/p' plant_its2_pspaired.fastq`; do
+			grep -A3 "$read" ../plant_its/Plant_ITS2_Delucia_Fluidigm_I1.fastq >> barcodes_psjoined.fastq
+		done
+		```
+
+	... No, because this turns out to be VERY slow -- I'm searching all ~1.2M raw barcode reads for each one of the ~1M filtered read headers!
+
+	- Instead: Use sed to reshape headers, then filter the raw barcode file using `filter_fasta.py`, which is much faster than my naive grep approach. See new lines in `pair_pandaseq.sh` for the details.
