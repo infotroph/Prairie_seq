@@ -481,3 +481,34 @@ Picking this project up again after long pause. Have spent the last month doing 
 	- Taxonomy assignment doesn't give any obvious error messages, but all OTU, whether from reference set or clustered de novo, come out as unassigned. Not sure what I'm doing wrong here.
 
 	- Ran core diversity analyses in separate scripts while waiting for alignment to finish, but saving them as part of `run_qiime.sh`. No particular surprises there -- same as in previous runs, there are too many OTUs and no visible patterns between groups.
+
+* 2016-07-26:
+
+	- Playing more with Pandaseq settings--want to get a sense how sensitive the quality parameters are. Set up multiple Pandaseq runs varying quality threshold (`-t`) from 0.6 to 0.9, and also holding quality at 0.6 but applying a minimum quality threshold for individual bases of the paired sequence (`-C min_phred:<number>`). For each run, noted the number of sequences paired and the number listed as removed by each of the possible quality filters, then deduplicated (`pick_otus.py --similarity 1.0`) to see how many unique sequences are assembled. My theory: If quality filtering is mostly removing garbage, it should reduce the singleton count disproportionately more than it reduces counts of commonly observed (dare we say "real") OTUs.
+
+	- For both tests: always 1286163 raw reads input, 151708 that did not align, 66842 that aligned but are listed as "slow". Seems clear both these quality filters are applied after alignment is done.
+
+	- Result of varying `-t`:
+
+		```
+		-t	paired	unique	sglton	lowq	short
+		0.6 1129100	668661	624851	  4186	1169
+		0.7 1114604	658367	614801	 18837	1014
+		0.8 1033167	591841	549047	100394	 894
+		0.9  717157	367346	333287	416531	 767
+		```
+
+	- ==> Not a huge change. 55.3, 55.2, 53.1, 46.5% of paired reads are singletons, so increasing the quality threshold does make a little difference, but not enough to explain tens of thousands of OTUs after clustering. Estimated overlaps are essentially identical for all -- counts for the 4 most common lengths drop a bit less from 0.6 to 0.9 than the counts for less-common lengths do, but basically sequences are removed proportionally across all lengths.
+
+	- result of varying `-C min_phred`:
+
+		```
+		min_phred	paired	unique sglton	lowq	short	lowphred
+		 3			81236	 14515 12376	4186	1169 	1047864
+		10 			12364	  2252  1897	4186	1169	1116736
+		20			 1752 	   409   352	4186	1169	1127348
+		```
+
+	- ==> filtering by individual base quality seems infeasible -- there just aren't many sequences without *some* low-quality bases. Hand-inspecting the paired fastq file, it appears to me that Pandaseq is *very conservative (or, perhaps, realistic?) about quality calls -- seem to be a lot of positions where, for reasons I don't understand, original base calls agree in both strands but Pandaseq assigns a lower quality than either original strand. 
+
+	- Conclusion: Not going to change either of these settings right now. TODO: After rest of pipeline settles down, consider bumping -t from 0.6 to 0.8 and see how much it affects clustered OTU counts. My prediction: Not much.
