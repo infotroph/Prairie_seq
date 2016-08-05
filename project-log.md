@@ -512,3 +512,73 @@ Picking this project up again after long pause. Have spent the last month doing 
 	- ==> filtering by individual base quality seems infeasible -- there just aren't many sequences without *some* low-quality bases. Hand-inspecting the paired fastq file, it appears to me that Pandaseq is *very conservative (or, perhaps, realistic?) about quality calls -- seem to be a lot of positions where, for reasons I don't understand, original base calls agree in both strands but Pandaseq assigns a lower quality than either original strand. 
 
 	- Conclusion: Not going to change either of these settings right now. TODO: After rest of pipeline settles down, consider bumping -t from 0.6 to 0.8 and see how much it affects clustered OTU counts. My prediction: Not much.
+
+* 2016-07-29:
+
+	- Question: How much should I worry about index read quality? `split_libraries.py` does not perform error correction on 10-nt barcodes, just throws out any read that isn't an exact match. Should I change this?
+
+	- Approach: We loaded 144 uniquely barcoded samples into the flowcell. How many unique index sequences did we get out? FASTQ files have four lines per record, so let's just extract the second line (=sequence) and compare them as plain ASCII strings.
+
+		```
+		$ cd no_backup/Fluidigm_2015813/plant_its/
+		$ sed -n 'n;p;n;n' Plant_ITS2_Delucia_Fluidigm_I1.fastq |  sort | uniq | wc -l
+		44393
+		```
+
+	- How many of these 44393 sequences are exact matches to known barcodes?
+
+		```
+		$ sed -n 'n;p;n;n' Plant_ITS2_Delucia_Fluidigm_I1.fastq | sort | uniq -c | sort > tmp.txt
+		$ R
+		> index_counts = read.table("tmp.txt", header=FALSE, col.names=c("count", "barcode"))
+		> bcmap = read.table("../plant_ITS_map.txt", header=T, comment.char="")
+		> sum(index_counts[index_counts$barcode %in% bcmap$BarcodeSequence, "count"])
+		[1] 1203129
+		> sum(index_counts$count)
+		[1] 1286163
+		> 1203129/1286163
+		[1] 0.9354405
+		```
+
+	- ==> Most of them.
+
+	- How many of the remaining inexact matches are abundant enough to matter?
+
+		```
+		> index_counts[!(index_counts$barcode %in% bcmap$Barcode) & index_counts$count > 100,]
+		      count    barcode
+		44252   105 NCGCGGACTA
+		44253   149 CCCCCCCCCC
+		44254   161 NCTTGTTCAC
+		44259  2296 NNNNNNNNNN
+		```
+
+	- ==> Basically none of them.
+
+	- How many sample barcodes are in the low-abundance reads?
+
+		```
+		> merge(
+		   x=index_counts[(index_counts$barcode %in% bcmap$Barcode) & index_counts$count < 1000,],
+		   y=bcmap[, c("BarcodeSequence", "X.SampleID")],
+		   by.x="barcode",
+		   by.y="BarcodeSequence",
+		   all=FALSE)
+
+		     barcode count      X.SampleID
+		1 AATGCAGTGT    25  Rhizo.2p3.0.10
+		2 ACCATGAGTC    29 Rhizo.0p7.10.30
+		3 ACGCAGGAGT     2 Rhizo.2p3.10.30
+		4 AGAGCGCCAA   590           H2O.C
+		5 AGGTAGCTCA    29       1p4.30.50
+		6 CGCGACTTGT    29        3p3.0.10
+		7 CTAAGTCATG    25           H2O.A
+		```
+
+	- So:
+		1. Every barcode from the known set was seen at least twice, and all but two root samples had more than 1000 raw reads.
+		2. "NNNNNNNNNN" is the only barcode from outside the known set that was seen more than 200 times.
+		3. Unknown barcodes are only about 6.5% of the whole dataset.
+		4. There is no overlap between the rarely-seen known barcodes and the commonly-seen unknown barcodes.
+		Therefore there would be little payoff from trying to perform error correction to recover sequences that have, say, an N at base 1 but otherwise match a known barcode: Most samples have plenty of reads as it is, and the samples that have too few have few enough that adding five or ten more error-corrected indexes won't help them.
+		5. ==> Let's continue to throw out all reads whose index is not an exact match to a known barcode.
