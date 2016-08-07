@@ -4,7 +4,7 @@ Prairie Seq
 Code and data for sequencing of root & soil samples from the restored prairie at the EBI Energy Farm
 ------------------------------------------------------------------------------
 
-This analysis is intended to be fully automated and repeatable. If I succeed in that, any change to the code or data should propagate through the downstream parts of the analysis simply by running $(make).
+This analysis is intended to be fully automated and repeatable. If I succeed in that, any change to the code or data should propagate through the downstream parts of the analysis simply by running $(make). **N.B. as of 2016-08-06, the Makefile is badly out of date** and will not be updated until CKB gets the sequence analysis pipeline working correctly. Will update this readme when fixed.
 
 Repository layout:
 - bash/, Python/, R/
