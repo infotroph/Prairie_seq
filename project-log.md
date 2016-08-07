@@ -582,3 +582,47 @@ Picking this project up again after long pause. Have spent the last month doing 
 		4. There is no overlap between the rarely-seen known barcodes and the commonly-seen unknown barcodes.
 		Therefore there would be little payoff from trying to perform error correction to recover sequences that have, say, an N at base 1 but otherwise match a known barcode: Most samples have plenty of reads as it is, and the samples that have too few have few enough that adding five or ten more error-corrected indexes won't help them.
 		5. ==> Let's continue to throw out all reads whose index is not an exact match to a known barcode.
+
+* 2016-07-30:
+
+	- Can I improve OTU assignment by cleaning up my reference database? Let's investigate.
+
+	- Full plant ITS2 file contains some lines that are VERY long. Which ones are those?
+
+		```
+		awk '{if(length>10000) print NR}' ncbi_all_plant_its2.fasta
+		```
+
+	This returns the following line numbers within the file (these are NOT GIs!): 33369, 36801, 36803, 36805, 38713, 38715, 38717, 38719, 38721, 38723, 38725, 38727, 38729, 93719, 93721, 257671, 257673, 263609, 285403, 462089, 462801, 467451, 467453, 467455, 467783, 467843, 467845, 467847, 486009, 486871.
+
+	- Manually inspected headers at (each of the above line numbers - 1) with e.g. `sed -n '33368p' ncbi_all_plant_its2_longid.fasta`. Not recording every result here, but they seem to divide into two piles: Those that are just very long ribosome sequences (e.g. full read from 18S through 26s) and chloroplast DNA, which isn't relevant to this analysis, so--waaaaitaminute:
+
+	- These here are entire carrot chromosomes! No WONDER the raw file is so big! Carrot is already well-represented in shorter ITS seqs, so I feel OK about throwing these out entirely. Let's entirely remove any sequences whose long header contains the words 'chloroplast' or 'genome'.
+
+		```
+		sed -nE 's/.*\|(.*)\|.*[Cc]hloroplast.*/\1/p' ncbi_all_plant_its2_longid.fasta >> unwanted_accessions.txt
+		sed -nE 's/.*\|(.*)\|.*[Gg]enome.*/\1/p' ncbi_all_plant_its2_longid.fasta > unwanted_accessions.txt
+		```
+
+	- In my 2016-07-06 reference sequence files, 'chloroplast' matches 1979 seqs from all-plants file, while 'genome' matches 8: 1 algal chloroplast genome that is already removed by step 1, and 7 of the above-mentioned carrot chromosomes. 22 of the chloroplast seqs, and zero of the genome seqs, are also in the present genera file.
+
+	- Let's also trim all the reference sequences to just the region of interest by trimming off everything outside our ITS primer binding sites.
+
+	- ==> Edited `sort_ncbi_refs.sh` to:
+		1. Use QIIME's `filter_fasta.py` to remove every sequences listed in `unwanted_accessions.txt` This step alone reduces the all-plant FASTA file from 317 to 151 megabytes!
+		3. Use `cutadapt` to look for sites matching our ITS primers, and trim them and everything outside of them. When no matching site is found, sequence is left unchanged.
+		4. Sort by taxonomy and run the nested reference workflow as before.
+		5. Use newly written script `python/filter_taxonomy.py` to subset taxonomy files to only the entries matching the reference seqs.
+
+	- After this trim, `awk '{if(length>10000) print NR}' plant_cut.fasta` finds only three lines: 255890, 255892, 482038. These are AY342318.1, AY342317.1, AB021684.1 respectively; all three are essentially-complete ribosomal RNA genes from the liverwort Marchantia polymorpha. Moving down the length scale, four more seqs have post-trim length between 5000 and 10000: KT693223.1, KU612123.1, LT174528.1, HE610130.1; all are classified as Chlorophyta (= algae). ==> Let's stop filtering for now and try picking OTUs with these included, but looks like I might be able to refine even further if necessary.
+
+	- A possible approach if I do want to refine more: Pull out all the  non-streptophytes (I see 12159 Chlorophyta plus 1 uncultured chlorobiont) with something like:
+
+		```
+		awk '/^ID/{next} !/Streptophyta/{print $1}' plant_taxonomy.txt > plant_nonstreptophyte_ids.txt
+		filter_fasta.py \
+			--input_fasta_fp plant_cut.fasta \
+			--output_fasta_fp streptophytes_cut.fasta \
+			--seq_id_fp plant_nonstreptophyte_ids.txt \
+			--negate
+		```

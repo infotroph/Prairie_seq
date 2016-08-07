@@ -7,9 +7,7 @@
 #PBS -m abe
 #PBS -j oe
 #PBS -d /home/a-m/black11/ncbi_its2
-#PBS -N sort_refs-20160724
-
-module load qiime
+#PBS -N sort_refs
 
 # Turn *plant* ITS sequences scraped from Genbank into a reference OTU set 
 # as demonstrated in the datasets linked from QIIME *fungal* ITS analysis tutorial. 
@@ -18,50 +16,128 @@ module load qiime
 # cd ~
 # git clone https://github.com/qiime/nested_reference_otus
 
+echo "starting at " `date -u` >> sort_refs.log
+module load qiime
+SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
+
+# First, prep reference sequences by blacklisting some unwanted categories.
+# unwanted_accessions.txt was created by grepping the headers of my
+# raw `ncbi_all_plant_its2_longid.fasta` for:
+# 	"[Cc]hloroplast" because I'm only interested in nuclear genes,
+# 	"[Gg]enome" to remove seven whole carrot chromosomes--
+#		they alone take up 166 MB & we have plenty of shorter carrot ITS sequences.
+# If redoing this with updated ref seqs, update your unwanted_accessions.txt as well!
+
+(filter_fasta.py \
+	--input_fasta_fp present_genera_its2.fasta \
+	--output_fasta_fp present_wanted.fasta \
+	--seq_id_fp unwanted_accessions.txt \
+	--negate
+filter_fasta.py \
+	--input_fasta_fp ncbi_all_plant_its2.fasta \
+	--output_fasta_fp plant_wanted.fasta \
+	--seq_id_fp unwanted_accessions.txt \
+	--negate
+) 2>&1 | tee -a sort_refs.log
+
+
+# cutadapt and qiime load incompatible Python versions, must purge between uses
+module purge
+module load cutadapt
+
+# Trim off our ITS primers and everything upstream/downstream of them, if present
+# Seqs with no match to primers are left untrimmed.
+# --error_rate is allowable mismatches per primer (0.1 = 10% = 2 bases)
+# --times 2 because otherwise cutadapt would stop after trimming just one end (???)
+#
+# cutadapt may complain of possible 'incomplete adapter sequences' on plant_cut.fasta
+# This is just because the last base before the primer is highly conserved --
+# This is in fact the whole [reverse complement of our] ITS primer.
+
+(cutadapt \
+	-g ATGCGATACTTGGTGTGAAT \
+	-a ATTGTAGTCTGGAGAAGCGTC \
+	--times=2 \
+	--error-rate=0.1 \
+	present_wanted.fasta > present_cut.fasta
+cutadapt \
+	-g ATGCGATACTTGGTGTGAAT \
+	-a ATTGTAGTCTGGAGAAGCGTC \
+	--times=2 \
+	--error-rate=0.1 \
+	plant_wanted.fasta > plant_cut.fasta
+) 2>&1 | tee -a sort_refs.log
+
+module purge
+module load qiime
 
 export PYTHONPATH=$PYTHONPATH:~black11/nested_reference_otus
 
 # sort_seqs is picky about file format; header line must be exactly as shown.
 awk 'BEGIN {print "ID Number\tGenBank Number\tNew Taxon String\tSource"}
-	{print $1"\t"$0"\tncbi_present"}' \
-	present_genera_its2_accession_taxonomy.txt > its2_taxonomy_present.txt
+	 {print $1"\t"$0"\tncbi_present"}' \
+	present_genera_its2_accession_taxonomy.txt > present_taxonomy.txt
 awk 'BEGIN {print "ID Number\tGenBank Number\tNew Taxon String\tSource"}
 	 {print $1"\t"$0"\tncbi_plants"}' \
-	ncbi_all_plant_its2_accession_taxonomy.txt > its2_taxonomy_plants.txt
+	ncbi_all_plant_its2_accession_taxonomy.txt > plant_taxonomy.txt
 
 (
 time ~black11/nested_reference_otus/scripts/sort_seqs.py \
-	--input_fasta present_genera_its2.fasta \
-	--input_taxonomy_map its2_taxonomy_present.txt \
-	--output_fp present_genera_its2_sorted.fasta
+	--input_fasta present_cut.fasta \
+	--input_taxonomy_map present_taxonomy.txt \
+	--output_fp present_sorted.fasta
 
 time ~black11/nested_reference_otus/scripts/sort_seqs.py \
-	--input_fasta ncbi_all_plant_its2.fasta \
-	--input_taxonomy_map its2_taxonomy_plants.txt \
-	--output_fp ncbi_all_plant_its2_sorted.fasta
+	--input_fasta plant_cut.fasta \
+	--input_taxonomy_map plant_taxonomy.txt \
+	--output_fp plant_sorted.fasta
 
 time ~black11/nested_reference_otus/scripts/nested_reference_workflow.py \
-	--input_fasta_fp present_genera_its2_sorted.fasta \
+	--input_fasta_fp present_sorted.fasta \
 	--output_dir "presentITS_otu_97" \
-	--run_id "20160724" \
+	--run_id "$SHORT_JOBID" \
 	--similarity_thresholds 97
 
 time ~black11/nested_reference_otus/scripts/nested_reference_workflow.py \
-	--input_fasta_fp present_genera_its2_sorted.fasta \
+	--input_fasta_fp present_sorted.fasta \
 	--output_dir "presentITS_otu_99" \
-	--run_id "20160724" \
+	--run_id "$SHORT_JOBID" \
 	--similarity_thresholds 99
 
-# Both all-plant DBs fail clustering with "improperly formatted input file was provided" -- try binary search to check for illegal characters?
 time ~black11/nested_reference_otus/scripts/nested_reference_workflow.py \
-	--input_fasta_fp ncbi_all_plant_its2_sorted.fasta \
+	--input_fasta_fp plant_sorted.fasta \
 	--output_dir "plantITS_otu_97" \
-	--run_id "20160724" \
+	--run_id "$SHORT_JOBID" \
 	--similarity_thresholds 97
 
 time ~black11/nested_reference_otus/scripts/nested_reference_workflow.py \
-	--input_fasta_fp ncbi_all_plant_its2_sorted.fasta \
+	--input_fasta_fp plant_sorted.fasta \
 	--output_dir "plantITS_otu_99" \
-	--run_id "20160724" \
+	--run_id "$SHORT_JOBID" \
 	--similarity_thresholds 99
 ) 2>&1 | tee -a sort_refs.log
+
+
+# filter taxonomies down to match picked seq sets.
+python filter_taxonomy.py \
+	present_genera_its2_accession_taxonomy.txt \
+	presentITS_otu_97/rep_set/97_otus_"$SHORT_JOBID".fasta \
+	> presentITS_otu_97/rep_set/97_taxonomy_"$SHORT_JOBID".txt
+
+python filter_taxonomy.py \
+	present_genera_its2_accession_taxonomy.txt \
+	presentITS_otu_99/rep_set/99_otus_"$SHORT_JOBID".fasta \
+	> presentITS_otu_99/rep_set/99_taxonomy_"$SHORT_JOBID".txt
+
+
+python filter_taxonomy.py \
+	ncbi_all_plant_its2_accession_taxonomy.txt \
+	plantITS_otu_97/rep_set/97_otus_"$SHORT_JOBID".fasta \
+	> plantITS_otu_97/rep_set/97_taxonomy_"$SHORT_JOBID".txt
+
+python filter_taxonomy.py \
+	ncbi_all_plant_its2_accession_taxonomy.txt \
+	plantITS_otu_99/rep_set/99_otus_"$SHORT_JOBID".fasta \
+	plantITS_otu_99/rep_set/99_taxonomy_"$SHORT_JOBID".txt
+
+echo "done at " `date -u` >> sort_refs.log
