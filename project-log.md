@@ -648,3 +648,5 @@ Pushed to Github, pulled from there to Biocluster, symlinked data to an easier-t
 `, then added that directory to `.gitignore`. The raw reads and large intermediate files will **not** be committed to git -- keep them backed up elsewhere, and copy them into your local repository as needed. Noted this in the README, too.
 
 Now editing Torque scripts to use this layout. Done so far: pair_pandaseq.py, with more compact loggin while I'm at it -- turned off INFO BESTOLP lines, and combined the Torque log and the Pandaseq log into a single file.
+
+My `.gitignore` edits from above are not working--ignored `private` and `rawdata/miseq` are shown as unadded directories. Looks like Git doesn't like end-of-line comments. Removed those, both now ignored correctly.
