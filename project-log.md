@@ -647,6 +647,8 @@ Committed some quickly-written, crappy notes toward an overview / intro&methods 
 Pushed to Github, pulled from there to Biocluster, symlinked data to an easier-to remember path: `ln -s ~/no_backup/Fluidigm_2015813/ rawdata/miseq
 `, then added that directory to `.gitignore`. The raw reads and large intermediate files will **not** be committed to git -- keep them backed up elsewhere, and copy them into your local repository as needed. Noted this in the README, too.
 
-Now editing Torque scripts to use this layout. Done so far: pair_pandaseq.py, with more compact loggin while I'm at it -- turned off INFO BESTOLP lines, and combined the Torque log and the Pandaseq log into a single file.
+Now editing Torque scripts to use this layout. Done so far: `pair_pandaseq.py`, with more compact logging while I'm at it -- turned off INFO BESTOLP lines, and combined the Torque log and the Pandaseq log into a single file.
 
 My `.gitignore` edits from above are not working--ignored `private` and `rawdata/miseq` are shown as unadded directories. Looks like Git doesn't like end-of-line comments. Removed those, both now ignored correctly.
+
+Edited paths in `sort_ncbi_refs.sh` to do initial processing the newly-relocated `rawdata/ncbi_its` directory and then write finished reference sequences and taxonomies to `data/its2_ref/`, updated `qiime_parameters.txt` to point toward them (still using present genera clustered at 97% for the moment, will test others soon)

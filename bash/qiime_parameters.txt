@@ -1,7 +1,7 @@
 align_seqs:alignment_method clustalw
 make_emperor:ignore_missing_samples True
-assign_taxonomy:id_to_taxonomy_fp ~black11/ncbi_its2/presentITS_otu_97/rep_set/97_taxonomy_20160730.txt
-assign_taxonomy:reference_seqs_fp ~black11/ncbi_its2/presentITS_otu_97/rep_set/97_otus_20160730.fasta
+assign_taxonomy:id_to_taxonomy_fp data/its_ref/ncbi_present_97_taxonomy.txt
+assign_taxonomy:reference_seqs_fp data/its_ref/ncbi_present_97.fasta
 assign_taxonomy:assignment_method blast
 parallel:jobs_to_start 20
 pick_otus:otu_picking_method uclust_ref

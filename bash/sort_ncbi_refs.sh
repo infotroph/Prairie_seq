@@ -6,15 +6,19 @@
 #PBS -M black11@igb.illinois.edu
 #PBS -m abe
 #PBS -j oe
-#PBS -d /home/a-m/black11/ncbi_its2
+#PBS -d rawdata/ncbi_its2
 #PBS -N sort_refs
 
 # Turn *plant* ITS sequences scraped from Genbank into a reference OTU set 
 # as demonstrated in the datasets linked from QIIME *fungal* ITS analysis tutorial. 
 
-# Uses the nested reference OTUs workflow from https://github.com/qiime/nested_reference_otus, To install:
-# cd ~
+# Uses sort_seqs.py and nested_reference_workflow.py, both from https://github.com/qiime/nested_reference_otus.
+# To install:
+# cd ~ # or wherever you like, just edit PATHs below to match
 # git clone https://github.com/qiime/nested_reference_otus
+# To tell this script how to find them:
+export PYTHONPATH=$PYTHONPATH:~/nested_reference_otus
+export PATH=$PATH:~/nested_reference_otus/scripts
 
 echo "starting at " `date -u` >> sort_refs.log
 module load qiime
@@ -71,8 +75,6 @@ cutadapt \
 module purge
 module load qiime
 
-export PYTHONPATH=$PYTHONPATH:~black11/nested_reference_otus
-
 # sort_seqs is picky about file format; header line must be exactly as shown.
 awk 'BEGIN {print "ID Number\tGenBank Number\tNew Taxon String\tSource"}
 	 {print $1"\t"$0"\tncbi_present"}' \
@@ -82,62 +84,71 @@ awk 'BEGIN {print "ID Number\tGenBank Number\tNew Taxon String\tSource"}
 	ncbi_all_plant_its2_accession_taxonomy.txt > plant_taxonomy.txt
 
 (
-time ~black11/nested_reference_otus/scripts/sort_seqs.py \
+time sort_seqs.py \
 	--input_fasta present_cut.fasta \
 	--input_taxonomy_map present_taxonomy.txt \
 	--output_fp present_sorted.fasta
 
-time ~black11/nested_reference_otus/scripts/sort_seqs.py \
+time sort_seqs.py \
 	--input_fasta plant_cut.fasta \
 	--input_taxonomy_map plant_taxonomy.txt \
 	--output_fp plant_sorted.fasta
 
-time ~black11/nested_reference_otus/scripts/nested_reference_workflow.py \
+time nested_reference_workflow.py \
 	--input_fasta_fp present_sorted.fasta \
-	--output_dir "presentITS_otu_97" \
+	--output_dir "present_tmp_97" \
 	--run_id "$SHORT_JOBID" \
 	--similarity_thresholds 97
 
-time ~black11/nested_reference_otus/scripts/nested_reference_workflow.py \
+time nested_reference_workflow.py \
 	--input_fasta_fp present_sorted.fasta \
-	--output_dir "presentITS_otu_99" \
+	--output_dir "present_tmp_99" \
 	--run_id "$SHORT_JOBID" \
 	--similarity_thresholds 99
 
-time ~black11/nested_reference_otus/scripts/nested_reference_workflow.py \
+time nested_reference_workflow.py \
 	--input_fasta_fp plant_sorted.fasta \
-	--output_dir "plantITS_otu_97" \
+	--output_dir "plant_tmp_97" \
 	--run_id "$SHORT_JOBID" \
 	--similarity_thresholds 97
 
-time ~black11/nested_reference_otus/scripts/nested_reference_workflow.py \
+time nested_reference_workflow.py \
 	--input_fasta_fp plant_sorted.fasta \
-	--output_dir "plantITS_otu_99" \
+	--output_dir "plant_tmp_99" \
 	--run_id "$SHORT_JOBID" \
 	--similarity_thresholds 99
 ) 2>&1 | tee -a sort_refs.log
 
+# Save clustered representative sequences to a more convenient path.
+cp present_tmp_97/rep_set/97_otus_"$SHORT_JOBID".fasta \
+	data/its_ref/ncbi_present_97.fasta
+cp present_tmp_99/rep_set/99_otus_"$SHORT_JOBID".fasta \
+	data/its_ref/ncbi_present_99.fasta
+cp plant_tmp_97/rep_set/97_otus_"$SHORT_JOBID".fasta \
+	data/its_ref/ncbi_plant_97.fasta
+cp plant_tmp_99/rep_set/99_otus_"$SHORT_JOBID".fasta \
+	data/its_ref/ncbi_plant_99.fasta
 
-# filter taxonomies down to match picked seq sets.
+# filter taxonomies down to match picked sequence sets.
 python filter_taxonomy.py \
 	present_genera_its2_accession_taxonomy.txt \
 	presentITS_otu_97/rep_set/97_otus_"$SHORT_JOBID".fasta \
-	> presentITS_otu_97/rep_set/97_taxonomy_"$SHORT_JOBID".txt
+	> data/its_ref/ncbi_present_97_taxonomy.txt
 
 python filter_taxonomy.py \
 	present_genera_its2_accession_taxonomy.txt \
 	presentITS_otu_99/rep_set/99_otus_"$SHORT_JOBID".fasta \
-	> presentITS_otu_99/rep_set/99_taxonomy_"$SHORT_JOBID".txt
+	> data/its_ref/ncbi_present_99_taxonomy.txt
 
 
 python filter_taxonomy.py \
 	ncbi_all_plant_its2_accession_taxonomy.txt \
 	plantITS_otu_97/rep_set/97_otus_"$SHORT_JOBID".fasta \
-	> plantITS_otu_97/rep_set/97_taxonomy_"$SHORT_JOBID".txt
+	> data/its_ref/ncbi_plant_97_taxonomy.txt
 
 python filter_taxonomy.py \
 	ncbi_all_plant_its2_accession_taxonomy.txt \
 	plantITS_otu_99/rep_set/99_otus_"$SHORT_JOBID".fasta \
-	plantITS_otu_99/rep_set/99_taxonomy_"$SHORT_JOBID".txt
+	> data/its_ref/ncbi_plant_99_taxonomy.txt
 
 echo "done at " `date -u` >> sort_refs.log
