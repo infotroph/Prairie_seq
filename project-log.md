@@ -640,6 +640,11 @@ Picking this project up again after long pause. Have spent the last month doing 
 
 Thus ends the backlog of notes from July work. Now to stay on track and actually commit my notes as I take them. Today: Working on synchronizing repositories. I've been hand-copying things back and forth between my laptop and the cluster all month; it's time to stop that.
 
-* All the notes I committed above were committed on a `datacheck` branch that I created when I was cross-checking datasheets from the extraction portion of the project. I plan to do another round of cross-checking next time I'm at the desk with the paper notes on it, but no need to keep this branch running. Merged everything back into master.
+All the notes I committed above were committed on a `datacheck` branch that I created when I was cross-checking datasheets from the extraction portion of the project. I plan to do another round of cross-checking next time I'm at the desk with the paper notes on it, but no need to keep this branch running. Merged everything back into master.
 
-* Committed some quickly-written, crappy notes toward an overview / intro&methods skeleton of the project -- Scott, feel free to raid these for your writing.
+Committed some quickly-written, crappy notes toward an overview / intro&methods skeleton of the project -- Scott, feel free to raid these for your writing.
+
+Pushed to Github, pulled from there to Biocluster, symlinked data to an easier-to remember path: `ln -s ~/no_backup/Fluidigm_2015813/ rawdata/miseq
+`, then added that directory to `.gitignore`. The raw reads and large intermediate files will **not** be committed to git -- keep them backed up elsewhere, and copy them into your local repository as needed. Noted this in the README, too.
+
+Now editing Torque scripts to use this layout. Done so far: pair_pandaseq.py

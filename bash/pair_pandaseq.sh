@@ -6,13 +6,14 @@
 #PBS -M black11@igb.illinois.edu
 #PBS -m abe
 #PBS -j oe
-#PBS -N pair_pandaseq_20160712
-#PBS -d /home/a-m/black11/no_backup/Fluidigm_2015813/
+#PBS -N pair_pandaseq
+#PBS -d rawdata/miseq
 
 module load pandaseq/2.10
 
 SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
 
+RAWDIR=plant_its
 OUTDIR=plant_its_pandaseq_joined
 mkdir -p "$OUTDIR"
 
@@ -57,9 +58,9 @@ mkdir -p "$OUTDIR"
 #	might be worth dropping this and producing a single FASTA with integrated barcodes.
 
 (time pandaseq \
-	-f plant_its/Plant_ITS2_Delucia_Fluidigm_R1.fastq \
-	-r plant_its/Plant_ITS2_Delucia_Fluidigm_R2.fastq \
-	-i plant_its/Plant_ITS2_Delucia_Fluidigm_I1.fastq \
+	-f "$RAWDIR"/Plant_ITS2_Delucia_Fluidigm_R1.fastq \
+	-r "$RAWDIR"/Plant_ITS2_Delucia_Fluidigm_R2.fastq \
+	-i "$RAWDIR"/Plant_ITS2_Delucia_Fluidigm_I1.fastq \
 	-w "$OUTDIR"/pspaired.fastq \
 	-U "$OUTDIR"/failed_pspair.fastq \
 	-g "$OUTDIR"/log.txt \

@@ -26,6 +26,10 @@ Repository layout:
 	GelDoc/ 
 		TIFF images of gels, named by timestamp and each accompanied by a CSV mapping lane numbers to sample IDs. The paper lab notebook should contain an annotated printout of each image that is stored here. 
 		NOTE: Depending which software you use to look at them, the TIFF images might appear black. This is because they're stored with a linear gamma, and some programs (e.g. Photoshop) try to account for this on display, while others (e.g. Preview on OS X) wait for you to give explicit instructions. I recommend letting the Make script convert them to jpeg and looking at those.
+	miseq/
+		Raw sequencing data and large intermediate files. This directory is ignored by Git because the files are too large, so put your copy of the data here and keep it backed up by some non-Git method.
+	ncbi_its2/
+		Reference sequences and taxonomy assignments for all the NCBI Nculeotide search results for "internal transcribed spacer 2" downloaded on 2016-07-06; one file for all Viridiplantae and one for only the genera known from Xaiohui Feng's aboveground vegetation surveys. TODO: Move generated refseq files from here to data/.
 	nanodrop/
 		Text files are raw output from the Nanodrop (in ND1000 data viewer, choose Reports > "Save Report..." > "Export Report Table Only"). Record all readings in the paper lab notebook as well.
 		Save corrections to individual readings in nanodrop_corrections.csv: timestamp and `savedID` must match timestamp and ID in raw output. If `newID` is specified, the cleanup script will use it to replace the sample ID. If newID is blank, the script will delete that observation from the cleaned dataset.

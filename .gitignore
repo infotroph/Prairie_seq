@@ -1,4 +1,5 @@
-private
+private # stuff that should not be shared
+rawdata/miseq # OK to share, but too big for Git
 
 # in this repo, these are compiled from Markdown.
 *.html
