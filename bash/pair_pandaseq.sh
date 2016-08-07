@@ -56,6 +56,9 @@ mkdir -p "$OUTDIR"
 #	This seems to be the easiest way to get output from pandaseq into QIIME.
 #	Depending whether QIIME actually uses the quality scores in the barcode file,
 #	might be worth dropping this and producing a single FASTA with integrated barcodes.
+# -d (output flags)
+#	Default is BFSrk.
+#	Changed B to b so it doesn't log an INFO line for every dang read.
 
 (time pandaseq \
 	-f "$RAWDIR"/Plant_ITS2_Delucia_Fluidigm_R1.fastq \
@@ -63,32 +66,32 @@ mkdir -p "$OUTDIR"
 	-i "$RAWDIR"/Plant_ITS2_Delucia_Fluidigm_I1.fastq \
 	-w "$OUTDIR"/pspaired.fastq \
 	-U "$OUTDIR"/failed_pspair.fastq \
-	-g "$OUTDIR"/log.txt \
 	-p ATGCGATACTTGGTGTGAAT \
 	-q GACGCTTCTCCAGACTACAAT \
+	-d bFSrk \
 	-l 25 \
 	-k 10 \
 	-T 1 \
 	-F
-) 2>&1 | tee -a "$OUTDIR"/torque_"$SHORT_JOBID".log
+) 2>&1 | tee -a "$OUTDIR"/pandaseq_"$SHORT_JOBID".log
 
 # Pandaseq puts barcodes on the end of the sequence IDs.
 # qiime expects barcode read IDs to be *identical* to forward reads, so we:
 
 # * strip the barcodes off the Pandaseq IDs,
 sed -E 's/^(@HWI.*):.*/\1/' \
-	"$OUTDIR"/plant_its2_pspaired.fastq \
-	> "$OUTDIR"/plant_its2_pspaired_cleanid.fastq
+	"$OUTDIR"/pspaired.fastq \
+	> "$OUTDIR"/pspaired_cleanid.fastq
 # 	(N.B. Don't delete this yet! Will need it for split_libraries_fastq)
 
 # * strip the run ID ("2:N:0:") off the raw barcode IDs,
 sed -E 's/^(@HWI.*) 2:N:0:$/\1/' \
-	plant_its/Plant_ITS2_Delucia_Fluidigm_I1.fastq \
+	"$RAWDIR"/Plant_ITS2_Delucia_Fluidigm_I1.fastq \
 	> "$OUTDIR"/raw_barcode_tmp.fastq
 
 # * and store a table of clean read IDs.
 sed -En 's/^@(HWI.*):.*/\1/p' \
-	"$OUTDIR"/plant_its2_pspaired.fastq \
+	"$OUTDIR"/pspaired.fastq \
 	> "$OUTDIR"/tmp_readnames.txt
 
 
