@@ -635,3 +635,11 @@ Picking this project up again after long pause. Have spent the last month doing 
 		* `assign_taxonomy:id_to_taxonomy_fp`  changed from `~black11/ncbi_its2/present_genera_its2_accession_taxonomy.txt` to... Hmm. I've set this file up to change names every time I run `sort_ncbi_refs.sh`! Setting it to the current `~black11/ncbi_its2/presentITS_otu_97/rep_set/97_taxonomy_20160730.txt`, but will need to change this when I sync the cluster up with my laptop.
 		* Added line `assign_taxonomy:reference_seqs_fp ~black11/ncbi_its2/presentITS_otu_97/rep_set/97_otus_20160730.fasta` (was previously setting it in `run_qiime.sh`) Will need to update this one after syncing too.
 		* Added line `pick_otus:otu_picking_method uclust_ref` as shown in the ITS soils demos. Not clear on the difference between `uclust_ref` and `uclust` with a reference database might do this anyway, but this seems most likely to be correct.
+
+## 2016-08-07, CKB
+
+Thus ends the backlog of notes from July work. Now to stay on track and actually commit my notes as I take them. Today: Working on synchronizing repositories. I've been hand-copying things back and forth between my laptop and the cluster all month; it's time to stop that.
+
+* All the notes I committed above were committed on a `datacheck` branch that I created when I was cross-checking datasheets from the extraction portion of the project. I plan to do another round of cross-checking next time I'm at the desk with the paper notes on it, but no need to keep this branch running. Merged everything back into master.
+
+* Committed some quickly-written, crappy notes toward an overview / intro&methods skeleton of the project -- Scott, feel free to raid these for your writing.

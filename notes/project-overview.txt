@@ -1,0 +1,37 @@
+
+[!Caution: Overwrought, underedited generalizations]
+[Seriously, edit the hell out of these no matter what you're using them for.]
+
+Prairies are known for their highly diverse plant communities and for maintaining the majority of their biomass belowground, yet most work on the interactions between prairie species has focused on aboveground growth. Interactions in the root zone both are key determinants of many physiological and community-assembly process, both for intraspecies coordination and for competition and symbiosis between species and even between families and kingdoms. In addition to the general neglect of roots compared to aerial portions, the belowground studies that do exist have shown a strong bias to treat shallow depths as representative of the whole root system, despite evidence that complex root communities have spatially partitioned functions.
+
+Deep roots are critical for plant access to water and nutrients when they are scarce or highly competed-for in the surface soil, provide structural support when the surface is eroded or unstable, and allow resource storage in a rarely disturbed environment. Deep roots also provide niche space by exuding highly labile substrates into the relatively oligotrophic subsoil, thus both supporting rhizosphere microbe communities and driving carbon transfers to depe, slow-turnover pools.
+
+One major reason for our scant understanding of deep root communites is that, simply put, identifying roots is hard. For decades, the dominant standard for obtaining well-identified root samples has been either to collect them from monocultures or to use a sampling method that allows retrieval of a root still physically attached to a well-identified plant crown. When dealing with mixed core samples or those collected far from the crown, options for visual assesment are limited: Gross root morphology is often very similar for all species in a functional group, and microscopy is time-consuming and requires specialized training. 
+
+Molecular approaches can help with this! High-throughput methods for extracting and amplifying DNA from small samples, together with the ability to sequence whole communities of mized samples rather than separating each individual root, means it is now possible to take a metabarcoding approach to plant root community analysis.
+
+The objective of this study was to use DNA barcoding to identify the species present in mixed samples of roots taken from differing depths below a restored prairie in central Illinois, and to use these identities to reconstruct the functional dynamics of water usage, carbon storage, and plant-mcirobe interactions by prairie root communities. Roots were extracted from soil cores and bulked by depth, then sonicated to remove soil and rhizosphere components. 
+
+[overwrough part ends here, I hope]
+
+
+---------------------------
+
+In a restored prairie, who lives where and how does that change with depth?  On July 15-18 of 2013, we collected root and soil samples from five depth increments (0-10, 10-30, 30-50, 50-75, and 75-100 cm) within a restored prairie containing 34 known plant species, extracted bulk DNA from washed & sonicated roots and from rhizosphere soil, and probed them with five sets of barcodes targeting bacteria (16S, V4 region), fungi in general (ITS), arbuscular mycorrhizhal fungi from the Glomeromycota specifically (NS31/AML2), eukaryotes in general (18S), and plants specifically (Plant ITS2). PCR was done via Fluidigm Access Array followed by sequencing (2x 300 bases) by MiSeq v3. We also sequenced three negative controls (water) and a selection of positive controls: A mock community of DNA extracted from the roots of all 34 known species, root DNA from washed & sonicated roots of the four most common plant species (Andropogon gerardii, Silphium perfoliatum, Sorghastrum nutans, Elymus canadensis), and "spike-in" dilution series of Andropogon with small amounts of Sorghastrum or Elymus added.
+
+Questions:
+
+0. How 'bout them controls, hey? 
+	* Do the negative controls look fairly uncontaminated? Do they contain species that should be "subtracted out" of the other samples? 
+	* Do all species show up in the mock community? If any don't, are they also absent from all mixed samples? If yes, probable amplification/extraction bias against these species
+	* How well do the spike-ins show up against Andropogon background? If nicely, may be able to interpret some relative abundance in the mixed samples.
+	* Do the single-species controls have mostly just one dominant OTU? Does it map to the right species?
+	*...
+
+1. What plant species are present at each depth? Does diversity decline monotonically? Of species that are present at all depths, do their co-occurance rates differ in different layers? Does belowground abundance correlate with aboveground abundance?
+
+2. What non-plant species (microbes, fungi, nematodes...) do we observe at each depth? Does their occurence correlate with certain plant species (=specialized hosts?), and if so does the correlation grow stronger or weaker with depth? Do symbionts colonize the whole plant root system, or only certain layers? 
+
+3. (only a few samples sequenced) Do the rhizosphere samples ordinate more with with each other or with the root samples whose surface they came from? Is their change with depth stronger or weaker than that of the root communities?
+
+4. ...?
