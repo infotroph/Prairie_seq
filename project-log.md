@@ -610,9 +610,9 @@ Picking this project up again after long pause. Have spent the last month doing 
 
 	- ==> Edited `sort_ncbi_refs.sh` to:
 		1. Use QIIME's `filter_fasta.py` to remove every sequences listed in `unwanted_accessions.txt` This step alone reduces the all-plant FASTA file from 317 to 151 megabytes!
-		3. Use `cutadapt` to look for sites matching our ITS primers, and trim them and everything outside of them. When no matching site is found, sequence is left unchanged.
-		4. Sort by taxonomy and run the nested reference workflow as before.
-		5. Use newly written script `python/filter_taxonomy.py` to subset taxonomy files to only the entries matching the reference seqs.
+		2. Use `cutadapt` to look for sites matching our ITS primers, and trim them and everything outside of them. When no matching site is found, sequence is left unchanged.
+		3. Sort by taxonomy and run the nested reference workflow as before.
+		4. Use newly written script `python/filter_taxonomy.py` to subset taxonomy files to only the entries matching the reference seqs.
 
 	- After this trim, `awk '{if(length>10000) print NR}' plant_cut.fasta` finds only three lines: 255890, 255892, 482038. These are AY342318.1, AY342317.1, AB021684.1 respectively; all three are essentially-complete ribosomal RNA genes from the liverwort Marchantia polymorpha. Moving down the length scale, four more seqs have post-trim length between 5000 and 10000: KT693223.1, KU612123.1, LT174528.1, HE610130.1; all are classified as Chlorophyta (= algae). ==> Let's stop filtering for now and try picking OTUs with these included, but looks like I might be able to refine even further if necessary.
 
