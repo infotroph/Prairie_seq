@@ -626,3 +626,12 @@ Picking this project up again after long pause. Have spent the last month doing 
 			--seq_id_fp plant_nonstreptophyte_ids.txt \
 			--negate
 		```
+
+* 2016-07-31:
+
+	- Updating QIIME parameter file to match updated run scripts:
+		* `assign_taxonomy:assignment_method` changed from `uclust` to `blast`, as per QIIME fungal ITS tutorial (not sure if this is why my taxonomy assignments were failing before, but worth a try)
+		* `align_seqs:alignment_method` changed from `muscle` to `clustalw`, but maybe I should just delete it entirely on the grounds that if ITS2 is phylogenetically uninformative in fungi it's probably not great in plants... and besides, I don't *need* phylogeny, I just need taxonomy.
+		* `assign_taxonomy:id_to_taxonomy_fp`  changed from `~black11/ncbi_its2/present_genera_its2_accession_taxonomy.txt` to... Hmm. I've set this file up to change names every time I run `sort_ncbi_refs.sh`! Setting it to the current `~black11/ncbi_its2/presentITS_otu_97/rep_set/97_taxonomy_20160730.txt`, but will need to change this when I sync the cluster up with my laptop.
+		* Added line `assign_taxonomy:reference_seqs_fp ~black11/ncbi_its2/presentITS_otu_97/rep_set/97_otus_20160730.fasta` (was previously setting it in `run_qiime.sh`) Will need to update this one after syncing too.
+		* Added line `pick_otus:otu_picking_method uclust_ref` as shown in the ITS soils demos. Not clear on the difference between `uclust_ref` and `uclust` with a reference database might do this anyway, but this seems most likely to be correct.
