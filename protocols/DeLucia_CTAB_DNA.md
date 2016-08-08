@@ -52,3 +52,13 @@ ddH2O				|			|			| to volume
 2-mercaptoethanol 	| 2% (v/v) = 280 mM |	14 M	| 2 mL
 
 Mix all but 2-mercaptoethanol and sterilize by autoclaving. Add 2-mercaptoethanol immediately before using.
+
+1x TE:
+
+Reagent 			| [final] 	| [stock]	| for 50 mL
+--------------------|-----------|-----------|------------
+Tris-HCl, pH 8.0	| 10 mM 	| 1 M		| 500 µL
+EDTA				| 1 mM		| 0.1 M		| 500 µL
+ddH2O				|			|			| to volume
+
+Mix Tris-HCl, EDTA, and 40 mL water. Adjust pH to 8.0, then add water to final volume and filter-sterilize.

@@ -2,4 +2,7 @@ This directory is for nanodrop readings that we want to keep, but for whatever r
 
 CTAB-BC_15mg_20mg_45mg_AB_WORKING_STOCK_CRS_2015-01-29.txt: 
 	These are 10 ng/µL working stocks, remeasured 2015-01-29 as a first-order check on how reliable the 2015-01-27 readings on the master stocks were. The dilutions for these stocks were computed based on the master-stock readings, so if the master stock readings were correct then we expect all these dilutions to read very near 10 ng/µL. 
-	Observed range: 8.64 - 12.49 ng/µL, median 10.83. No sign of correlation between full-strength and diluted readings. Conclusion: Not perfect, but cumulative nanodrop->dilution->nanodrop error seems to be generally < 15%, so we *probably* didn't base any of our dilutions on wild outlier readings. This time. 
+	Observed range: 8.64 - 12.49 ng/µL, median 10.83. No sign of correlation between full-strength and diluted readings. Conclusion: Not perfect, but cumulative nanodrop->dilution->nanodrop error seems to be generally < 15%, so we *probably* didn't base any of our dilutions on wild outlier readings. This time.
+
+NaCl-EtOH_precip_test-20150611.txt:
+	Wanted to test whether reprecipitating DNA would make a noticeable difference in 260/230 ratio. Measurements come from one box of CTAB-BC test samples (several sets combined, most were extracted 2015-01-16 and previously Nanodropped on 2015-01-27): on 2015-06-11 I took Nanodrop readings from all samples in box, added ~1 volume 5 M NaCl and then 2 volumes 95% EtOH, incubated on ice 1.5 hours, spun down, washed pellets twice with 70% EtOH, let dry, resuspended overnight in 50 µL TE. Took a second set of after-cleanup Nanodrop measurements on 2015-06-12; this file contains both sets of readings.

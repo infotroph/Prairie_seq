@@ -65,4 +65,12 @@ Beauchamp, V.B., Walz, C. & Shafroth, P.B. (2009) Salinity tolerance and mycorrh
 
 Paper sent by Neil Anderson of Reforestation Technologies International, who made the mycorrhizal inoculant that Pizzo and Associates sold us for Energy Farm prairies at planting time. 
 
+-----------
+Chen, S., Yao, H., Han, J., Liu, C., Song, J., Shi, L., Zhu, Y., Ma, X., Gao, T., Pang, X., Luo, K, Li, Y., Jia, X., Lin, Y. & Leon, C. (2010) Validation of the ITS2 Region as a Novel DNA Barcode for Identifying Medicinal Plant Species. PLoS ONE, 5, e8613. doi:10.1371/journal.pone.0008613
 
+Source for our plant ITS2 primers.
+
+-------------
+Masella, A.P., Bartram, A.K., Truszkowski, J.M., Brown, D.G, & Neufeld, J.D. (2012) PANDAseq: paired-end assembler for illumina sequences. BMC Bioinformatics, 13, 31. doi: 10.1186/1471-2105-13-31
+
+Presents the end-joining algorithm we're using for plant ITS assembly. Beware that the first equation in the paper contains a statistical error (mistakes p(a|b) for p(b|a)), but it's not clear if the implementation makes the same mistake or not -- see also 10.1093/bioinformatics/btv401 for a harsh flaming of said error, and 10.1093/nar/gkt1244 for an algorithm update.
