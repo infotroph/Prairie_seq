@@ -103,14 +103,14 @@ module load qiime
 python ../../Python/filter_taxonomy.py \
 	present_genera_its2_accession_taxonomy.txt \
 	present_cut.fasta \
-| tee -a pres_filt_tmp.txt | awk 'BEGIN {print "ID Number\tGenBank Number\tNew Taxon String\tSource"} 
+| awk 'BEGIN {print "ID Number\tGenBank Number\tNew Taxon String\tSource"} 
 	{print $1"\t"$0"\tncbi_present"}' \
 > present_taxonomy.txt
 
 python ../../Python/filter_taxonomy.py \
 	ncbi_all_plant_its2_accession_taxonomy.txt \
 	plant_cut.fasta \
-| tee -a plant_filt_tmp |  awk 'BEGIN {print "ID Number\tGenBank Number\tNew Taxon String\tSource"}
+|  awk 'BEGIN {print "ID Number\tGenBank Number\tNew Taxon String\tSource"}
 	 {print $1"\t"$0"\tncbi_plants"}' \
 > plant_taxonomy.txt
 
