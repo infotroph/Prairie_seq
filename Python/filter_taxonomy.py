@@ -13,15 +13,15 @@ from sys import argv, stdout
 from cogent.parse.fasta import MinimalFastaParser
 
 def strip_tax(tax_fp, fasta_fp, out):
-	otu_ids = []
-	for seq_id,_ in MinimalFastaParser(open(fasta_fp,'U')):
-	    otu_ids.append(seq_id)
-	otu_ids = set(otu_ids)
+    otu_ids = []
+    with open(fasta_fp, 'U') as ff:
+        for seq_id,_ in MinimalFastaParser(ff):
+            otu_ids.append(seq_id)
+    otu_ids = set(otu_ids)
 
-	for line in open(tax_fp,'U'):
-	    if line.strip().split()[0] in otu_ids:
-	        out.write(line)
-	close(fasta_fp)
-	close(tax_fp)
+    with open(tax_fp,'U') as tf:
+        for line in tf:
+            if line.strip().split()[0] in otu_ids:
+                out.write(line)
 
-strip_tax(argv[0], argv[1], stdout)
+strip_tax(argv[1], argv[2], stdout)

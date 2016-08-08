@@ -20,11 +20,33 @@
 export PYTHONPATH=$PYTHONPATH:~/nested_reference_otus
 export PATH=$PATH:~/nested_reference_otus/scripts
 
-echo "starting at " `date -u` >> sort_refs.log
 module load qiime
 SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
+echo "starting at " `date -u` >> "$SHORT_JOBID".log
 
-# First, prep reference sequences by blacklisting some unwanted categories.
+# Where to write the final output?
+REF_OUTPATH=../../data/its2_ref
+mkdir -p "$REF_OUTPATH"
+
+# Shorten fasta headers to just the accession ID.
+awk -F'|' '/^>/{print ">"$4; next} {print $0}' \
+	ncbi_all_plant_its2_longid.fasta \
+	> ncbi_all_plant_its2.fasta
+awk -F'|' '/^>/{print ">"$4; next} {print $0}' \
+	present_genera_its2_longid.fasta \
+	> present_genera_its2.fasta
+
+# expand taxon IDs into taxonomy strings for every accession.
+Rscript ../../R/expand_taxonomy.R \
+	ncbi_all_plant_its2_accessions_taxids.csv \
+	ncbi_all_plant_its2_unique_taxonomy.txt \
+	ncbi_all_plant_its2_accession_taxonomy.txt
+Rscript ../../R/expand_taxonomy.R \
+	present_genera_its2_accessions_taxids.csv \
+	present_genera_its2_unique_taxonomy.txt \
+	present_genera_its2_accession_taxonomy.txt
+
+# Prep reference sequences by blacklisting some unwanted categories.
 # unwanted_accessions.txt was created by grepping the headers of my
 # raw `ncbi_all_plant_its2_longid.fasta` for:
 # 	"[Cc]hloroplast" because I'm only interested in nuclear genes,
@@ -37,12 +59,12 @@ SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
 	--output_fasta_fp present_wanted.fasta \
 	--seq_id_fp unwanted_accessions.txt \
 	--negate
-filter_fasta.py \
-	--input_fasta_fp ncbi_all_plant_its2.fasta \
-	--output_fasta_fp plant_wanted.fasta \
-	--seq_id_fp unwanted_accessions.txt \
-	--negate
-) 2>&1 | tee -a sort_refs.log
+# filter_fasta.py \
+# 	--input_fasta_fp ncbi_all_plant_its2.fasta \
+# 	--output_fasta_fp plant_wanted.fasta \
+# 	--seq_id_fp unwanted_accessions.txt \
+# 	--negate
+) 2>&1 | tee -a "$SHORT_JOBID".log
 
 
 # cutadapt and qiime load incompatible Python versions, must purge between uses
@@ -64,25 +86,35 @@ module load cutadapt
 	--times=2 \
 	--error-rate=0.1 \
 	present_wanted.fasta > present_cut.fasta
-cutadapt \
-	-g ATGCGATACTTGGTGTGAAT \
-	-a ATTGTAGTCTGGAGAAGCGTC \
-	--times=2 \
-	--error-rate=0.1 \
-	plant_wanted.fasta > plant_cut.fasta
-) 2>&1 | tee -a sort_refs.log
+# cutadapt \
+# 	-g ATGCGATACTTGGTGTGAAT \
+# 	-a ATTGTAGTCTGGAGAAGCGTC \
+# 	--times=2 \
+# 	--error-rate=0.1 \
+# 	plant_wanted.fasta > plant_cut.fasta
+) 2>&1 | tee -a "$SHORT_JOBID".log
 
 module purge
 module load qiime
 
-# sort_seqs is picky about file format; header line must be exactly as shown.
-awk 'BEGIN {print "ID Number\tGenBank Number\tNew Taxon String\tSource"}
-	 {print $1"\t"$0"\tncbi_present"}' \
-	present_genera_its2_accession_taxonomy.txt > present_taxonomy.txt
-awk 'BEGIN {print "ID Number\tGenBank Number\tNew Taxon String\tSource"}
-	 {print $1"\t"$0"\tncbi_plants"}' \
-	ncbi_all_plant_its2_accession_taxonomy.txt > plant_taxonomy.txt
+# Remove taxonomies not present in cut fasta files, and convert format
+# sort_seqs.py is picky and requires exactly these headers.
+python ../../Python/filter_taxonomy.py \
+	present_genera_its2_accession_taxonomy.txt \
+	present_cut.fasta \
+| tee -a pres_filt_tmp.txt | awk 'BEGIN {print "ID Number\tGenBank Number\tNew Taxon String\tSource"} 
+	{print $1"\t"$0"\tncbi_present"}' \
+> present_taxonomy.txt
 
+python ../../Python/filter_taxonomy.py \
+	ncbi_all_plant_its2_accession_taxonomy.txt \
+	plant_cut.fasta \
+| tee -a plant_filt_tmp |  awk 'BEGIN {print "ID Number\tGenBank Number\tNew Taxon String\tSource"}
+	 {print $1"\t"$0"\tncbi_plants"}' \
+> plant_taxonomy.txt
+
+# Sort sequences by length and taxonomic depth, so uclust uses the 
+# most informative seqs as OTU centroids
 (
 time sort_seqs.py \
 	--input_fasta present_cut.fasta \
@@ -96,59 +128,59 @@ time sort_seqs.py \
 
 time nested_reference_workflow.py \
 	--input_fasta_fp present_sorted.fasta \
-	--output_dir "present_tmp_97" \
+	--output_dir present_tmp_"$SHORT_JOBID"_97 \
 	--run_id "$SHORT_JOBID" \
 	--similarity_thresholds 97
 
 time nested_reference_workflow.py \
 	--input_fasta_fp present_sorted.fasta \
-	--output_dir "present_tmp_99" \
+	--output_dir present_tmp_"$SHORT_JOBID"_99 \
 	--run_id "$SHORT_JOBID" \
 	--similarity_thresholds 99
 
 time nested_reference_workflow.py \
 	--input_fasta_fp plant_sorted.fasta \
-	--output_dir "plant_tmp_97" \
+	--output_dir plant_tmp_"$SHORT_JOBID"_97 \
 	--run_id "$SHORT_JOBID" \
 	--similarity_thresholds 97
 
 time nested_reference_workflow.py \
 	--input_fasta_fp plant_sorted.fasta \
-	--output_dir "plant_tmp_99" \
+	--output_dir plant_tmp_"$SHORT_JOBID"_99 \
 	--run_id "$SHORT_JOBID" \
 	--similarity_thresholds 99
-) 2>&1 | tee -a sort_refs.log
+) 2>&1 | tee -a "$SHORT_JOBID".log
 
 # Save clustered representative sequences to a more convenient path.
-cp present_tmp_97/rep_set/97_otus_"$SHORT_JOBID".fasta \
-	data/its_ref/ncbi_present_97.fasta
-cp present_tmp_99/rep_set/99_otus_"$SHORT_JOBID".fasta \
-	data/its_ref/ncbi_present_99.fasta
-cp plant_tmp_97/rep_set/97_otus_"$SHORT_JOBID".fasta \
-	data/its_ref/ncbi_plant_97.fasta
-cp plant_tmp_99/rep_set/99_otus_"$SHORT_JOBID".fasta \
-	data/its_ref/ncbi_plant_99.fasta
+cp present_tmp_"$SHORT_JOBID"_97/rep_set/97_otus_"$SHORT_JOBID".fasta \
+	"$REF_OUTPATH"/ncbi_present_97.fasta
+cp present_tmp_"$SHORT_JOBID"_99/rep_set/99_otus_"$SHORT_JOBID".fasta \
+	"$REF_OUTPATH"/ncbi_present_99.fasta
+cp plant_tmp_"$SHORT_JOBID"_97/rep_set/97_otus_"$SHORT_JOBID".fasta \
+	"$REF_OUTPATH"/ncbi_plant_97.fasta
+cp plant_tmp_"$SHORT_JOBID"_99/rep_set/99_otus_"$SHORT_JOBID".fasta \
+	"$REF_OUTPATH"/ncbi_plant_99.fasta
 
-# filter taxonomies down to match picked sequence sets.
-python filter_taxonomy.py \
+# filter taxonomies down to match the final picked sequence sets.
+python ../../Python/filter_taxonomy.py \
 	present_genera_its2_accession_taxonomy.txt \
-	presentITS_otu_97/rep_set/97_otus_"$SHORT_JOBID".fasta \
-	> data/its_ref/ncbi_present_97_taxonomy.txt
+	present_tmp_"$SHORT_JOBID"_97/rep_set/97_otus_"$SHORT_JOBID".fasta \
+	> "$REF_OUTPATH"/ncbi_present_97_taxonomy.txt
 
-python filter_taxonomy.py \
+python ../../Python/filter_taxonomy.py \
 	present_genera_its2_accession_taxonomy.txt \
-	presentITS_otu_99/rep_set/99_otus_"$SHORT_JOBID".fasta \
-	> data/its_ref/ncbi_present_99_taxonomy.txt
+	present_tmp_"$SHORT_JOBID"_99/rep_set/99_otus_"$SHORT_JOBID".fasta \
+	> "$REF_OUTPATH"/ncbi_present_99_taxonomy.txt
 
 
-python filter_taxonomy.py \
+python ../../Python/filter_taxonomy.py \
 	ncbi_all_plant_its2_accession_taxonomy.txt \
-	plantITS_otu_97/rep_set/97_otus_"$SHORT_JOBID".fasta \
-	> data/its_ref/ncbi_plant_97_taxonomy.txt
+	plant_tmp_"$SHORT_JOBID"_97/rep_set/97_otus_"$SHORT_JOBID".fasta \
+	> "$REF_OUTPATH"/ncbi_plant_97_taxonomy.txt
 
-python filter_taxonomy.py \
+python ../../Python/filter_taxonomy.py \
 	ncbi_all_plant_its2_accession_taxonomy.txt \
-	plantITS_otu_99/rep_set/99_otus_"$SHORT_JOBID".fasta \
-	> data/its_ref/ncbi_plant_99_taxonomy.txt
+	plant_tmp_"$SHORT_JOBID"_99/rep_set/99_otus_"$SHORT_JOBID".fasta \
+	> "$REF_OUTPATH"/ncbi_plant_99_taxonomy.txt
 
-echo "done at " `date -u` >> sort_refs.log
+echo "done at " `date -u` >> "$SHORT_JOBID".log

@@ -651,4 +651,13 @@ Now editing Torque scripts to use this layout. Done so far: `pair_pandaseq.py`, 
 
 My `.gitignore` edits from above are not working--ignored `private` and `rawdata/miseq` are shown as unadded directories. Looks like Git doesn't like end-of-line comments. Removed those, both now ignored correctly.
 
-Edited paths in `sort_ncbi_refs.sh` to do initial processing the newly-relocated `rawdata/ncbi_its` directory and then write finished reference sequences and taxonomies to `data/its2_ref/`, updated `qiime_parameters.txt` to point toward them (still using present genera clustered at 97% for the moment, will test others soon)
+Edited paths in `sort_ncbi_refs.sh` to do initial processing in the newly-relocated `rawdata/ncbi_its` directory and then write finished reference sequences and taxonomies to `data/its2_ref/`, updated `qiime_parameters.txt` to point toward them (still using present genera clustered at 97% for the moment, will test others soon).
+
+...OK, sort_ncbi_refs needed a lot of work:
+
+* nested OTU workflow needs the full taxonomies for every accession, which aren't yet committed. Added new script `expand_taxonomy.R` to reconstruct these on the fly from unique taxonomies and `accession_taxid` maps.
+* Ditto for reference FASTAs with accessions as names. I've committed `present_genera_its2_longid.fasta and copied the too-giant-to-commit `ncbi_all_plant_its2_longid.fasta` into the working directory, and added `awk` calls to reconstruct the short-header versions as needed.
+* Put Torque job ID into directory paths and logfile names, to avoid clobbering previous versions when I rerun it.
+* call `filter_taxonomy.py` in between cutadapt and otu-calling steps, to remove sequences I trimmed out. I don't think this is 100% necessary, but if nothing else it prevents the log file from being flooded with thousands of lines of complaints about it.
+* `filter_taxonomy.py` had one major bug (I was reading from `argv[0]` and `argv[1]` instead of `argv[1]` and `argv[2]`, one minor(treating close as a function instead of a method), and mixed tab/space indenting. Fixed all of these.
+* needed to specify path to `filter_taxonomy.py`
