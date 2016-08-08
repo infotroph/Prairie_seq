@@ -24,7 +24,8 @@ module load qiime
 SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
 echo "starting at " `date -u` >> "$SHORT_JOBID".log
 
-# Where to write the final output?
+# Final outputs get copied here, all intermediate files left in cwd --
+# inspect them however you like, then delete manually
 REF_OUTPATH=../../data/its2_ref
 mkdir -p "$REF_OUTPATH"
 
@@ -59,11 +60,11 @@ Rscript ../../R/expand_taxonomy.R \
 	--output_fasta_fp present_wanted.fasta \
 	--seq_id_fp unwanted_accessions.txt \
 	--negate
-# filter_fasta.py \
-# 	--input_fasta_fp ncbi_all_plant_its2.fasta \
-# 	--output_fasta_fp plant_wanted.fasta \
-# 	--seq_id_fp unwanted_accessions.txt \
-# 	--negate
+filter_fasta.py \
+	--input_fasta_fp ncbi_all_plant_its2.fasta \
+	--output_fasta_fp plant_wanted.fasta \
+	--seq_id_fp unwanted_accessions.txt \
+	--negate
 ) 2>&1 | tee -a "$SHORT_JOBID".log
 
 
@@ -86,12 +87,12 @@ module load cutadapt
 	--times=2 \
 	--error-rate=0.1 \
 	present_wanted.fasta > present_cut.fasta
-# cutadapt \
-# 	-g ATGCGATACTTGGTGTGAAT \
-# 	-a ATTGTAGTCTGGAGAAGCGTC \
-# 	--times=2 \
-# 	--error-rate=0.1 \
-# 	plant_wanted.fasta > plant_cut.fasta
+cutadapt \
+	-g ATGCGATACTTGGTGTGAAT \
+	-a ATTGTAGTCTGGAGAAGCGTC \
+	--times=2 \
+	--error-rate=0.1 \
+	plant_wanted.fasta > plant_cut.fasta
 ) 2>&1 | tee -a "$SHORT_JOBID".log
 
 module purge
