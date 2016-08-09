@@ -673,3 +673,63 @@ Fixing up `run_qiime.sh`, which was also in worse shape than I thought:
 * Probably will end up deleting most of the align-and-tree commands, but not going to think about them until otu picking is working right. Added an `exit` to bail from script rather than delete/comment these.
 
 BLAST is not finding reference and taxonomy files. Wasted an hour reverifying paths in `qiime_parameters` and rerunning `pick_open_reference_otus.py` before realizing BLAST apparently runs with a different working directory. Changed reference and taxonomy paths in `qiime_parameters` from relative to absolute, BLAST now runs happily. So much for avoiding absolute paths.
+
+Ran `run_qiime.sh` to get picked OTUs from all four reference sets. The initial closed-reference step finds more OTUS as the size of the reference file grows: 73 from present genera clustered at 97%, 202 from present genera clustered at 99% (but the OTUs picked against it are still clustered at 97%!), 183 and 362 from all-plant seqs clustered at 97 and 99% respectively.  The de novo picking step essentially makes up for this, though -- total number of OTUs is pretty similar between methods: 5923, 5994, 6603, 6545 from present 97, present 99, plant 97, plant 99 respectively. Total number of seqs retained after throwing out singletons is very similar across methods -- ranges from 721686 to 722559 with no apparent pattern.
+
+Stalling on making any formal decision about OTU picking. Let's look at some output! copied `rawdata/miseq/plant_its_present97_otu/otu_table_mc2_w_tax.biom` to my laptop, saved for the moment as `~/UI/prairie_seq/present97_otu_mc2_w_tax_20160808.biom`. Noodling around in R:
+
+```
+library(phyloseq)
+
+bp = import_biom("~/UI/prairie_seq/present97_otu_mc2_w_tax_20160808.biom")
+
+psmap = read.table(
+	"~/UI/prairie_seq/rawdata/plant_ITS_map.txt",
+	comment.char="",
+	header=T)
+rownames(psmap)=psmap$X.SampleID
+
+bpm = merge_phyloseq(bp, sample_data(psmap))
+
+plot_bar(
+	subset_samples(bpm, SampleType=="root"),
+	x="Rank7",
+	fill="Rank9",
+	facet_grid=~Depth1)
+
+# normalize reads within each sample
+# (all colSums(otu_table(bpm_sampnorm) should == 1)
+bpm_sampnorm = transform_sample_counts(bpm, function(x) x/sum(x))
+
+# plot by normalized abundance
+# sum of abundance within each depth should equal number
+#of samples from that depth -- 
+# can check with nrow(sample_data(subset_samples(bpm, Depth1==0)))
+# ==> Depth 0-10=26 samples, 10-30=26, 30-50=23, 50-75=26, 75-100=25.
+plot_bar(
+	subset_samples(bpm_sampnorm, SampleType=="root"),
+	x="Rank7",
+	fill="Rank9",
+	facet_grid=~Depth1)
+```
+
+Notable observations in this plot:
+* Taxonomic ranks are messed up here -- Rank7 shows family names for the dicots, but "Poales", i.e. a whole order, for the grasses. 
+* Relative grass abundance increases with depth
+* Relative legume abundance seems fairly constant with depth, but composition changes: *Astragalus* is common in surface layer but not below, *Lezpedeza* shows up in 10-30 layer but not elsewhere. 
+Saved a screenshot of this last plot, emailed to EHD and SAW.
+
+Let's have a look at the controls too.
+
+```
+(plot_bar(
+ 	subset_samples(bpm_sampnorm, SampleType=="control"),
+ 	x="Rank9",
+ 	facet_grid=Sample~.)
+ +theme(axis.text.x = element_text(angle = 45, hjust = 1)))
+```
+
+* that's an awful lot of Solidago in places it shouldn't be, including water controls and *Andropogon* voucher samples -> hence also in spike-ins.
+* Seems to be a wide, relatively even array of taxa in the voucher mix samples, which is a good sign for sensitivity / PCR bias worries.
+
+Took a very brief look at these same plots in the all-plants 97% file, but did not go into detail and did not look at the 99% files at all. My quick look says: similar patterns but with more species in the mix.
