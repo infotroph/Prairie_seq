@@ -661,3 +661,15 @@ Edited paths in `sort_ncbi_refs.sh` to do initial processing in the newly-reloca
 * call `filter_taxonomy.py` in between cutadapt and otu-calling steps, to remove sequences I trimmed out. I don't think this is 100% necessary, but if nothing else it prevents the log file from being flooded with thousands of lines of complaints about it.
 * `filter_taxonomy.py` had one major bug (I was reading from `argv[0]` and `argv[1]` instead of `argv[1]` and `argv[2]`, one minor(treating close as a function instead of a method), and mixed tab/space indenting. Fixed all of these.
 * needed to specify path to `filter_taxonomy.py`
+
+## 2016-08-08, CKB
+
+Fixing up `run_qiime.sh`, which was also in worse shape than I thought:
+
+* `pick_open_reference_otus.py` requires that the OTU-picking method be passed in the script call and *NOT* in the parameters file (???), while the taxonomy file still must be passed in the parameter file. Currently generating temporary parameter files on the fly for each different reference method -- this is gross and I need to remove that as soon as I settle on a reference DB.
+* Had some baffling moments trying to figure out the interaction between Torque working directory as set by `#PBS -d` (interpreted relative to the $(pwd) it was qsub'd from, doesn't know how to expand `~`) and relative paths across symlinked directory boundaries ('../../' did not go where I expected). Current solution: Specify Torque working directory as `#PBS -d .`, and make a note to always submit the script as `cd ~/Prairie_seq && qsub bash/run_qiime.sh`.
+* updated paths to write most logs to `tmp/`
+* `pick_open_reference_otus.py` refuses to overwrite existing OTU output directories. Punting on this for now by manually removing previous runs before submitting each time.
+* Probably will end up deleting most of the align-and-tree commands, but not going to think about them until otu picking is working right. Added an `exit` to bail from script rather than delete/comment these.
+
+BLAST is not finding reference and taxonomy files. Wasted an hour reverifying paths in `qiime_parameters` and rerunning `pick_open_reference_otus.py` before realizing BLAST apparently runs with a different working directory. Changed reference and taxonomy paths in `qiime_parameters` from relative to absolute, BLAST now runs happily. So much for avoiding absolute paths.

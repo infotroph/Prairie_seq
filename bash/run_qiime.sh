@@ -6,8 +6,8 @@
 #PBS -M black11@igb.illinois.edu
 #PBS -m abe
 #PBS -j oe
-#PBS -N plant_its_presentref_nounassigned-20160725
-#PBS -d /home/a-m/black11/no_backup/Fluidigm_2015813/
+#PBS -N plant_its_ncbiref
+#PBS -d .
 
 module load qiime
 
@@ -22,38 +22,70 @@ SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
 # But we don't know what sample they came from.
 # There's nothing you can do, just let them go.)
 (time split_libraries_fastq.py \
-	--sequence_read_fps plant_its_pandaseq_joined/plant_its2_pspaired_cleanid.fastq \
-	--barcode_read_fps plant_its_pandaseq_joined/barcodes_pspaired.fastq \
-	--output_dir plant_its_slnoun_psp \
-	--mapping_fps plant_ITS_map.txt \
+	--sequence_read_fps rawdata/miseq/plant_its_pandaseq_joined/pspaired_cleanid.fastq \
+	--barcode_read_fps rawdata/miseq/plant_its_pandaseq_joined/barcodes_pspaired.fastq \
+	--output_dir rawdata/miseq/plant_its_sl \
+	--mapping_fps rawdata/plant_ITS_map.txt \
 	--barcode_type 10 \
 	--phred_quality_threshold 0 \
 	--phred_offset 33
-) 2>&1 | tee -a split_nounassign-20160725.log
+) 2>&1 | tee -a tmp/split_"$SHORT_JOBID".log
 
-count_seqs.py -i plant_its_sl_psp/seqs.fna >> split_nounassign-20160725.log
+count_seqs.py -i rawdata/miseq/plant_its_sl/seqs.fna >> split_"$SHORT_JOBID".log
 
-(time pick_open_reference_otus.py \
-	--input_fps plant_its_slnoun_psp/seqs.fna \
-	--output_dir plant_its_presentref_noun_otu99_psp \
-	--otu_picking_method uclust \
-	--reference_fp ~black11/ncbi_its2/presentITS_otu_99/rep_set/99_otus_20160724.fasta  \
-	--parameter_fp qiime_parameters.txt \
-	--parallel \
-	--jobs_to_start 20 \
-	--suppress_align_and_tree
-) 2>&1 | tee -a presentref_otu99noun-20160725.log
+# Pick OTUs and taxonomy, using each of four possible reference sets.
+# Taxonomy file has to be passed in parameters file, so a horrible hack:
+# I'll copy the master qiime_parameters.txt to four temporary files,
+# rewriting reference file names each time.
+cp bash/qiime_parameters.txt tmp/params_pr97.txt
+sed 's/present_97/present_99/' tmp/params_pr97.txt > tmp/params_pr99.txt
+sed 's/present_97/plant_97/' tmp/params_pr97.txt > tmp/params_pl97.txt
+sed 's/present_97/plant_99/' tmp/params_pr97.txt > tmp/params_pl99.txt
 
 (time pick_open_reference_otus.py \
-	--input_fps plant_its_slnoun_psp/seqs.fna \
-	--output_dir plant_its_presentref_noun_otu97_psp \
+	--input_fps rawdata/miseq/plant_its_sl/seqs.fna \
+	--output_dir rawdata/miseq/plant_its_present97_otu \
+	--reference_fp data/its2_ref/ncbi_present_97.fasta \
+	--parameter_fp tmp/params_pr97.txt \
 	--otu_picking_method uclust \
-	--reference_fp ~black11/ncbi_its2/presentITS_otu_97/rep_set/97_otus_20160724.fasta  \
-	--parameter_fp qiime_parameters.txt \
 	--parallel \
-	--jobs_to_start 20 \
 	--suppress_align_and_tree
-) 2>&1 | tee -a presentref_otu97noun-20160725.log
+) 2>&1 | tee -a tmp/pr97_"$SHORT_JOBID".log
+
+
+(time pick_open_reference_otus.py \
+	--input_fps rawdata/miseq/plant_its_sl/seqs.fna \
+	--output_dir rawdata/miseq/plant_its_present99_otu \
+	--reference_fp data/its2_ref/ncbi_present_99.fasta \
+	--parameter_fp tmp/params_pr99.txt \
+	--otu_picking_method uclust \
+	--parallel \
+	--suppress_align_and_tree
+) 2>&1 | tee -a tmp/pr99_"$SHORT_JOBID".log
+
+(time pick_open_reference_otus.py \
+	--input_fps rawdata/miseq/plant_its_sl/seqs.fna \
+	--output_dir rawdata/miseq/plant_its_plant97_otu \
+	--reference_fp data/its2_ref/ncbi_plant_97.fasta \
+	--parameter_fp tmp/params_pl97.txt \
+	--otu_picking_method uclust \
+	--parallel \
+	--suppress_align_and_tree
+) 2>&1 | tee -a tmp/pl97_"$SHORT_JOBID".log
+
+(time pick_open_reference_otus.py \
+	--input_fps rawdata/miseq/plant_its_sl/seqs.fna \
+	--output_dir rawdata/miseq/plant_its_plant99_otu \
+	--reference_fp data/its2_ref/ncbi_plant_99.fasta \
+	--parameter_fp tmp/params_pl99.txt \
+	--otu_picking_method uclust \
+	--parallel \
+	--suppress_align_and_tree
+) 2>&1 | tee -a tmp/pl99_"$SHORT_JOBID".log
+
+# Probably going to delete everything below, but for now let's just bail
+echo "Not attempting alignment or diversity analysis. Exiting now!"
+exit 
 
 # Remaining steps are a manual version of the align-and-tree portions of pick_open_reference_otus.py.
 # Doing them by hand because pick_open_reference_otus has alignment method hard-coded to pynast,
