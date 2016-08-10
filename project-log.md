@@ -733,3 +733,37 @@ Let's have a look at the controls too.
 * Seems to be a wide, relatively even array of taxa in the voucher mix samples, which is a good sign for sensitivity / PCR bias worries.
 
 Took a very brief look at these same plots in the all-plants 97% file, but did not go into detail and did not look at the 99% files at all. My quick look says: similar patterns but with more species in the mix.
+
+## 2016-08-09, CKB:
+
+Still stalling on OTU decision. Meanwhile, here's my first pass at how to add bulk soil C and N values in to the analysis -- I should probably just do this once and write them in to the mapping file! Working from a quickly hand-made CSV version of the C/N analysis data sent by Mike Masters on 2016-02-17. TODO: Clean this up properly and commit it!
+
+```
+library(dplyr)
+
+# (This is a temporary file quickly hand-extracted from Excel sheet)
+soil = read.csv("~/UI/prairie_seq/rawdata/sequences/SoilCN_tmp.csv")
+
+# Remove empty capsules (they were a zero check), average duplicates.
+# N=119 -- Apparently we missed 2P2 75-100
+soil_clean = (soil
+	%>% filter(Block != "Empty Capsule")
+	%>% select(-Notes)
+	%>% group_by(Block, Sample, Upper, Lower)
+	%>% summarize_all(funs(mean))
+) 
+
+#psmap is as constructed yesterday
+psmap_soil = merge(
+	x=psmap,
+	y=soil_clean,
+	by.x=c("Block", "Location", "Depth1", "Depth2"),
+	by.y=c("Block", "Sample", "Upper", "Lower"),
+	all.x=TRUE)
+psmap_soil$Depthf = paste0(psmap_soil$Depth1, "-", psmap_soil$Depth2)
+psmap_soil$CN = psmap_soil$PctC / psmap_soil$PctN
+
+rownames(psmap_soil) = psmap_soil$X.SampleID
+bpms = merge_phyloseq(bp, sample_data(psmap_soil))
+# ... use as above, but now with soil C and N data!
+```
