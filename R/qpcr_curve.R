@@ -73,7 +73,7 @@ set_ids = seq_along(ids)[ids != ""]
 # Normalize, smooth, and fit melting peaks all in one step. See the qpcR::meltcurve() documentation for details on how it does the fitting.
 # The plot is pretty ugly and we'll make a prettier version in a later step, but let's save this one too for diagnostic pourposes.
 pdf(
-	file="figs/multi_ctab_peakfit.pdf", 
+	file="figs/multi_ctab_peakfit-20150421.pdf", #FIXME FIXME FIXME: let Makefile specify path!
 	width=45,
 	height=30,
 	pointsize=24)
@@ -109,7 +109,8 @@ peak_summary = merge(peak_summary, iddat, all.x=TRUE)
 peak_summary = peak_summary[order.plate(peak_summary$Well),]
 
 # OK, summary is done. Write it out and move on.
-write.csv(peak_summary, file="data/multi_ctab_melt_summary.csv", quote=FALSE, row.names=FALSE)
+#FIXME FIXME FIXME: let Makefile specify path!
+write.csv(peak_summary, file="data/multi_ctab_melt_summary-20150421.csv", quote=FALSE, row.names=FALSE)
 
 
 
@@ -126,4 +127,5 @@ fitted_summary = merge(fitted_summary, iddat, all.x=TRUE)
 # Sort in plate order (TODO: maybe should sort by sample instead?)
 fitted_summary = fitted_summary[order.plate(fitted_summary$Well),]
 
-write.csv(fitted_summary, file="data/multi_ctab_melt_curves.csv", quote=FALSE, row.names=FALSE)
+# FIXME FIXME FIXME: let Makefile specify path!
+write.csv(fitted_summary, file="data/multi_ctab_melt_curves-20150421.csv", quote=FALSE, row.names=FALSE)

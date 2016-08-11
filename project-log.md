@@ -136,7 +136,9 @@ Bioanalyzer results, and a quick plotting script, for TLP's Undergrad Research S
 
 2015-04-21, not recorded until 2015-05-26, CKB and CRS:
 
-qPCR results for CRS's Undergrad Research Symposium poster, committed in a new `sligar-URS-poster` branch, with ugly hacks to do it -- most of the melt analysis scripts have hard-coded paths that I didn't want to overwrite, so I duplicated a *lot* of code. This will need care and thought before merging back into master.
+QPCR results, and plot output, for CRS's Undergrad Research Symposium poster. All these changes committed in branch `sligar-URS-poster`, and the changes are messy -- ALL of the qPCR plotting scripts have hard-coded filepaths in them, at least one of them assumed E.coli is in well A11, etc. I kicked the problem down the road by editing all scripts to write to versions of filenames with `-20150421` appended, then commented out all the existing Makefile entries and replaced them with date-specific ones. This will be no easier to fix later on, but maybe we'll be less up against a deadline.
+	
+	* (2016-08-11, CKB: I never did fix this properly, but am merging it back into master so that the data from the poster are easily accessible. Sorry for passing the buck, future collaborators/self.)
 
 2015-05-26 (really 27 now), CKB:
 

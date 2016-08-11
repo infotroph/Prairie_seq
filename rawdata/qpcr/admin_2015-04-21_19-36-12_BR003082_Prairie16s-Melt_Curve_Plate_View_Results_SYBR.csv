@@ -1,0 +1,33 @@
+,,1,2,3,4,5,6,7,8,9,10,11,12
+A,Content,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn
+A,Sample,A1,A1,H1,H1,,,,,,,,
+A,Peak 1,86.4,86.3,86.7,86.8,None,None,None,None,None,None,None,None
+A,Peak 2,None,None,None,None,None,None,None,None,None,None,None,None
+B,Content,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn
+B,Sample,A2,A2,H2,H2,,,,,,,,
+B,Peak 1,85.9,85.9,86,86,None,None,None,None,None,None,None,None
+B,Peak 2,None,None,None,None,None,None,None,None,None,None,None,None
+C,Content,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Neg Ctrl,Neg Ctrl
+C,Sample,A3,A3,H3,H3,,,,,,,,
+C,Peak 1,86.1,86,86.1,86.1,None,None,None,None,None,None,None,None
+C,Peak 2,None,None,None,None,None,None,None,None,None,None,None,None
+D,Content,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn
+D,Sample,A4,A4,NO SAMPLE,NO SAMPLE,,,,,,,,
+D,Peak 1,None,None,None,None,None,None,None,None,None,None,None,None
+D,Peak 2,None,None,None,None,None,None,None,None,None,None,None,None
+E,Content,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn
+E,Sample,C1,C1,R.Sph,R.Sph,,,,,,,,
+E,Peak 1,85.7,85.7,85.7,85.7,None,None,None,None,None,None,None,None
+E,Peak 2,None,None,None,None,None,None,None,None,None,None,None,None
+F,Content,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn
+F,Sample,C2,C2,H.Flu,H.Flu,,,,,,,,
+F,Peak 1,85.5,85.5,84.6,84.6,None,None,None,None,None,None,None,None
+F,Peak 2,None,None,None,None,None,None,None,None,None,None,None,None
+G,Content,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn
+G,Sample,C3,C3,E.coli,E.coli,,,,,,,,
+G,Peak 1,86.3,86.3,86.1,86.1,None,None,None,None,None,None,None,None
+G,Peak 2,None,None,None,None,None,None,None,None,None,None,None,None
+H,Content,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn,Unkn
+H,Sample,C4,C4,Mixed_Bact,Mixed_Bact,,,,,,,,
+H,Peak 1,None,86.1,85.8,85.8,None,None,None,None,None,None,None,None
+H,Peak 2,None,None,84.4,84.4,None,None,None,None,None,None,None,None
