@@ -769,3 +769,9 @@ rownames(psmap_soil) = psmap_soil$X.SampleID
 bpms = merge_phyloseq(bp, sample_data(psmap_soil))
 # ... use as above, but now with soil C and N data!
 ```
+
+## 2016-08-13, CKB:
+
+My OTU-call testing above is still unresolved -- I'm still not sure how to evaluate the results. Leaving it on the TODO list for the moment and switching back to pre-clustering cleanup. First, a Pandaseq algorithm change: The original Pandaseq algorithm, strangely, often a paired base as of lower quality than either parent strand, even when the base calls agree! I believe this is because one of the probability calculations in Masela et al 2012 confuses p(true match|observe match) with p(observe match|true match). Cole et al 2013 (doi:10.1093/nar/gkt1244) presents an update, available in Pandaseq as `-A rdp_mle`, that corrects this and produces base quality scores that are at least equal to the better-quality parent as long as both calls agree.
+
+This means per-read base quality in the overlap regions is now reported as WAY higher -- effectively no reads (29 out of ~1.3M) removed as LOWQ, compared to ~4000 with default algorithm. Bumped up quality threshold from 0.6 to 0.8 on the theory that the sequences removed as low-quality now really are worth removing.

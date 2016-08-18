@@ -34,12 +34,6 @@ mkdir -p "$OUTDIR"
 # -L (max length) unset
 #	Haven't considered either of these carefully, don't expect them to matter.
 #	May revisit later.
-# -t (alignment quality threshold)
-#	default is 0.6, max advised is 0.9 (Masella et al 2012 10.1186/1471-2105-13-31)
-#	I tried 0.6,0.7,0.8, 0.9, saw only small reductions in either 
-#	total sequence count or number of singletons 
-#	==> doesn't seem to make a huge difference for this dataset.
-#	May revisit later after the rest of the pipeline is set.
 
 # Rationale for non-default settings:
 # -l (minimum length after primers are removed)
@@ -59,6 +53,14 @@ mkdir -p "$OUTDIR"
 # -d (output flags)
 #	Default is BFSrk.
 #	Changed B to b so it doesn't log an INFO line for every dang read.
+# -A (end-pairing algorithm)
+#	Default is simple_bayesian.
+#	Using rdp_mle, a corrected/improved version of the simple_bayesian method: 
+#	see Cole et al 2013 (10.1093/nar/gkt1244)
+# -t (alignment quality threshold)
+#	default is 0.6, max advised is 0.9 (Masella et al 2012 10.1186/1471-2105-13-31)
+#	In my testing this didn't affect results much, but using 0.8 because it does eliminate 
+# 	a few bogus-looking assignments that aren't caught at 0.6.
 
 (time pandaseq \
 	-f "$RAWDIR"/Plant_ITS2_Delucia_Fluidigm_R1.fastq \
@@ -69,9 +71,11 @@ mkdir -p "$OUTDIR"
 	-p ATGCGATACTTGGTGTGAAT \
 	-q GACGCTTCTCCAGACTACAAT \
 	-d bFSrk \
+	-A rdp_mle \
 	-l 25 \
 	-k 10 \
 	-T 1 \
+	-t 0.8 \
 	-F
 ) 2>&1 | tee -a "$OUTDIR"/pandaseq_"$SHORT_JOBID".log
 
