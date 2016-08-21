@@ -31,7 +31,7 @@ SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
 	--phred_offset 33
 ) 2>&1 | tee -a tmp/split_"$SHORT_JOBID".log
 
-count_seqs.py -i rawdata/miseq/plant_its_sl/seqs.fna >> split_"$SHORT_JOBID".log
+count_seqs.py -i rawdata/miseq/plant_its_sl/seqs.fna >> tmp/split_"$SHORT_JOBID".log
 
 # Pick OTUs and taxonomy, using each of four possible reference sets.
 # Taxonomy file has to be passed in parameters file, so a horrible hack:
