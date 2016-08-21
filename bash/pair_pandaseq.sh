@@ -9,31 +9,67 @@
 #PBS -N pair_pandaseq
 #PBS -d rawdata/miseq
 
-module load pandaseq/2.10
-
 SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
 
-RAWDIR=plant_its
+RAW_FWDREADS=plant_its/Plant_ITS2_Delucia_Fluidigm_R1.fastq
+RAW_REVREADS=plant_its/Plant_ITS2_Delucia_Fluidigm_R2.fastq
+RAW_INDEX=plant_its/Plant_ITS2_Delucia_Fluidigm_I1.fastq
+
 OUTDIR=plant_its_pandaseq_joined
 mkdir -p "$OUTDIR"
 
-# Attempting to join paired-end reads from all reads sorted as 'Plant ITS2'
+# Joining paired-end reads from all reads sorted as 'Plant ITS2'
 # in primer-sorted files from sequencing center.
-# N.B. Reverse file appears to contain some reads from 'universal' ITS primer 
-# (TCCTCCGCTTATTGATATGC) -- ~183k out of 1.28M total,
-# compared to ~830k from intended primer GACGCTTCTCCAGACTACAAT
-# Forward read seems ~uncontaminated: ATGCGATACTTGGTGTGAAT in ~1.1M of 1.28M total reads
+# Start by trimming off primers and low-quality ends, and discard reads with the wrong primers --
+# ~all 1.28M reads have our forward plant ITS2 primer (ATGCGATACTTGGTGTGAAT)
+# but ~190k of the reverse reads have our 'fungal' ITS2 reverse primer (TCCTCCGCTTATTGATATGC)
+# instead of the expected GACGCTTCTCCAGACTACAAT.
+# Chimeras? Tag-switching? In any case we probably don't want them.
 
-# TODO: Do I need to re-sort files or otherwise filter the universal reverse seqs out? Are there plant ITS seqs hiding in the universal primer reverse files?
+module load cutadapt
 
+# -q 20: trim ends when 'average' quality drops below 20 (see cutadapt docs for gory details)
+# --trimmed only: throw out anything not matching these primers
+cutadapt \
+	-g ATGCGATACTTGGTGTGAAT \
+	-G GACGCTTCTCCAGACTACAAT \
+	--error-rate=0.1 \
+	-q 20 \
+	--trimmed-only \
+	-o "$OUTDIR"/R1_trim.fastq \
+	-p "$OUTDIR"/R2_trim.fastq \
+	"$RAW_FWDREADS" \
+	"$RAW_REVREADS"
+
+module purge
+module load qiime
+
+# Make a list of readnames we kept,
+# converting read 1 indicator '1:N:0:' to index read indicator '2:N:0:'
+sed -En 's/^@(HWI.*) 1:N:0:/\1 2:N:0:/p' \
+        "$OUTDIR"/R1_trim.fastq \
+        > "$OUTDIR"/tmp_R1_trim_names.txt
+
+# Filter index reads to match trimmed reads
+time filter_fasta.py \
+        --input_fasta_fp "$RAW_INDEX" \
+        --output_fasta_fp "$OUTDIR"/I1_trim.fastq \
+        --seq_id_fp "$OUTDIR"/tmp_R1_trim_names.txt
+
+module purge
+module load pandaseq/2.10
+
+# Pair ends.
 # Using pandaseq defaults for these settings:
-# -o (min overlap) 1
-#	Manual says increasing this doesn't usually change much,
-#	because seqs with little overlap tend to fail the alignment quality tests anyway.
 # -O (max overlap) unset
 # -L (max length) unset
 #	Haven't considered either of these carefully, don't expect them to matter.
 #	May revisit later.
+# -o (min overlap) unset
+#	Default allows as little as 1 base overlap, but setting higher seems to
+# 	force sequences to assemble at higher overlaps even if lower probabililty.
+#	Instead, we leave -o unset and then remove the short overlaps after assembly
+#	via -C min_overlapbits.
 
 # Rationale for non-default settings:
 # -l (minimum length after primers are removed)
@@ -54,22 +90,26 @@ mkdir -p "$OUTDIR"
 #	Default is BFSrk.
 #	Changed B to b so it doesn't log an INFO line for every dang read.
 # -A (end-pairing algorithm)
-#	Default is simple_bayesian.
-#	Using rdp_mle, a corrected/improved version of the simple_bayesian method: 
-#	see Cole et al 2013 (10.1093/nar/gkt1244)
+# 	default is simple_bayesian.
+#	Using rdp_mle, which is presented (Cole et al 2014, 10.1093/nar/gkt1244)
+# 	as a corrected/improved version of the simple_bayesian algorithm.
 # -t (alignment quality threshold)
 #	default is 0.6, max advised is 0.9 (Masella et al 2012 10.1186/1471-2105-13-31)
-#	In my testing this didn't affect results much, but using 0.8 because it does eliminate 
-# 	a few bogus-looking assignments that aren't caught at 0.6.
+#	In my testing this didn't affect results much, but using 0.8 because it does
+#	eliminate a few bogus-looking assignments that aren't caught at 0.6.
+# -C min_overlapbits:20 (Filter low-overlap reads after assembling)
+#	default is to not filter.
+#	argument is minimum "bits saved" -- see Cole et al 2014 10.1093/nar/gkt1244,
+#	but for reads pretrimmed to q >= 20 it apporaches 2 bits per base of overlap,
+#	i.e. 10-11 bases to equal 20 bits saved.
 
 (time pandaseq \
-	-f "$RAWDIR"/Plant_ITS2_Delucia_Fluidigm_R1.fastq \
-	-r "$RAWDIR"/Plant_ITS2_Delucia_Fluidigm_R2.fastq \
-	-i "$RAWDIR"/Plant_ITS2_Delucia_Fluidigm_I1.fastq \
+	-f "$OUTDIR"/R1_trim.fastq \
+	-r "$OUTDIR"/R2_trim.fastq \
+	-i "$OUTDIR"/I1_trim.fastq \
 	-w "$OUTDIR"/pspaired.fastq \
 	-U "$OUTDIR"/failed_pspair.fastq \
-	-p ATGCGATACTTGGTGTGAAT \
-	-q GACGCTTCTCCAGACTACAAT \
+	-C min_overlapbits:20 \
 	-d bFSrk \
 	-A rdp_mle \
 	-l 25 \
@@ -90,7 +130,7 @@ sed -E 's/^(@HWI.*):.*/\1/' \
 
 # * strip the run ID ("2:N:0:") off the raw barcode IDs,
 sed -E 's/^(@HWI.*) 2:N:0:$/\1/' \
-	"$RAWDIR"/Plant_ITS2_Delucia_Fluidigm_I1.fastq \
+	"$OUTDIR"/I1_trim.fastq \
 	> "$OUTDIR"/raw_barcode_tmp.fastq
 
 # * and store a table of clean read IDs.
@@ -108,4 +148,5 @@ time filter_fasta.py \
 	--seq_id_fp "$OUTDIR"/tmp_readnames.txt
 
 rm "$OUTDIR"/raw_barcode_tmp.fastq \
-	"$OUTDIR"/tmp_readnames.txt
+	"$OUTDIR"/tmp_readnames.txt \
+	"$OUTDIR"/tmp_R1_trim_names.txt

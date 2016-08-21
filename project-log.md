@@ -775,3 +775,194 @@ bpms = merge_phyloseq(bp, sample_data(psmap_soil))
 My OTU-call testing above is still unresolved -- I'm still not sure how to evaluate the results. Leaving it on the TODO list for the moment and switching back to pre-clustering cleanup. First, a Pandaseq algorithm change: The original Pandaseq algorithm, strangely, often a paired base as of lower quality than either parent strand, even when the base calls agree! I believe this is because one of the probability calculations in Masela et al 2012 confuses p(true match|observe match) with p(observe match|true match). Cole et al 2013 (doi:10.1093/nar/gkt1244) presents an update, available in Pandaseq as `-A rdp_mle`, that corrects this and produces base quality scores that are at least equal to the better-quality parent as long as both calls agree.
 
 This means per-read base quality in the overlap regions is now reported as WAY higher -- effectively no reads (29 out of ~1.3M) removed as LOWQ, compared to ~4000 with default algorithm. Bumped up quality threshold from 0.6 to 0.8 on the theory that the sequences removed as low-quality now really are worth removing.
+
+Next I want to evaluate a pre-assembly trimming step: What if I use cutadapt to remove forward and reverse primers and discard reads without a recognizable primer? This should remove the ~15% of reverse reads that seem to start with ITS4R (TCCTCCGCTTATTGATATGC, our fungal primer) instead of S3R (GACGCTTCTCCAGACTACAAT, our Chen et al plant reverse primer). Should I also quality-trim the 3' end before pairing ends? My rationale is that the very ends are much more likely to contain errors, including some that might not show up in the quality score (see Schirmer et al. 2015, doi:10.1093/nar/gku1341). Maybe (I haven't crunched the probabilities) below a certain quality it's more likely that we generate a spurious alignment than that Pandaseq corrects the error bases. If a read no longer pairs after trimming, arguably it wasn't giving us very good information to start with, at least give my current permissive overlap settings (allowed to have as little as 1 base overlap).
+
+To test:
+
+	* ran `cutadapt` on raw reads with `-q` unset or with it set to 10 or 20. All 3 runs trim primers (`-g ATGCGATACTTGGTGTGAAT -G GACGCTTCTCCAGACTACAAT`) with allowed error rate 0.1 (= up to 2 mismatches per primer).
+	* ran `filter_fasta.py` on raw index reads to match them to trimmed read files,
+	* then ran `pandaseq` with no primer trimming, algorithm `rdp_mle`, kmers 10, quality threshold 0.8.
+
+How many sequences are removed by each level of quality trimming?
+
+```
+count_seqs.py -i plant_its_pandaseq_trimjoined_noq/R1_trim.fastq,\
+	plant_its_pandaseq_trimjoined_q10/R1_trim.fastq,\
+	plant_its_pandaseq_trimjoined_q20/R1_trim.fastq
+
+1035310  : plant_its_pandaseq_trimjoined_q20/R1_trim.fastq (Sequence lengths (mean +/- std): 252.5424 +/- 45.5433)
+1035810  : plant_its_pandaseq_trimjoined_q10/R1_trim.fastq (Sequence lengths (mean +/- std): 279.0444 +/- 3.2391)
+1035810  : plant_its_pandaseq_trimjoined_noq/R1_trim.fastq (Sequence lengths (mean +/- std): 279.9997 +/- 0.0764)
+```
+
+So not much gets trimmed at Q10, while Q20 removes ~40 bases on average (but note SD -- these are probably highly skewed). OK, what does Pandaseq do with them?
+
+```
+count_seqs.py -i plant_its_pandaseq_trimjoined_noq/pspaired.fastq,\
+	plant_its_pandaseq_trimjoined_q10/pspaired.fastq,\
+	plant_its_pandaseq_trimjoined_q20/pspaired.fastq
+
+1025833  : plant_its_pandaseq_trimjoined_q20/pspaired.fastq (Sequence lengths (mean +/- std): 423.4261 +/- 58.3442)
+1035642  : plant_its_pandaseq_trimjoined_q10/pspaired.fastq (Sequence lengths (mean +/- std): 450.6829 +/- 29.8456)
+1035648  : plant_its_pandaseq_trimjoined_noq/pspaired.fastq (Sequence lengths (mean +/- std): 451.1088 +/- 31.0052)
+```
+
+Uh-oh. If the mean length after assembly changes, Pandaseq must be picking different overlap sites! Is this an across-the-board effect or a skew from a few dramatic changes? To find out, let's look at how the length of individual reads changes between methods... but only in as much detail as needed to figure out what's going on, because these files are giant.
+
+	* Make a list of the readnames from each file
+
+	```
+	sed -n 's/^@HWI/HWI/p' \
+		plant_its_pandaseq_trimjoined_q20/pspaired.fastq \
+		> tmp_20_reads.txt
+	sed -n 's/^@HWI/HWI/p' \
+		plant_its_pandaseq_trimjoined_q10/pspaired.fastq \
+		> tmp_10_reads.txt
+	sed -n 's/^@HWI/HWI/p' \
+		plant_its_pandaseq_trimjoined_noq/pspaired.fastq \
+		> tmp_0_reads.txt
+	```
+
+	* Filter it down to those that are present in all three assembled files
+
+	```
+	comm -1 -2 \
+		<(sort tmp_20_reads.txt) \
+		<(sort tmp_10_reads.txt) \
+		> tmp_2010_reads.txt
+	comm -1 -2 \
+		<(sort tmp_2010_reads.txt) \
+		<(sort tmp_0_reads.txt)  \
+		> tmp_common_reads.txt
+	```
+
+	* Construct temporary fastqs containing only those reads, all in the same order.
+
+	```
+	filter_fasta.py \
+		--input_fasta_fp plant_its_pandaseq_trimjoined_noq/pspaired.fastq \
+		--output_fasta_fp tmp_pstrim_noq.fastq \
+		--seq_id_fp tmp_common_reads.txt
+	filter_fasta.py \
+		--input_fasta_fp plant_its_pandaseq_trimjoined_q10/pspaired.fastq \
+		--output_fasta_fp tmp_pstrim_q10.fastq \
+		--seq_id_fp tmp_common_reads.txt
+	filter_fasta.py \
+		--input_fasta_fp plant_its_pandaseq_trimjoined_q20/pspaired.fastq \
+		--output_fasta_fp tmp_pstrim_q20.fastq \
+		--seq_id_fp tmp_common_reads.txt
+	```
+
+	* compare histograms of line length:
+
+	```
+	fastqhistogram () { ( sed -n 'n;p;n;n' $1 | awk '{print length}' | sort -n | uniq -c ) }
+	fastqhistogram tmp_pstrim_noq.fastq
+	fastqhistogram tmp_pstrim_q10.fastq
+	fastqhistogram tmp_pstrim_q20.fastq
+	```
+
+Not showing raw result (~500 lines per file), but shortest assembled read from noq is 279 bases, q10 232, q20 38! q20 has a whole smear of short reads (~6k of them evenly spread out) with lengths 38-231 -- plus a very distinct peak of ~50k reads in the 238-247 region right at the bottom tail of the lower-q read lengths! Where did those short reads move from? Let's directly compare lengths of individual lines.
+
+```
+sed -n 'n;p;n;n' tmp_pstrim_noq.fastq | awk '{print length}' > tmp_noq_lengths.txt
+sed -n 'n;p;n;n' tmp_pstrim_q10.fastq | awk '{print length}' > tmp_q10_lengths.txt
+sed -n 'n;p;n;n' tmp_pstrim_q20.fastq | awk '{print length}' > tmp_q20_lengths.txt
+```
+
+Plotted these a few different ways, observed that:
+
+* Most differences betwee q0 and q10 are random-looking. A surprising number of ~300-350 base q0 contigs become ~500-550 base q10 contigs, and a bunch of q0 contigs cluster ~560 but get shortened at q10 -- these must have only a few bases of overlap, since the untrimmed q0 reads are very close to 280 bases each.
+* Plotting q20 vs either q0 or q10 shows distinct bands in the scatterplot: things that were anywhere from 275 to 560 bases at lower Q get pulled in to peaks near 180, 250, 400 in the q20 version. I interpret this to mean that bogus assemblies of random length are getting pushed back to their correct position by quality trimming.
+* If bogus pairings at q0 and q10 are getting turned into real pairings at q20, that should mean the number of unique sequences in the assembled q20 file is lower, right?
+
+```
+sed -n 'n;p;n;n;' tmp_pstrim_noq.fastq | sort | uniq | wc -l
+# 768151
+sed -n 'n;p;n;n;' tmp_pstrim_q10.fastq | sort | uniq | wc -l
+# 768097
+sed -n 'n;p;n;n;' tmp_pstrim_q20.fastq | sort | uniq | wc -l
+# 747124
+```
+
+==> Yes, it looks like it.
+
+## 2016-08-14, CKB
+
+Let's go a step further and put these into QIIME and deduplicate with `pick_otus.py --similarity 1.0`. The reduction in sequences holds up, and the difference gets larger, as I move through the pathway: post- `split_libraries.py`, seqs.fna contains 980830, 980663, 922851 reads (q0, q10, q20 respectively) with 729116, 728893, 684454 unique seqs if checked by `sed | sort | uniq` and 724854, 724629, 678301 unique seqs if checked by `pick_otus` with similarity 1.0. Why the difference between `uniq` and `pick_otus`? I think this is because `pick_otus` counts unequal-length reads as identical as long as the shorter one is an exact substring of the longer one, e.g. `ATGTAA` and `ATGT` are one OTU at similarity 1.0 but two records by `uniq`. The difference is bigger than I was expecting since everything should be anchored in the same primers, but not big enough to worry me.
+
+How many of these sequences are identical between methods?
+
+```
+comm -1 -2 \
+	<(sed -n 'n;p;' plant_its_sl_noq/seqs.fna | sort | uniq) \
+	<(sed -n 'n;p;' plant_its_sl_q10/seqs.fna | sort | uniq) \
+	| wc -l
+# 680179
+comm -1 -2 \
+	<(sed -n 'n;p;' plant_its_sl_q10/seqs.fna | sort | uniq) \
+	<(sed -n 'n;p;' plant_its_sl_q20/seqs.fna | sort | uniq) \
+	| wc -l
+# 392328
+comm -1 -2 \
+	<(sed -n 'n;p;' plant_its_sl_noq/seqs.fna | sort | uniq) \
+	<(sed -n 'n;p;' plant_its_sl_q20/seqs.fna | sort | uniq) \
+	| wc -l
+# 391768
+```
+
+## 2016-08-16, CKB
+
+Not shown here, because code is basically repeating what I did above: Played around with adding a minimum overlap. At q20 Pandaseq shows an awful lot of seqs (almost 180k) with only 3 bases of overlap, which seems like essentially blunt-end joining, but most of these come out to the same lengths that are common in seqs with longer overlaps, and specifying a minimum overlap of 10 or 25 seems to mostly make Pandaseq reassemble them at a different length rather than throw them out, and the length and overlap histograms become even more spread out than before -- this looks like it's adding noise, not removing it!
+
+Let's think this through: Most R1 reads still close to 280 bases after trimming primers and low-quality bases, with some skew dwon to ~250. R2 has many reads very close to 279, but also a distinct mound in the 200-250 base range -- R2 quality drops faster, so quality trimming removes more bases. So for a 450-base qequence where both forward and reverse reads were near the short end of their common range, that's e.g. 250+200 bases minus ~3-5 bases overlap = totally plausible as a common non-error outcome given the histograms of the inputs. So the question is how to tell if these common lengths are *correctly* assembled. What if we test how many unique sequences are *common*... if imposing a minimum overlap is really cleaning up assembly errors, we should see fewer singletons *and* more common sequences, because the singletons got converted to them. Conversely, if imposing a minimum overlap is disrupting real-but-short assemblies, we should see common sequences become less common as the bogus reassembly converts them to singletons (noise). Let's count sequences where we see more than 100 identical copies before clustering, and ask  "how many reads do these common reads account for between them?"
+
+```
+sed -n 'n;p;n;n;' path/to/pspaired.fastq | sort | uniq -c | awk '$1 > 100 {print $1}' | wc -l
+sed -n 'n;p;n;n;' path/to/pspaired.fastq | sort | uniq -c | awk 'BEGIN {n=0} $1 > 100 {n=n+$1} END {print n}'
+```
+
+Answer: 181-184 seqs totalling ~112k reads from both q0 and q10, 184 seqs with 105-108k reads at q20 when minimum overlap is set to 10 ot 25, but 225 seqs totalling 124431 reads at q20 with no minimum overlap. If I move down the scale and define "common" as anything over 10 reads, the same pattern is visible: 3622 seqs contain 195745 reads at q0, 3623 containing 191410 reads q10, 3777 containing 194372 reads q20 min overlap 10, 3530 containing  186687 reads at q20 min overlap 25, and 3843 containing 209228 reads at q20 with no min overlap.
+
+(Yes, all those numbers would get a little bigger if ran them as e.g. '$1 >= 100' instead of '$1 > 100'. But my conclusion stands and I don't care enough to redo it.)
+
+This seems pretty clear: quality-trimming before assembly boosts the number of reads that are common and identical to each other, while imposing a minimum overlap strongly reduces the number of identical reads -- they "turn back into" singletons! Note that I really do mean "boosts the number": At q20 with no min overlap, I get the fewest total reads but they contain more sequences that are commonly seen and those common sequences account for a larger number of reads (not just a higher proportion of them). Of course this doesn't prove that the common sequences are correctly assembled or that they reflect the actual genetics of any particular plant, but it certainly makes me more confident.
+
+## 2016-08-17, CKB
+
+==> Bottom line on pre-assembly trimming: By removing low-quality reads from the 3' end of raw reads before end-pairing, we remove about 30-40k reads, mostly singletons, and  we re-assemble around that many again at shorter lengths that cause them to convert from singletons to matching other common sequences. Some of the assembled contigs have overlaps shorter than would normally inspire confidence, but it seems likely these tend to be correct assemblies of a sequence nearly too long to assemble rather than bogus assemblies of shorter sequences.
+
+## 2016-08-21, CKB
+
+Follow-up to the above conclusiont: I realized Pandaseq also has a post-assembly filter for minimum "overlap bits saved" -- we can remove them rather the short overlaps rather than smear them around. Checked Cole et al 2014 (10.1093/nar/gkt1244) for the definition: bits saved = `log2(product{i=1 to n}(P_i/P)null))`, where `P_null=0.25`, so for one base this becomes bits saved = `log2(P/Pnull) = ((1-p)*(1-q)+pq/3)/0.25`. Since we've already trimmed reads to average Q>=20, we should have p ~= q <= 0.01, for `log2((0.99^2 + 0.99^/3)/0.25) ~= 1.97` bits per base. In other words: set `min_overlapbits` to a value about twice the shortest acceptable overlap length!
+
+Added `-C min_overlapbits:20` and reran Pandaseq.
+
+* Removes 1025833 (no overlap filter) - 750823 (20-bit min overlap) = 275010 reads removed by filtering.
+* Increases mean read length from 423.4261 +/- 58.3442 to 447.2532 +/- 9.2307.
+* Reduces unique sequence count by 747211 - 508917 = 238294.
+* Nearly all of that reduction is in removed singletons: 707994 - 473605 = 234389.
+* Counts of common sequences also decline: for seqs seen 10 or more times from 4262 to 3768, for seqs seen 100 or more times from 229 to 175.
+* Does this mean we're losing anything important? Collected all seqs that are seen 100 or more times in no-min-overlap file but are removed (or count reduced below 100!) with a 20-bit minimum overlap:
+
+```
+sed -n 'n;p;n;n;' plant_its_pandaseq_trimjoined_q20/pspaired.fastq | sort | uniq -c | awk '$1>=100{print $2}' > q20_mc100.txt
+sed -n 'n;p;n;n;' plant_its_pandaseq_trimjoined_q20mb20/pspaired.fastq | sort | uniq -c | awk '$1>=100{print $2}' > q20mb20_mc100.txt
+
+comm -1 -2 q20_mc100.txt q20mb20_mc100.txt > qcomm.txt
+comm -2 -3 q20_mc100.txt q20mb20_mc100.txt > qmbrm.txt
+
+# note that the headers are just line numbers, as unique IDs to keep BLAST happy
+awk '{print ">" NR "\n" $0}' qcomm.txt > qcomm.fasta
+awk '{print ">" NR "\n" $0}' qmbrm.txt > qmbrm.fasta
+```
+
+* `qcomm.fasta` contains 175 sequences that are common both with and without overlap filtering. BLASTed (via web browser) and spot-checked ~30 of the results. Found them all good with top hits that look like species we expect to see.
+*  `qmbrm.fasta` contains 54 common sequences are removed by the overlap quality filter. 2 of these are 159-160 bases long, 50 are 240-244 bases, and 2 are 443-449. All combined, they account for 18161 of the reads removed.
+* BLASTed (via web browser) and checked all 54 results carefully.
+* All except the two ~440-base seqs have only very low-scoring BLAST hits. No hit is more than 20 bases long, and most appear to match in the conserved 5.8S only. Taxonomy of hits is inconsistent -- several seqs have their best matches to the carp genome!
+* ==> The short sequences look like junk to me.
+* The two 440-base seqs have good hits with high coverage, and they appear to be one grass (probably *Sorghastrum*, though top-scoring hit is a *Saccharum*) and one *Solidago* (not clear which species -- good matches to at least half a dozen species, including both *S. rigida* and *S. canadensis* with near-equal identity).
+* I see plenty of hits for both *Sorghastrum* and *Solidago* in `qcomm.fasta` (i.e. sequences for these that *do* pass the overlap-quality filter), and these particular sequences only appear 102 and 100 times respectively in the unfiltered dataset.
+* ==> These two sequences aren't obviously junk, but I feel good about excluding them in the service of a principled overlap-quality cutoff.
