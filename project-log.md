@@ -966,3 +966,18 @@ awk '{print ">" NR "\n" $0}' qmbrm.txt > qmbrm.fasta
 * The two 440-base seqs have good hits with high coverage, and they appear to be one grass (probably *Sorghastrum*, though top-scoring hit is a *Saccharum*) and one *Solidago* (not clear which species -- good matches to at least half a dozen species, including both *S. rigida* and *S. canadensis* with near-equal identity).
 * I see plenty of hits for both *Sorghastrum* and *Solidago* in `qcomm.fasta` (i.e. sequences for these that *do* pass the overlap-quality filter), and these particular sequences only appear 102 and 100 times respectively in the unfiltered dataset.
 * ==> These two sequences aren't obviously junk, but I feel good about excluding them in the service of a principled overlap-quality cutoff.
+
+## 2016-08-23, CKB
+
+Credit where due: Today's work is largely inspired by conversation with Shawn Brown last week -- he suggested I'm likely to have better luck doing de novo OTU clustering followed by taxonomy assignment on the clustered centroid sequences, rather than attempt an open-reference or closed-reference approach. Other recommendations of note from Shawn:
+
+* Consider using ITSx to extract just the ITS2 region, as often recommended for fungus, rather than try to align the full amplicon -- predict that this will make clustering "messier" (i.e. more clusters at a given similarity, because conserved regions aren't contributing to the estimate) but species assignments will probably be more accurate (all sequences in a given cluster are more likely to actually be related).
+* For chimera detection, there is probably no plant ITS database that's authoritatize enough to treat as a "known chimera-free" reference. Best bet is to use de novo chimera detection: assume more abundant sequences are the likely parents, look for lower-abundance sequences that are a mix of two probable parents.
+* For both clustering and OTU detection, consider using vsearch instead of usearch -- it's open-source, fast, and reportedly very good, but *is* still unpublished. Probably want to at least compare its results to usearch.
+* To pick a clustering threshold, try several, look at the mock community results, and pick the one that comes closest to recreating the taxonomic makeup and number of species we expect.
+
+Today: Working on a replacement for my approach to ITS2 taxonomy. Reasoning: The IGB biocluster already has an up-to-date local copy of the full Blast databases, and by calling `blastn` directly instead of through QIIME it is possible to return taxids instead of accession numbers. This greatly reduces the size of mapping file needed -- I only need to store one taxonomy for each known taxon, instead of one per sequence! -- and will be very fast for looking up preclustered sequences. This seems much more promising than my (painfully, slowly) hand-built ITS queries.
+
+Two new scripts: `get_taxonomies.sh` downloads and uncompresses the complete NCBI taxonomy database (~1.5 million taxa, ~275 MB uncompressed), then calls `ncbidump_to_qiimetax.py`, which uses the Cogent parsing libraries (included with qiime) to write all the taxa to one text file in the form `taxid<tab>superkingdom;kingdom;phylum;class;order;family;genus;species\n` as expected by QIIME's `assign_taxonomy.py`. Should only need to run these scripts once per machine, or as needed to freshen from the current NCBI database.
+
+Today's version of the taxonomy file is currently 147 MB and named `rawdata/ncbi_taxonomy/nt_taxonomy.txt`). Its MD5 sum is e23d49d12809bceb2e34a3b540b86f2c and it was built 2016-08-23 from a freshly downloaded taxdump.tar.gz whose MD5 sum is bacb0c67268987f3abfba4821c73e2c6.
