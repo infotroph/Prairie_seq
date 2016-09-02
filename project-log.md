@@ -985,3 +985,83 @@ Today's version of the taxonomy file is currently 147 MB and named `rawdata/ncbi
 ## 2016-08-24, CKB
 
 Now to make a way of using this taxonomy file. The challenge here is that QIIME expects to take one FASTA or BLAST database full of reference sequences and a second file of taxonomies that have the same IDs as the sequences -- probably NCBI GIs, which are getting phased out next month! To get around this, added a new script `assign_taxonomy_by_taxid.py`, which extends the default QIIME `assign_taxonomy.py` mechanism by defining a new class of OTU picker that calls `blastn` intead of `blastall` and returns the taxid of the top hit instead of its GI. The resulting blast hit can then be looked up in `nt_taxonomy.txt` in the same way QIIME's `assign_taxonomy.py` does.
+
+## 2016-08-25, CKB
+
+Testing ITSx, as recommended by Shawn Brown for extracting just the ITS2 regions for clustering without 5.8S/LSU ends. None of this is added to scripts yet, just testing from an interactive session. Started from vsearch_otu/seqs_unique_mc2.fasta, which contains 39929 seqs 381.2300 +/- 115.3755 bases long. As the name implies, it was dereplicated and singletons were removed using vsearch.
+
+```
+qsub -I -lnodes=1:ppn=8,mem=40gb
+cd Prairie_seq/rawdata/miseq/
+module load ITSx/1.0.11
+mkdir itsx_test_vsearch_uniqmc2 # hoo boy is that a mouthfull
+cd itsx_test_vsearch_uniqmc2/
+ITSx -i ../vsearch_otu/seqs_unique_mc2.fasta -o ITSx_out -t "Tracheophyta,Fungi" --cpu 8   
+```
+
+Started 22:45:14, finished 00:05:57 = 1:20:42 elapsed, appears to only use four cores -- probably uses two threads (forward & reverse strands) per group in -t? Let's see how the seqs got divided up:
+
+```
+count_seqs.py -i "*.fasta"
+0  : ITSx_out.ITS1.fasta
+0  : ITSx_out.full.fasta
+87  : ITSx_out_no_detections.fasta (Sequence lengths (mean +/- std): 219.8851 +/- 109.5218)
+37904  : ITSx_out.ITS2.fasta (Sequence lengths (mean +/- std): 192.7186 +/- 53.3280)
+```
+
+Not bad. Now let's dereplicate the extracted ITS2 regions again:
+
+```
+time vsearch \
+	--derep_fulllength ITSx_out.ITS2.fasta \
+	--sizein \
+	--sizeout \
+	--fasta_width 0 \
+	--minuniquesize 1 \
+	--output ITSx_out.ITS2_derep_after_itsx.fasta
+```
+
+Takes less than one second. The bits of log output that are of interest right now:
+
+```
+7304746 nt in 37902 seqs, min 49, max 347, avg 193
+WARNING: 2 sequences shorter than 32 nucleotides discarded.
+18104 unique sequences, avg cluster 16.8, median 3, max 19238
+```
+
+Also tried dereplicating with --minuniquesize 2, i.e. throw out a second round of singletons, but output is identical to version with singletons. I'm not sure whether to be surprised by this -- on the one hand the file was singleton-free before ITS extraction, but on the other we were only storing one *copy* of each sequence -- it it likely that EVERY unique full-length sequence had at least one other sequence with an exactly matching ITS2? I guess if a lot of the variations are one-base variants, not *that* unlikely.
+
+Now clustered the dereplicated ITS2 file at 80,90 93,95,97%, e.g.
+
+```
+vsearch \
+	--cluster_fast ITSx_out.ITS2_derep_after_itsx.fasta \
+	--centroids ITSx_out.ITS2_derep_after_itsx_otus80.fasta \
+	--id 0.80 \
+	--sizein \
+	--sizeout \
+	--strand both \
+	--relabel "OTU_" \
+	--threads 10
+python ~/Prairie_seq/Python/assign_taxonomy_by_taxid.py \
+	-i ITSx_out.ITS2_derep_after_itsx_otus80.fasta \
+	-o otus80_assigned_taxonomies.txt \
+	-t ~/Prairie_seq/rawdata/ncbi_taxonomy/nt_taxonomy.txt \
+	--n_threads 3 \
+	--min_percent_identity 80 \
+	-l otu80_assign.log
+# (repeat for other percents. Left --min_percent_identity at 90 for all except the 80% file; don't expect it to matter much)
+# 80%:  66 Size min 2, max 54761, avg 274.3
+# 90%: 179 Size min 2, max 46162, avg 101.1
+# 93%: 266 Size min 2, max 44301, avg 68.1
+# 95%: 395 Size min 2, max 44289, avg 45.8
+# 97%: 643 Size min 2, max 36135, avg 28.2
+```
+
+How many of these clusters are assigned as the same species by Blast taxonomy? Let's pull out the taxonomy strings and count uniques: `awk -F'\t' '{print $2}' otus80_assigned_taxonomies.txt | sort | uniq | wc -l` gives 59 species at 80%, 101 at 90%, 110 at 93%, 123 at 95%, 140 at 97%.
+
+OK, what if I lump by genus? If I drop the `-F'\t'` from the above awk call, it splits by whitespace -> second and further words of binomial are truncated -> taxonomy string same for all members of the genus ==> 49, 63, 64, 71, 72 genera.
+
+How does this compare to clustering full seqs before ITS2 extraction? Don't have all 5 thresholds handy, but have run 80 and 95: 80% has 35 species from 31 genera, 95% 96 species from 69 genera.
+
+...Huh. Those genera include "No", which is from "No blast hit", but also "None", which is a placeholder value that should always be filled in by `assign_taxonomy_by_taxid.py`. Poked around for a while and found that blastn's `staxids` formatter returns a *comma-separated list* of taxids. If several taxa are tied for best hit, blast returns the taxids of all hits in the tie, even if `-max_target_seqs` and `-max_hsps` are both 1! TODO: fix `assign_taxonomy_by_taxid.py` to handle this.
