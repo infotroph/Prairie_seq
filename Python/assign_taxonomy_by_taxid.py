@@ -13,9 +13,11 @@ script_info = {}
 script_info['brief_description'] = """Assign taxonomy to each sequence, using BLAST and a reference taxonomy keyed by taxid"""
 script_info['script_description'] = """Extends the standard QIIME 1.9.1 taxonomy assignment with a method that uses BLAST+ and matches by taxid instead of by GI. That means this method does NOT work with the default greengenes reference taxonomy! 
 
-For each query sequence, queries the specified Blast database (using megablast in blastn) and finds the taxid of the top-scoring hit (no more than one hit per query sequence), then looks up its taxonomy in the specified taxonomy mapping file. Since QIIME does not ship with blast+ by default, you'll need to make sure it's installed and available in your $PATH before calling this script. On my computing cluster I accomplish this with $(module load blast+), but your system may differ.
+For each query sequence, queries the specified Blast database (using megablast in blastn) and finds the taxid of the top-scoring hit, then looks up its taxonomy in the specified taxonomy mapping file. If the best hit is a tie between several taxa, computes a consensus taxonomy containing only the levels shared by at least --min_consensus_fraction of the tied results.
 
-Output should be in the same format documented for assign_seqs.py. If it isn't, please file a bug.
+Since QIIME does not ship with blast+ by default, you'll need to make sure it's installed and available in your $PATH before calling this script. On my computing cluster I accomplish this with $(module load blast+), but your system may differ.
+
+Output is intended to be in the same format documented for assign_seqs.py. If it isn't, please file a bug.
 """
 
 script_info['script_usage'] = []
@@ -54,7 +56,10 @@ script_info['optional_options'] = [
                 '[default: %default]', default='blastplus_assign_taxonomy_log.txt'),
     make_option('--n_threads', type='int',
                 help='Number of simultaneous threads blastn should run. '
-                '[default: %default]', default=1)
+                '[default: %default]', default=1),
+    make_option('--min_consensus_fraction', type='float',
+                help='Fraction of tied Blast hits that must agree for taxon assignment '
+                'at a given taxonomic level. [default: %default]', default=1.0)
 ]
 
 script_info['version'] = __version__
@@ -122,13 +127,40 @@ class BlastPlusTaxonAssigner(BlastTaxonAssigner):
         return result
 
     def _get_first_blast_hit_per_seq(self, blast_hits):
-        # We already limited Blast+ to one hit! 
-        # Just need to filter out empty results.
+        # We called BLAST with -max_target_seqs=1, so multiple hits means ties!
+        # Will deal with those by assigning consensus taxonomies in _map_ids_to_taxonomy,
+        # so this method only exists to mask the BlastTaxonAssigner version.
+        # ... And to filter out empty results while it's at it.
         for k,v in blast_hits.items():
             if not v:
                 blast_hits[k] = None
         return blast_hits
 
+    def _map_ids_to_taxonomy(self, hits, id_to_taxonomy_map):
+        """ map {query_id:(blast_seq_id,e-val)} to {query_id:(tax,e-val,blast_seq_id)}
+        Differs from BlastTaxonAssigner method by building a consensus taxonomy
+        if the blast result contains multiple taxids.
+        """
+        for query_id, hit in hits.items():
+            query_id = query_id.split()[0]
+            try:
+                hit_id, e_value = hit
+                hit_ids = hit_id.split(';')
+                id_taxa = [(id_to_taxonomy_map.get(id, None), e_value, id) for id in hit_ids]
+                if len(id_taxa) == 1:
+                    # The usual case: Just one best hit, return as usual
+                    hits[query_id] = id_taxa[0]
+                else:
+                    # The tie case: Several taxa had equally good best hits.
+                    # Let's compute the consensus taxonomy.
+                    split_taxa = [x[0].split(';') for x in id_taxa]
+                    constax = self._get_consensus_assignment(split_taxa)
+                    constax = ';'.join(constax[0])
+                    # Returned hit_id still contains all taxa, e.g. "53749;53751;308558"
+                    hits[query_id] = (constax, e_value, hit_id)
+            except TypeError:
+                hits[query_id] = ('No blast hit', None, None)
+        return hits
 
 
 def main():
@@ -142,7 +174,8 @@ def main():
         'Max E value': opts.blast_e_value,
         'id_to_taxonomy_filepath': opts.id_to_taxonomy_fp,
         'blast_db': opts.blast_db,
-        'num_threads': opts.n_threads
+        'num_threads': opts.n_threads,
+        'min_consensus_fraction': opts.min_consensus_fraction
         })
 
     assigner(
