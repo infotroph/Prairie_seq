@@ -33,7 +33,7 @@ Here we use a local Blast database (not a FASTA file!) named "localnucl" and a v
 script_info['required_options'] = [
     get_options_lookup()['fasta_as_primary_input'],
     make_option('-t', '--id_to_taxonomy_fp', type="existing_filepath",
-                help='Path to tab-delimited file mapping integer taxids to semicolon-separated '
+                help='Path to a tab-delimited file mapping integer taxids to semicolon-separated '
                 'taxonomy lists.')
 ]
 
