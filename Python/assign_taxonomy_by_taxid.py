@@ -81,23 +81,6 @@ def blastplus_seqtaxa(seqs, blast_db, max_evalue=1e7, min_percent_identity=90, n
         stdin=subprocess.PIPE)
     return blastcmd.communicate(input=seqfasta)[0].strip().split('\n')
 
-def blast_compat_id(seq_id):
-    '''
-    Makes IDs BLAST-compatible.
-
-    Blast+ truncates sequence IDs at the first whitespace, 
-    then *usually* strips terminal semicolons from the remainder:
-    '1;', '1;;;', '1; ;;;' all come back as '1', but '1; ;0;' becomes '1;'.
-    Things get even weirder if the ID contains any tabs:
-    '1s ;t\t' -> '1s;', '1s ;\tt' -> '1s', '1t\t;s ' -> '1t'!
-        
-    Why? Your guess is as good as mine. But we'll avoid the issue by using
-    only the first word of the ID and then stripping *all* trailing semicolons.
-    Note that we *do not* check whether IDs are unique after stripping --
-    Make sure you ensure this beforehand!
-    '''
-    return seq_id.split()[0].strip(';')
-
 class BlastPlusTaxonAssigner(BlastTaxonAssigner):
     def _get_blast_hits(self, blast_db, seqs):
         max_evalue = self.Params['Max E value']
@@ -107,9 +90,25 @@ class BlastPlusTaxonAssigner(BlastTaxonAssigner):
         if min_percent_identity < 1.0:
             min_percent_identity *= 100.0
 
-        seq_ids = [blast_compat_id(s[0]) for s in seqs]
+        '''
+        Blast+ truncates sequence IDs according to some rule I don't understand:
+        It *always* truncates at the first whitespace,
+        then *usually* strips terminal semicolons from the remainder:
+        '1;', '1;;;', '1; ;;;' all come back as '1', but '1; ;0;' becomes '1;'.
+        Things get even weirder if the ID contains any tabs:
+        '1s ;t\t' -> '1s;', '1s ;\tt' -> '1s', '1t\t;s ' -> '1t'!
+        Why? Your guess is as good as mine, but we'll work around it by matching
+        the Blast result back to the full untrimmed ID. The matching happens below;
+        here we're just checking that the first-word-minus-any-trailing semicolons
+        is enough to uniquely identify the sequence.
 
-        result = {}.fromkeys(seq_ids, [])
+        (P.S. If your sequence ID contains tabs you're proooobably going to have trouble
+        reading the tab-separated output file, but to this script the IDs are all just strings.)
+        '''
+        if len(set([s[0].split()[0].strip(';') for s in seqs])) < len(seqs):
+            raise ValueError("Sequence IDs are not unique after trimming whitespace and semicolons!")
+
+        result = {}.fromkeys([s[0] for s in seqs], [])
 
         blast_result = blastplus_seqtaxa(
             seqs = seqs, 
@@ -120,10 +119,17 @@ class BlastPlusTaxonAssigner(BlastTaxonAssigner):
 
         # e is a list of 4 fields from one line: [seqid, taxid, e value, pct identity]
         for e in [x.split() for x in blast_result]:
-            if (e and float(e[2]) <= max_evalue 
-                and float(e[3]) >= min_percent_identity):
-                result[e[0]] = (e[1], float(e[2]))
-
+            if (e and float(e[2]) <= max_evalue and float(e[3]) >= min_percent_identity):
+                if e[0] in result:
+                    # Hooray, Blast gave us back the same ID we gave it!
+                    result[e[0]] = (e[1], float(e[2]))
+                else:
+                    # no exact ID match, have to search prefixes.
+                    # FIXME: likely slow on large results!
+                    for k in result.keys():
+                        if k.find(e[0]) == 0:
+                            result[k] = (e[1], float(e[2]))
+                            break
         return result
 
     def _get_first_blast_hit_per_seq(self, blast_hits):
@@ -142,7 +148,6 @@ class BlastPlusTaxonAssigner(BlastTaxonAssigner):
         if the blast result contains multiple taxids.
         """
         for query_id, hit in hits.items():
-            query_id = query_id.split()[0]
             try:
                 hit_id, e_value = hit
                 hit_ids = hit_id.split(';')
