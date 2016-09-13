@@ -1,0 +1,57 @@
+binomial,Tube id,mg tissue,plate,ID,Type,Tube number,Notes,Row,Column,Include in voucher mix?,Include as one-species?,Include in spike-in?
+Andropogon gerardii,V1,75,1,B5,"Voucher, Common",1,,B,5,NO,"y, 13 uL Plt3-C4 after adding B8 C4 C5& 30 uL buf","y, after adding B8 C4 C5& 30 uL buf"
+Sorghastrum nutans,V7,55,1,B6,"Voucher, Common",7,,B,6,y,NO,NO
+Elymus canadensis,V14,147,1,B7,"Voucher, Common",14,,B,7,"y, after diluting","y, 19 uL plt3-D1 after diluting","y, after diluting"
+Andropogon gerardii,V3,94,1,B8,"Voucher, Common",3,,B,8,NO,included as B5,included as B5
+Ratibida pinnata,V25,159,1,B9,"Voucher, Common",25,,B,9,NO,,
+Sorghastrum nutans,V8,70,1,B10,"Voucher, Common",8,,B,10,NO,NO,"y, after diluting"
+Sorghastrum nutans,V9,160,1,B11,"Voucher, Common",9,,B,11,NO,NO,NO
+Elymus canadensis,V13,71,1,B12,"Voucher, Common",13,,B,12,NO,NO,NO
+Ratibida pinnata,V24,97,1,C1,"Voucher, Common",24,,C,1,"y, after diluting",,
+Sorghastrum nutans,V10,120,1,C2,"Voucher, Common",10,,C,2,NO,NO,NO
+Elymus canadensis,V11,46,1,C3,"Voucher, Common",11,,C,3,NO,NO,NO
+Andropogon gerardii,V5,161,1,C4,"Voucher, Common",5,,C,4,NO,included as B5,included as B5
+Andropogon gerardii,V4,125,1,C5,"Voucher, Common",4,,C,5,NO,included as B5,included as B5
+Ratibida pinnata,V23,52,1,C6,"Voucher, Common",23,,C,6,NO,,
+Helianthus grosseserratus,V17,52,1,C7,"Voucher, Common",17,,C,7,NO,,
+Ratibida pinnata,V21,81,1,C8,"Voucher, Common",21,,C,8,NO,,
+Ratibida pinnata,V22,123,1,C9,"Voucher, Common",22,,C,9,NO,,
+Elymus canadensis,V12,94,1,C10,"Voucher, Common",12,,C,10,NO,NO,NO
+Andropogon gerardii,V2,51,1,C11,"Voucher, Common",2,,C,11,y,NO,NO
+Helianthus grosseserratus,V20,156,1,C12,"Voucher, Common",20,,C,12,NO,,
+Helianthus grosseserratus,V18,121,1,D1,"Voucher, Common",18,,D,1,NO,,
+Elymus canadensis,V15,126,1,D2,"Voucher, Common",15,,D,2,NO,NO,NO
+Helianthus grosseserratus,V19,94,1,D3,"Voucher, Common",19,,D,3,NO,,
+Helianthus grosseserratus,V16,71,1,D4,"Voucher, Common",16,,D,4,"y, after diluting",,
+Sorghastrum nutans,V6,107,1,D5,"Voucher, Common",6,,D,5,NO,y,NO
+Aster novae-angliae,V40,98.5,1,D6,"Voucher, Others",40,,D,6,y,,
+Silphium laciniatum,V35,70.2,1,D7,"Voucher, Others",35,,D,7,y,,
+Coreopsis tripteris,V34,78.3,1,D8,"Voucher, Others",34,,D,8,y,,
+Baptisia spp2,V31,89.4,1,D9,"Voucher, Others",31,,D,9,y,,
+Dalea purpurea,V38,71,1,D10,"Voucher, Others",38,,D,10,y,,
+Desmodium canadense,V27,100.1,1,D11,"Voucher, Others",27,Few mg spilled while loading plate,D,11,y,,
+Lespedeza capitata,V37,75.8,1,D12,"Voucher, Others",37,,D,12,y,,
+Veronicastrum virginicum,V26,120.2,1,E1,"Voucher, Others",26,,E,1,y,,
+Astragalus canadensis,V36,94.5,1,E2,"Voucher, Others",36,,E,2,y,,
+Penstemon digitalis,V32,87.4,1,E3,"Voucher, Others",32,,E,3,NO,,
+Pycnanthemum virginianum,V33,124.8,1,E4,"Voucher, Others",33,,E,4,y,,
+Silphium perfoliatum,V29,119.7,1,E5,"Voucher, Others",29,,E,5,y,,
+Silphium terebinthinaceum,V30,96.5,1,E6,"Voucher, Others",30,,E,6,y,,
+Taraxacum officinale,V39,119.2,1,E7,"Voucher, Others",39,,E,7,y,,
+Rudbeckia hirta,V28,85.7,1,E8,"Voucher, Others",28,,E,8,y,,
+Baptisia leucantha,V50,90.9,1,E9,"Voucher, Others",50,,E,9,y,,
+Heliopsis spp.,V46,99.5,1,E10,"Voucher, Others",46,,E,10,y,,
+Parthenium integrifolium,V43,92,1,E11,"Voucher, Others",43,,E,11,NO,,
+Silphium integrifolium,V54,119,1,E12,"Voucher, Others",54,,E,12,y,,
+Parthenium integrifolium,V52,115,1,F1,"Voucher, Others",52,,F,1,NO,,
+Schizachyrium scoparium,V44,83.7,1,F2,"Voucher, Others",44,,F,2,y,,
+Solidago canadensis,V41,117.1,1,F3,"Voucher, Others",41,,F,3,NO,,
+Aster hirta spp.,V49,85.6,1,F4,"Voucher, Others",49,,F,4,y,,
+Solidago rigida,V53,78.6,1,F5,"Voucher, Others",53,,F,5,y,,
+Parthenium integrifolium,V55,114,1,F6,"Voucher, Others",55,Few mg spilled while loading plate,F,6,y,,
+Rudbeckia subtomentosa,V48,97.3,1,F7,"Voucher, Others",48,,F,7,y,,
+Echinacea pallida,V42,82.3,1,F8,"Voucher, Others",42,,F,8,y,,
+Heliopsis helianthoides,V47,90.4,1,F9,"Voucher, Others",47,,F,9,y,,
+Monarda fistulosa,V51,98.6,1,F10,"Voucher, Others",51,,F,10,y,,
+Carex bicknellii,V45,84.1,1,F11,"Voucher, Others",45,,F,11,y,,
+Silphium perfoliatum,V71,158,2,H12,"Voucher, Common",71,,H,12,NO,y,
