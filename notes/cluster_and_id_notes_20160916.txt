@@ -1,0 +1,53 @@
+
+Scott, 
+
+A week ago I promised you some annotated figures on clustering parameters. I sat on them too long and now have too much to say about them, so here's, uh, 1500 words of light weekend reading.
+
+Evan, I'm CCing you as a progress report but will send you a more-digested version once we've settled the questions I ask here. This will not be on the test.
+
+My goal here is to vary the values of three different data-processing parameters and evaluate their effect on clustering, taxonomy assignment, and ultimately inferred community structure. I'll walk you through the process and then introduce figures below. 
+
+	0. prep work: We start by removing primers, trimming low-quality ends, assembling forward/reverse reads, and debarcoding to obtain 956812 clean, well-identified reads in `seqs.fna`. Then we dereplicate and remove singletons and suspected chimeras to leave 38084 unique sequences in `seqs_unique_mc2_nonchimera.fasta`. I can answer questions about the prep pipeline under spearate cover, but for this discussion let's consider it finished.
+	
+	1. ITS extraction: We use ITSx to pull out the ITS2 variable region plus an "anchor", i.e. a few bases of conserved 5.8S/26S at each end so that the alignment step of the clustering process has clear ends to work with. This raises parameter-tuning question 1: How long should this anchor be? I've tested 0 bases, 10, 20, "hmm" (which keeps all bases the ITSx HMM classifies as 5.8S or LSU, but truncates any upstream/downstream of that), and "whole" (i.e. skip ITSx and analyze the whole amplicon with primers removed but no trimming beyond that). Regardless of anchor length, each extracted ITS file contains 36142 unique sequences.
+	
+	2. OTU clustering: This may be obvious to you, but it took a while for me to understand that this happens in two steps: First cluster the ~40k *unique* sequences, then assign *each read* from the 956k in seqs.fna to one of these clusters, or throw it out if it doesn't match any of them. Note that I cluster in order of decreasing abundance so that centroids are taken from the most commonly seen sequences, and that I burn some extra CPU cycles to always match a sequence to the most-similar centroid, not just the first centroid closer-than-the-cutoff it finds. Second parameter tuning question: What similarity threshold to use? We'll use the same threshold for both cluster assignment and read mapping. I tested 80, 85, 87, 90, 92, 95, 97, and 99%. Depending on the clustering threshold, the final read->OTU mapping contains between 657237 and 891254 of our 956812 clean reads and maps them to between 40 and 2779 OTUs.
+
+	3. Assign taxonomy: BLAST each centroid sequence against the full 'nt' database, return the taxid of the highest-scoring hit if there is one and it has more than cutoff% identity with the query, otherwise return "No blast hit". I tested two approaches: "cutoff is the same as the clustering similarity", and "cutoff is some fixed value". Of fixed values, I have tested 90% and 95% but could try others. Note: We probably also need some way of checking for and rejecting low-coverage but high-identity matches, but these are only an issue for cases where there's truly no better match available (otherwise the better hit would have a higher score and become our result). Technically I do already set a maximum E value, but I think it's set too high to matter -- it's currently set to 0.001, most hits are in the 1e-30 to 1e-200 range. 
+
+	4. Put all the pieces together: assemble one BIOM file that contains the full read-to-OTU map, sample identies, OTU taxonomies, and other per-sample metadata. This file becomes the starting point for all the Actual Community Analysis. This step is ~finished and has essentially no parameters to tune.
+
+To test these, I've taken my clean `seqs.fna` and reprocessed it a total of 120(!) different ways: five ITS anchor lengths times eight clustering thresholds times three BLAST identities. Let's look at some pictures, shall we? 
+
+Figure 1: clustering.pdf. Colors are different anchor lengths, the x-axis is clustering similarity threshold, and when there are multiple shapes & linetypes they indicate different BLAST similarity thresholds for taxonomy assignment. 
+
+	a. The raw number of OTU clusters obtained from our 72284 (extracted) or 76168 (whole) clean unique sequences. No surprises here -- even at 80% similarity the number of clusters is higher than the expected number of plant species, then it rises exponentially at higher similarities. Anchor length seems to make little difference in this step.
+	b. Percent of raw reads in the full file (956812 reads) that are mapped to OTUs. Note that a high percentage here isn't neccesarily a goal -- if a large fraction of the singleton reads are too dissimilar to map onto any higher-frequency OTU, then we *should* throw them out and feel good doing it. As for cluster number, this seems to be strongly driven by cluster similarity and changing the ITS anchor length makes essentially no difference.
+	c, d. Success of BLAST taxonomy assignment using the same similarity threshold used for clustering (solid lines + circles), a fixed minimum identity of 90% (dashed lines + triangles), or a fixed minimum identity of 95% (dotted lines + squares). Both panels show the same values, but they are expressed as the number of OTUs with *no* BLAST hit in panel c and as the percent of all OTUS that *did* have a blast hit in panel (d). 
+
+	The most obvious takeaway is that requiring 99% identity REALLY cuts down on the number of database hits you can get! But I'm puzzled by the rise in the blast95 line after 95% in panel d -- is is really easier to find a 95%+ blast hit against a 99% centroid than to find one against a 95% centroid? Or is this some kind of artifact?
+
+Figure 2: speciesplots.pdf. Colors and line types are the same as in Fig. 1. 
+	a-c. Number of unique species, calculated by collapsing all OTUs that map to the same species name.
+	d-f. Ditto but collapsing by genus. 
+	Left panels (a & d): total number of OTU groups after collapsing. Middle panels (b & e): number of species/genera expected (=present in Xaiohui's data) but not identified in the dataset. Right panels (c & f): number of species/genera assigned to reads but not present in Xiaohui's list. 	
+
+	As expected, clustering the extracted ITS2 variable region does produce a higher species/genus count than clustering the whole amplicon, but the difference isn't huge except at low clustering thresholds, where the extracted regions have many fewer "unseen" species/genera. Whether what we "saw" is correctly identified is another question, of course! 
+
+	Comparing blast thresholds, the peak around 90% from the same-as-cluster treatment is not what I was expecting. I guess it makes sense (low=many species are clustered together, high=many species are blast misses). But the fact that it's way stronger for genus than for species is weeeird -- how does n_genera manage to drop while n_species holds steady? Some kind of interaction where spurious hits to genera not-actually-present convert to misses while hits to other-species-from-genera-that-really-are-present keep increasing? 
+
+	Takeaways: ????
+		Best I got: Clustering thresholds below 90% look like they probably lump multiple genera together, and high blast similarities in conjunction with high clustering thresholds seem to produce an unacceptable number of unidentified clusters. I should probably run at least one more constant-blast-threshold run at 80% for comparison.
+
+Figure 3: its_anchor_trees.pdf. 
+	My reasoning here: The point of leaving anchor bases on the extracted ITS2 is to improve alignment, so tree shape should be an easy check on alignment quality. To the extent that ITS2 is phylogenetically informative, sequences that cluster near each other in the tree should also get mapped to closely related taxa. This figure attempts to test that prediction. 
+	Each panel is an utterly naive neighbor-joining tree of sequence similarity (NOT phylogeny!): I took each file of cluster centroids, asked clustalw for an alignment and tree using default settings, then plotted the result with no quality checks at all. Tips are labeled with blast-assigned species names, and colors are families. Top row is clustered at 80%, bottom at 90%. I suspect higher similaries would show the same pattern, but I didn't feel like waiting for clustalw to compute a 2000-sequence alignment to find out.
+
+	Takeaway: Looks to me as if the bare ITS2 with 0 anchor bases (leftmost panels) produces a nice clean tree, with near-complete separation between families and decent clustering of genera and species. The separation gets less clean as the number of anchor bases increases, especially for the unextracted whole amplicons at the right. Therefore, I propose to standardize on 0 anchor bases from here on out. Seem reasonable?
+
+	Bonus takeaway: There seems to be a lot less ITS2 sequence variation among the grasses than there is in the dicots -- note the short branch lengths. I see this in blast results too -- it seems common to see high-identity matches to four or five genera among the the top hits for a given grass sequence. This seems worth keeping in mind when picking primers for future studies.
+
+
+Bottom line: I think I want to extract ITSx with 0 anchor bases on each end, and I probably want my BLAST identity threshold to be lower than my clustering threshold, but I don't know how much and I don't know which clustering threshold to use. Counterarguments? Thoughts on how to pick these? Other suggestions?
+
+--Chris

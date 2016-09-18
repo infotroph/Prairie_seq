@@ -1099,3 +1099,92 @@ Also added while writing the above scripts: changed `assign_taxonomy_by_taxid.py
 ## 2016-09-12, CKB
 
 Collecting several files relating to species voucher samples, including some that haven't previously been added to Git but really really should have. Relocated all of these to live in `rawdata/vouchers/`.
+
+## 2016-09-16, CKB
+
+Thinking more about BLAST similarity thresholds. Does it makes sense to require the same similarity used for clustering? Let's think through the ways a given sequence could change when we lower the threshold:
+
+	* Hit remains the same: No problem! It could still be the wrong taxonomy, but our BLAST settings don't change it.
+	* No-hit remains a no-hit: No problem! We just still don't know what the sequence is.
+	* No-hit becomes a hit: This could be either good or bad. If a high-scoring match exists but was below our similarity threshold, finding the hit is good. If relaxing our standards makes us accept a bad match, it's bad.
+	* Hit becomes a no-hit: Should never happen. As currently configured, taxonomy script will always report the highest-scoring hit if there is one that meets the similarity and e-value cutoffs, so anything that matches at more restrictive thresholds should also match, and still have the same score, at a lower threshold.
+	* Hit changes to a different hit: Again, the highest-scoring hit from a high threshold should still be available at a low threshold, so lowering the threshold will only change the taxonomy of a hit if it *increases* the score, e.g. from a very short high-similarity match to a longer match with a lower similarity but enough extra length to more than compensate. If this happens, it's a good thing!
+
+So a higher threshold is only better if it prevents us from declaring spurious taxonomic assignments to sequences that ought correctly to be left unidentified, or in the dubious case where a "wrong" match has a lower similarity but a higher blast score than the "right" match. 
+
+==> Tentative takeaway: Pick one lower BLAST threshold to use for all clustering levels, plan to hand-inspect final results.
+	(But may need to inspect all clusters that glom to a given species, not just one of them.)
+	(And this doesn't tell me *what* threshold to use.)
+
+To find which threshold to use: 
+
+	* Pick a set of sequences that produce reasonable mappings at a low threshold, increase until false negatives rise.
+	* Find some sequences with no good hit, decrease threshold until spurious matches start. This might be easier said than done?
+
+Not sure how to assemble those sequence sets right now; will need to think more on this.
+
+Meanwhile, made some plots of cluster number, unique species count, etc. comparing bioms from different OTS anchor lengths, clustering thresholds, and blast identities. Hopefully this is a one-off analysis, but the script for it is long, so I saved it as `R/biom_checking.R`. To generate the fixed-blast threshold files (`*_blast90.biom`, `*.blast95.biom`), I reran `assign_taxonomy_by_taxid.py` for each centroid file and then built a new biom by re-adding the new taxonomy, using `blast/reblast.sh`. Hopefully this too is a one-off, but saving it because but would be annoying to remake if I need it again.
+
+Now switching gears to test ITS anchor length. The stated reason for leaving anchor bases is to improve multiple sequence alignments by reducing uncertainty about end gap lengths. Therefore, testing alignment quality seems like a reasonable way of evaluating anchor length... But since (at least clustalw's) alignment scores depend on the length of the sequence and different anchor lengths necessarily produce different sequence lengths, I don't know how to compare alignment qualities directly. How about an indirect method instead, such as: comparing tree geometries. Prediction: To the extent that ITS2 is phylogenetically informative (that is, "kinda but with caveats" -- see e.g. 10.1016/S1055-7903(03)00208-2, 10.1016/j.ympev.2008.07.019), and to the extent my BLAST-based taxonomy assignments are correct, a higher-quality alignment should produce a neighbor-joining tree where closely clustered sequences are also ones assigned to closely related taxa. Let's try!
+
+On Biocluster:
+
+```
+module load clustalw/2.1
+
+cd Prairie_seq/rawdata/miseq/plant_it_otu/
+for f in otu_*[89]0.fasta; do 
+    clustalw2 -infile="$f" -align -tree -quiet
+done
+```
+
+Copied the resulting guide trees (`*.dnd`) to my computer, then in R:
+
+```
+# This throws a whole bunch of warnings because only the 80% and 90% trees exist.
+# just gonna ignore those for the moment.
+# 'b' is a list of 40 biom files generated at differing anchor lengths 
+# and cluster thresholds -- See biom_checking.R for code
+trees = lapply(names(b), function(x)read_tree(paste0("~/UI/prairie_seq/tmp/otu_", x, ".dnd")))
+names(trees) = names(b)
+
+# read names in bioms contain semicolons, but clustalw converts them to unserscores.
+# Phyloseq won't read them if fixed upstream, 
+# but seems happy to use semicolon-containing names once read.
+trees = lapply(trees, function(x){taxa_names(x) = gsub("_", ";", taxa_names(x)); x})
+
+# "b" is a list of phyloseq objects containing all 40 biom files from
+# variable-blast-threshold tests.
+btre = mapply(merge_phyloseq, b, trees)
+plot_tree_sp = function(name){
+	(plot_tree(
+		physeq=btre[[name]],
+		title=name,
+		label.tips="Rank8",
+		color="Rank6",
+		ladderize=TRUE,
+		base.spacing=1e-4)
+	+ theme(legend.position="none"))
+}
+
+ggsave(
+	filename="~/UI/prairie_seq/tmp/its_anchor_trees.pdf",
+	plot=plot_grid(
+		plot_tree_sp("a0_80"),
+		plot_tree_sp("a10_80"),
+		plot_tree_sp("a20_80"),
+		plot_tree_sp("ahmm_80"),
+		plot_tree_sp("whole_80"),
+		plot_tree_sp("a0_90"),
+		plot_tree_sp("a10_90"),
+		plot_tree_sp("a20_90"),
+		plot_tree_sp("ahmm_90"),
+		plot_tree_sp("whole_90"),
+		nrow=2),
+	width=24,
+	height=24,
+	units="in"
+)
+```
+
+Wrote a long, rambling email to Scott about about all of this, saved as `notes/cluster_and_id_notes_20160916.txt` Figures from it are archived in `figs/static/biom_checking_20160916/`.
