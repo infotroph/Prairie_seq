@@ -1188,3 +1188,149 @@ ggsave(
 ```
 
 Wrote a long, rambling email to Scott about about all of this, saved as `notes/cluster_and_id_notes_20160916.txt` Figures from it are archived in `figs/static/biom_checking_20160916/`.
+
+## 2016-09-17, CKB
+	
+Looking more carefully at clustalw output, it appears that the neighbor-joining trees I made yesterday are not what I thought they were -- each tree is actually the guide tree that clustalw builds from *pairwise* distances, *before* performing multiple alignment. So they probably don't tell us much about the quality of the *multiple* alignment, though we could still expect them to be informative about pairwise alignments. Additionally, I now think I'm confounding the issue by aligning cluster centroids from each method -- it would be better to align the same set of sequences from each method, make sure I'm plotting a tree built *from* the alignment instead of the guide tree, and annotate the trees with taxonomies obtained from identical Blast settings -- that way any differences in tree geometry are solely attributable to differences in anchor length.
+
+On biocluster:
+
+	```
+	anchors=(a0 a10 a20 ahmm whole)
+
+	# all ITS-extracted files contain 
+	# the same seqs in the same order (yes, I checked),
+	# and are already sorted in decreasing abundance
+	# ==> head -n200 gives the 100 most abundant sequences
+	for a in ${anchors[@]::4}; do
+	    head -n200 its2_"$a".fasta > tmp_its2head_"$a".fasta
+	done
+
+	# For its2_whole.fasta: Order might differ, need to match on seqids instead
+	module purge
+	module load qiime
+	sed -En 's/^>(.*)$/\1/p' tmp_its2head_a0.fasta > tmp_readnames.txt
+	time filter_fasta.py \
+	    --input_fasta_fp its2_whole.fasta \
+	    --output_fasta_fp tmp_its2head_whole.fasta \
+	    --seq_id_fp tmp_readnames.txt
+	rm tmp_readnames.txt
+
+	module purge
+	module load clustalw/2.1
+
+	# align, build tree
+	for a in ${anchors[@]}; do
+	    clustalw2 -infile=tmp_its2head_"$a".fasta -align > tmp_"$a"_headalign.log
+	    clustalw2 -infile=tmp_its2head_"$a".aln -tree > tmp_"$a"_headtree.log
+	done
+	```
+
+From the logs: length of reference alignment amd multiple alignment scores (I still don't know how to interpret these, but saving in case):
+
+	```
+	anchor,length,score
+	a0,258,2032535
+	a10,275,2659693
+	a20,292,2881240
+	ahmm,348,4233257
+	whole,523,6861623
+	```
+
+Now let's assign taxonomies to each file. Again, it's the same 100 sequences and the same BLAST settings, so any differences in assigned taxonomy are attributable to the greater or lesser number of anchor bases.
+
+	```
+	module purge
+	module load qiime
+	module load blast+
+
+	for a in ${anchors[@]}; do
+	    echo "$a"
+	    python ~/Prairie_seq/Python/assign_taxonomy_by_taxid.py \
+	        --input_fasta_fp tmp_its2head_"$a".fasta \
+	        --output_fp tmp_its2head_"$a"_blasttax.txt \
+	        --id_to_taxonomy_fp ~/Prairie_seq/rawdata/ncbi_taxonomy/nt_taxonomy.txt \
+	        --log_fp tmp_its2head_"$a"_assign.log \
+	        --n_threads 2 \
+	        --min_percent_identity 90
+	done
+	```
+
+
+Copied the resulting `*.ph` and `*_blasttax.txt` back to my laptop. In R:
+
+	```
+	library(phyloseq)
+	library(tidyr)
+	library(RColorBrewer)
+
+	# "ih" for "its2 head"
+	ih_names = c("a0", "a10", "a20", "ahmm", "whole")
+
+	ih_trees = lapply(ih_names, function(x){
+	    read_tree(paste0("~/UI/prairie_seq/tmp/tmp_its2head_", x, ".ph"))})
+	names(ih_trees) = ih_names
+
+	ih_taxa = lapply(ih_names, function(x){
+	    xt = read.table(
+	        paste0("~/UI/prairie_seq/tmp/tmp_its2head_", x, "_blasttax.txt"),
+	        header=FALSE,
+	        sep="\t",
+	        stringsAsFactors=FALSE)
+	    names(xt) = c("OTUID", "taxonomy", "evalue", "taxid")
+	    # clustalw truncated IDS to 30 chars! We'll just match here and hope for no collisions.
+	    rownames(xt) = substr(xt$OTUID, 1, 30) 
+	    
+	    tax_table(as.matrix(
+	        xt
+	        %>% separate(
+	            "taxonomy", 
+	            c("superkingdom", "kingdom", "phylum", "class", "order", "family", "genus", "species"), 
+	            sep=";")))
+	})
+
+	# phyloseq demands an OTU table, so we'll humor it by pulling counts from OTUID.
+	ih_fakesamples = lapply(ih_taxa, function(x){
+	    xt = (
+	        data.frame(x[,"OTUID"])
+	        %>% transmute(fakesample=as.numeric(sub(".*=(\\d+);.*", "\\1", OTUID))))
+	    rownames(xt) = rownames(x)
+	    otu_table(xt, taxa_are_rows=TRUE)
+	})
+
+	ih = mapply("merge_phyloseq", ih_trees, ih_taxa, ih_fakesamples)
+
+	# Make one stable color map for all trees
+	ih_families = Reduce(
+	    function(x,y)union(x,y),
+	    lapply(ih, function(x)tax_table(x)[,"family"]))
+	ih_family_colors = brewer.pal(length(ih_families), "Dark2")
+	names(ih_family_colors) = ih_families
+	ihcolor = scale_colour_manual(name = "family", values = ih_family_colors)
+
+	plot_ihtree = function(name){
+	    (plot_tree(
+	        ih[[name]],
+	        title=name,
+	        color="family",
+	        label.tips="species",
+	        ladderize=TRUE)
+	    + ihcolor
+	    +theme(legend.position=c(0.8,0.9), legend.box.just=c(0,0)))
+	}
+
+	ggsave(
+	    "figs/static/biom_checking_20160916/its2_anchorhead_trees.pdf",
+	    plot_grid(
+	        plot_ihtree("a0"),
+	        plot_ihtree("a10"),
+	        plot_ihtree("a20"),
+	        plot_ihtree("ahmm"),
+	        plot_ihtree("whole"),
+	        nrow=2),
+	    width=12,
+	    height=12,
+	    units="in")
+	```
+
+These trees look very different from yesterday's versions! No longer seems clear that taxonomic coherence changes much, nor that grasses have any less sequence variation than other groups. Sent a correction to Scott and Evan, going to wait for their input before making a call on this.

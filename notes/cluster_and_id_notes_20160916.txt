@@ -51,3 +51,14 @@ Figure 3: its_anchor_trees.pdf.
 Bottom line: I think I want to extract ITSx with 0 anchor bases on each end, and I probably want my BLAST identity threshold to be lower than my clustering threshold, but I don't know how much and I don't know which clustering threshold to use. Counterarguments? Thoughts on how to pick these? Other suggestions?
 
 --Chris
+
+Followup, 2016-09-17:
+
+As if this message wasn’t long enough already, here’s a correction:
+The trees I sent in Figure 3 yesterday are mislabeled. If I’ve read the manual correctly, those are *not* neighbor-joining trees built from multiple alignments — they're actually the guide trees that clustalw builds by pairwise alignment *before* it performs the multiple alignment. Also I reported accurately that my starting point was the cluster centroids from each file, but I now think that was a mistake — it meant each tree contained a different set of sequences.
+
+I’m attaching an updated figure: To build this one, I took the 100 most common sequences from the raw dataset, built multiple alignments of that same set of sequences at each ITS anchor length, built a tree from each multiple alignment, and assigned taxonomies separately to each file, always with a blast identity threshold of 90% — so any changes in taxonomy assignment are directly attributable to the change in anchor length.
+
+If this new figure is more correct than yerterday’s version, I’d say I no longer see obvious support for either my claim that shorter anchors cluster better or that the grasses have less sequence divergence. Not sure what my next step is.
+
+—Chris
