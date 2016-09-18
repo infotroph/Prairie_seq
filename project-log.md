@@ -1334,3 +1334,19 @@ Copied the resulting `*.ph` and `*_blasttax.txt` back to my laptop. In R:
 	```
 
 These trees look very different from yesterday's versions! No longer seems clear that taxonomic coherence changes much, nor that grasses have any less sequence variation than other groups. Sent a correction to Scott and Evan, going to wait for their input before making a call on this.
+
+A little project cleanup: Deleted `run_qiime.sh`, which has now been completely supplanted. The only thing it did that isn't implemented elsewhere was run QIIME's core diversity analysis workflow script, which I doubt I will use at all and will probably fine-tune parameters if I do. But for reference, the call in `run_qiime.sh` was:
+
+	```
+	(time core_diversity_analyses.py \
+		--output_dir plant_its_present99_noun_corediv \
+		--input_biom_fp plant_its_presentref_noun_otu99_psp/otu_table_mc2_w_tax.biom \
+		--mapping_fp plant_ITS_map.txt \
+		--parameter_fp qiime_parameters.txt \
+		--nonphylogenetic_diversity \
+		--categories Block,Depth1,SampleType \
+		--sampling_depth 2000 \
+		--jobs_to_start 20 \
+		--parallel
+	) 2>&1 | tee -a "$SHORT_JOBID".log
+	```
