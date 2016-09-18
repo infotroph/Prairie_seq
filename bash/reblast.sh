@@ -22,6 +22,18 @@ module load blast+
 for a in ${anchors[*]}; do
 	python ~/Prairie_seq/Python/assign_taxonomy_by_taxid.py \
 		--input_fasta_fp otu_"$a"_"$PBS_ARRAYID".fasta \
+		--output_fp "$a"_"$PBS_ARRAYID"_blast_taxonomies_id80pct.txt \
+		--id_to_taxonomy_fp ~/Prairie_seq/rawdata/ncbi_taxonomy/nt_taxonomy.txt \
+		--log_fp assigntax_id80pct_"$a"_"$PBS_ARRAYID"_"$SHORT_JOBID".log \
+		--n_threads 3 \
+		--min_percent_identity 80
+	md5sum \
+		otu_"$a"_"$PBS_ARRAYID".fasta \
+		"$a"_"$PBS_ARRAYID"_blast_taxonomies_id80pct.txt \
+		>> assigntax_id80pct_"$a"_"$PBS_ARRAYID"_"$SHORT_JOBID".log
+
+	python ~/Prairie_seq/Python/assign_taxonomy_by_taxid.py \
+		--input_fasta_fp otu_"$a"_"$PBS_ARRAYID".fasta \
 		--output_fp "$a"_"$PBS_ARRAYID"_blast_taxonomies_id90pct.txt \
 		--id_to_taxonomy_fp ~/Prairie_seq/rawdata/ncbi_taxonomy/nt_taxonomy.txt \
 		--log_fp assigntax_id90pct_"$a"_"$PBS_ARRAYID"_"$SHORT_JOBID".log \
@@ -53,11 +65,20 @@ module load biom-format/2.1.5
 for a in ${anchors[*]}; do
 	biom add-metadata \
 		--input-fp "$a"_"$PBS_ARRAYID".biom \
+		--output-fp "$a"_"$PBS_ARRAYID"_blast80.biom \
+		--sample-metadata-fp ~/Prairie_seq/rawdata/plant_ITS_map.txt \
+		--observation-metadata-fp "$a"_"$PBS_ARRAYID"_blast_taxonomies_id80pct.txt \
+		--observation-header OTUID,taxonomy,evalue,taxid \
+		--sc-separated taxonomy
+
+	biom add-metadata \
+		--input-fp "$a"_"$PBS_ARRAYID".biom \
 		--output-fp "$a"_"$PBS_ARRAYID"_blast90.biom \
 		--sample-metadata-fp ~/Prairie_seq/rawdata/plant_ITS_map.txt \
 		--observation-metadata-fp "$a"_"$PBS_ARRAYID"_blast_taxonomies_id90pct.txt \
 		--observation-header OTUID,taxonomy,evalue,taxid \
 		--sc-separated taxonomy
+
 	biom add-metadata \
 		--input-fp "$a"_"$PBS_ARRAYID".biom \
 		--output-fp "$a"_"$PBS_ARRAYID"_blast95.biom \
