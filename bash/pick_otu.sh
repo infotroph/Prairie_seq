@@ -2,7 +2,7 @@
 
 #PBS -S /bin/bash
 #PBS -q default
-#PBS -l nodes=1:ppn=10,mem=20gb
+#PBS -l nodes=1:ppn=24,mem=20gb
 #PBS -M black11@igb.illinois.edu
 #PBS -m abe
 #PBS -j oe
@@ -32,14 +32,16 @@ anchors=("whole" "a0" "a10" "a20" "ahmm")
 # Cluster OTUs, then build sample-to-OTU table
 for a in ${anchors[*]}; do 	
 	vsearch \
-		--cluster_fast its2_"$a".fasta \
+		--cluster_size its2_"$a".fasta \
 		--centroids otu_"$a"_"$PBS_ARRAYID".fasta \
 		--id 0."$PBS_ARRAYID" \
 		--sizein \
 		--sizeout \
 		--strand both \
 		--fasta_width 0 \
-		--threads 10 \
+		--threads 24 \
+		--maxaccepts 0 \
+		--maxrejects 0 \
 		--log otu_"$a"_"$PBS_ARRAYID"_"$SHORT_JOBID".log
 	md5sum \
 		its2_"$a".fasta \
@@ -52,7 +54,9 @@ for a in ${anchors[*]}; do
 		--uc "$a"_"$PBS_ARRAYID".uc \
 		--strand both \
 		--id 0."$PBS_ARRAYID" \
-		--threads 10 \
+		--threads 24 \
+		--maxaccepts 0 \
+		--maxrejects 0 \
 		--log build_"$a"_"$PBS_ARRAYID"_"$SHORT_JOBID".log
 	md5sum \
 		otu_"$a"_"$PBS_ARRAYID".fasta \
