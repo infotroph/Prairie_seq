@@ -2,7 +2,7 @@
 #	* anchor length around ITS2 (0,10,20 bases or 5.8S/26S HMM or whole amplicon)
 #	* clustering threshold
 #	* blast similarity cutoff
-# These anlyses shouldn't be needed for routine use, but saving for posterity
+# These analyses shouldn't be needed for routine use, but saving for posterity
 # This is an edited transcript of an interactive session -- it will definitely not
 # do anything useful if run as a script.
 
@@ -23,11 +23,12 @@ vouch = read.csv("rawdata/vouchers/root_voucher_fate.csv")
 vouch$genus = sapply(as.character(vouch$binomial), function(x) strsplit(x, " ")[[1]][1])
 
 # Collapse OTUs assigned to the same species/genus.
-# These are slooooow, but whatever
+# These are slooooow!
+# If you only need to know which & how many unique groups,
+# use get_taxa_unique(physeq, rankname) instead
 b_spglom = lapply(b, tax_glom, "Rank8", NArm=FALSE)
 b_genglom = lapply(b, tax_glom, "Rank7", NArm=FALSE)
 
-# First run, all blast identity thresholds were the same as clustering threshold
 b_sizes = (
 	data.frame(
 		name=bioms,
@@ -36,7 +37,7 @@ b_sizes = (
 		n_unidentified_taxa = sapply(
 			b,
 			function(x)length(which(tax_table(x)[, "Rank1"] == "No blast hit"))),
-		n_species = sapply(b_spglom, ntaxa),
+		n_species = sapply(b_spglom, ntaxa), # N.B. each NA counted separately
 		n_genera = sapply(b_genglom, ntaxa),
 		n_unseen_sp = sapply( # species present in vouchers but not identified in unknowns
 			b_spglom,
@@ -50,105 +51,23 @@ b_sizes = (
 		n_unexp_gen = sapply( # genera "present" in unknowns but not vouchers
 			b_genglom,
 			function(x)length(setdiff(tax_table(x)[,"Rank7"], vouch$genus))))
-	# break filenames into anchor/similarity columns
-	%>% separate(col=name, into=c("anchor", "pct_sim", "biom_file_ext"))
-	%>% select(-biom_file_ext)
+	# break filenames into anchor/cluster similarity/blast similarity columns
+	# example filenames: "a0_80.biom", "ahmm_95_blast90.biom"
+	%>% extract(
+			col=name,
+			into=c("anchor", "pct_sim", "blast_sim"),
+			regex="([:alnum:]+)_([:digit:]+)_?(?:blast)?([:digit:]+)?.biom")
+	%>% replace_na(list(blast_sim="blast_equals_cluster"))
 	%>% mutate(
 		pct_rawreads_clustered = n_rawreads_clustered/SEQS_FNA_LENGTH*100,
 		pct_clusters_identified = (1 - n_unidentified_taxa/n_clusters)*100,
 		pct_sim = as.numeric(as.character(pct_sim)))
 )
-
-# Then I repeated the above but with BLAST percent ID fixed at 90% 
-# instead of matching cluster similarity
-bioms90 = list.files("tmp/bioms_id90pct")
-b90 = lapply(bioms90, function(x)import_biom(file.path("tmp/bioms_id90pct", x)))
-names(b90)=sub("_blast90.biom$", "", bioms90)
-
-b90_spglom = lapply(b90, tax_glom, "Rank8", NArm=FALSE)
-b90_genglom = lapply(b90, tax_glom, "Rank7", NArm=FALSE)
-
-b90_sizes = (
-	data.frame(
-		name=bioms90,
-		n_clusters = sapply(b90, ntaxa),
-		n_rawreads_clustered = sapply(b90, function(x)sum(otu_table(x))),
-		n_unidentified_taxa = sapply(
-			b90,
-			function(x)length(which(tax_table(x)[, "Rank1"] == "No blast hit"))),
-		n_species = sapply(b90_spglom, ntaxa),
-		n_genera = sapply(b90_genglom, ntaxa),
-		n_unseen_sp = sapply( # species present in vouchers but not identified in unknowns
-			b90_spglom,
-			function(x)length(setdiff(vouch$binomial, tax_table(x)[,"Rank8"]))),
-		n_unexp_sp = sapply( # species "present" in unknowns but not vouchers
-			b90_spglom,
-			function(x)length(setdiff(tax_table(x)[,"Rank8"], vouch$binomial))),
-		n_unseen_gen = sapply( # genera present in vouchers but not identified in unknowns
-			b90_genglom,
-			function(x)length(setdiff(vouch$genus, tax_table(x)[,"Rank7"]))),
-		n_unexp_gen = sapply( # genera "present" in unknowns but not vouchers
-			b90_genglom,
-			function(x)length(setdiff(tax_table(x)[,"Rank7"], vouch$genus))))
-	# break filenames into anchor/similarity columns
-	%>% separate(col=name, into=c("anchor", "pct_sim", "blast_sim", "biom_file_ext"))
-	%>% select(-biom_file_ext)
-	%>% mutate(
-		pct_rawreads_clustered = n_rawreads_clustered/SEQS_FNA_LENGTH*100,
-		pct_clusters_identified = (1 - n_unidentified_taxa/n_clusters)*100,
-		pct_sim = as.numeric(as.character(pct_sim)))
-)
-
-
-# And once more with BLAST percent ID fixed at 95% 
-bioms95 = list.files("tmp/bioms_id95pct")
-b95 = lapply(bioms95, function(x)import_biom(file.path("tmp/bioms_id95pct", x)))
-names(b95)=sub("_blast95.biom$", "", bioms95)
-
-b95_spglom = lapply(b95, tax_glom, "Rank8", NArm=FALSE)
-b95_genglom = lapply(b95, tax_glom, "Rank7", NArm=FALSE)
-
-b95_sizes = (
-	data.frame(
-		name=bioms95,
-		n_clusters = sapply(b95, ntaxa),
-		n_rawreads_clustered = sapply(b95, function(x)sum(otu_table(x))),
-		n_unidentified_taxa = sapply(
-			b95,
-			function(x)length(which(tax_table(x)[, "Rank1"] == "No blast hit"))),
-		n_species = sapply(b95_spglom, ntaxa),
-		n_genera = sapply(b95_genglom, ntaxa),
-		n_unseen_sp = sapply( # species present in vouchers but not identified in unknowns
-			b95_spglom,
-			function(x)length(setdiff(vouch$binomial, tax_table(x)[,"Rank8"]))),
-		n_unexp_sp = sapply( # species "present" in unknowns but not vouchers
-			b95_spglom,
-			function(x)length(setdiff(tax_table(x)[,"Rank8"], vouch$binomial))),
-		n_unseen_gen = sapply( # genera present in vouchers but not identified in unknowns
-			b95_genglom,
-			function(x)length(setdiff(vouch$genus, tax_table(x)[,"Rank7"]))),
-		n_unexp_gen = sapply( # genera "present" in unknowns but not vouchers
-			b95_genglom,
-			function(x)length(setdiff(tax_table(x)[,"Rank7"], vouch$genus))))
-	# break filenames into anchor/similarity columns
-	%>% separate(col=name, into=c("anchor", "pct_sim", "blast_sim", "biom_file_ext"))
-	%>% select(-biom_file_ext)
-	%>% mutate(
-		pct_rawreads_clustered = n_rawreads_clustered/SEQS_FNA_LENGTH*100,
-		pct_clusters_identified = (1 - n_unidentified_taxa/n_clusters)*100,
-		pct_sim = as.numeric(as.character(pct_sim)))
-)
-
-b_sizes$blast_sim = "blast_equals_cluster"
-b_allsizes = rbind(b_sizes, b90_sizes, b95_sizes)
-
-
-
 
 
 # Plots of cluster number/success rate at different anchor/cluster/blast settings
 plot_grid(
-	ggplot(b_allsizes,
+	ggplot(b_sizes,
 		aes(
 			x=pct_sim,
 			y=n_clusters,
@@ -156,7 +75,7 @@ plot_grid(
 		+geom_line()
 		+geom_point()
 		+theme(legend.position="none"),
-	ggplot(b_allsizes,
+	ggplot(b_sizes,
 		aes(
 			x=pct_sim,
 			y=pct_rawreads_clustered,
@@ -165,7 +84,7 @@ plot_grid(
 		+geom_point()
 		+geom_hline(yintercept=100, lty="dashed")
 		+theme(legend.position="none"),
-	ggplot(b_allsizes,
+	ggplot(b_sizes,
 		aes(
 			x=pct_sim,
 			y=n_unidentified_taxa,
@@ -178,7 +97,7 @@ plot_grid(
 		+theme(
 			legend.position=c(0.3, 0.7),
 			legend.box.just=c(0,0)),
-	ggplot(b_allsizes,
+	ggplot(b_sizes,
 		aes(
 			x=pct_sim,
 			y=pct_clusters_identified,
@@ -195,7 +114,7 @@ plot_grid(
 
 # How many species and genera are in the clusters we get, and how many of those are from species/genera we were/weren't expecting based on the voucher data?
 plot_grid(
-	ggplot(b_allsizes,
+	ggplot(b_sizes,
 		aes(
 			x=pct_sim,
 			y=n_species,
@@ -208,7 +127,7 @@ plot_grid(
 		+theme(
 			legend.position=c(0.3, 0.7),
 			legend.box.just=c(0,0)),
-	ggplot(b_allsizes,
+	ggplot(b_sizes,
 		aes(
 			x=pct_sim,
 			y=n_unseen_sp,
@@ -218,7 +137,7 @@ plot_grid(
 		+geom_line()
 		+geom_point()
 		+theme(legend.position="none"),
-	ggplot(b_allsizes,
+	ggplot(b_sizes,
 		aes(
 			x=pct_sim,
 			y=n_unexp_sp,
@@ -228,7 +147,7 @@ plot_grid(
 		+geom_line()
 		+geom_point()
 		+theme(legend.position="none"),
-	ggplot(b_allsizes,
+	ggplot(b_sizes,
 		aes(
 			x=pct_sim,
 			y=n_genera,
@@ -239,7 +158,7 @@ plot_grid(
 		+geom_point()
 		+geom_hline(yintercept=26, lty="dashed")
 		+theme(legend.position="none"),
-	ggplot(b_allsizes,
+	ggplot(b_sizes,
 		aes(
 			x=pct_sim,
 			y=n_unseen_gen,
@@ -249,7 +168,7 @@ plot_grid(
 		+geom_line()
 		+geom_point()
 		+theme(legend.position="none"),
-	ggplot(b_allsizes,
+	ggplot(b_sizes,
 		aes(
 			x=pct_sim,
 			y=n_unexp_gen,
