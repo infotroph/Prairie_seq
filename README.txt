@@ -17,6 +17,8 @@ Repository layout:
 	The script that runs the whole analysis. After making any change to data or code, update outputs by running the command $(make) in the project root directory. All analyses that need updating after the change, and none of the ones that don't need updating, will be rerun.
 - notes/
 	Bits of text -- reminders from the authors to ourselves, sketches for paper sections, instructions. All hand-written; make doesn't touch anything in this directory.
+- plant_manuscript/
+	The paper about the plant species identification portion of the project. This directory has its own Makefile, and for the moment it does not update itself automatically -- when numbers/figures in the results change, they have to be updated by hand in the paper. TODO: automate some of this, integrate manuscript compilation into the main project Makefile.
 - project-log.md
 	Running log of changes to the project. Add to the bottom, don't edit what came earlier.
 - protocols/
