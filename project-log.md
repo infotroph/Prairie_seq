@@ -1368,3 +1368,41 @@ Updated `biom_checking.R` to simplify checking blast threshold effects -- no nee
 ## 2016-09-22, CKB
 
 Spent the past several days producing a very rough first draft of intro/methods/possible figures; presented it today to DeLucia lab meeting. All figures are static screenshots of test plots from temporary files I haven't committed yet! Need to clean up/commit plotting code in coming days. All manuscript files live in `plant_manuscript`; note that this directory has its own Makefile to compile Markdown + BibTeX + figures into a docx file, and further note that it doesn't automatically update -- when results change, need to find and edit numbers/pictures in the manuscript by hand.
+
+## 2016-09-23, CKB
+
+Apparently all my data analysis for the last month has, somehow, used a version of the paired-end reads from before the last set of changes I made to `pair_pandaseq.sh` on Aug 21, and therefore contains a whole bunch of reads that should have been thrown out by the `min_overlapbits` filter! Not sure how I managed this and embarrassed that of COURSE it went unnoticed until after I started writing up the details. Let's rerun everything and follow the changes through the pipeline:
+
+* Starting point:  Checked md5sums of `/plant_its/Plant_ITS2_Delucia_Fluidigm_*.fastq`, re-extracted from known-untouched `Delucia_Fluidigm_PrimerSorted_2015813.tgz`, rechecked checksums. Run interactively and time not recorded, but was on the order of 5-10 minutes per file.
+	```
+	md5sum plant_its/*
+	# 429349d077139f435815eef49a942cd2  plant_its/Plant_ITS2_Delucia_Fluidigm_I1.fastq
+	# d9b852a9bde8497d9e95af8045eed117  plant_its/Plant_ITS2_Delucia_Fluidigm_R1.fastq
+	# 9b2fb05d5543a5d8129f43e132c800b3  plant_its/Plant_ITS2_Delucia_Fluidigm_R2.fastq
+	tar -xvf Delucia_Fluidigm_PrimerSorted_2015813.tgz \
+		-C plant_its "Plant_ITS2_Delucia_Fluidigm_R1.fastq"
+	tar -xvf Delucia_Fluidigm_PrimerSorted_2015813.tgz \
+		-C plant_its "Plant_ITS2_Delucia_Fluidigm_R2.fastq"
+	tar -xvf Delucia_Fluidigm_PrimerSorted_2015813.tgz \
+		-C plant_its "Plant_ITS2_Delucia_Fluidigm_I1.fastq"
+	md5sum plant_its/*
+	# 429349d077139f435815eef49a942cd2  plant_its/Plant_ITS2_Delucia_Fluidigm_I1.fastq
+	# d9b852a9bde8497d9e95af8045eed117  plant_its/Plant_ITS2_Delucia_Fluidigm_R1.fastq
+	# 9b2fb05d5543a5d8129f43e132c800b3  plant_its/Plant_ITS2_Delucia_Fluidigm_R2.fastq
+	```
+* `pair_pandaseq.out`: Run as job 2044463, run time 03:22. Produces `plant_its_pandaseq_joined/pspaired_cleanid.fastq` and `plant_its_pandaseq_joined/barcodes_pspaired.fastq`.
+	- Was: md5s d3b16b4525618faa748a3c245d936721 and 00097616c4df241e6fcc21074aab4b0a respectively, each contained 1186094 reads, none removed by `min_overlapbits` filter.
+	- Now: md5s 36b92191259cd34336403a5ac0ec3912 and 4e028abe806135df24a6c546f6c192a8, contains 750823 reads, 275010 removed by `min_overlapbits` filter.
+* `split_derep.sh`: Run as job 2044525, run time 03:29. Produces `plant_its_sl/seqs.fna` and `plant_its_sl/seqs_unique_mc2_chimera.fasta`.
+	- Was: `seqs.fna` md5 d02a7ef926351c2cb34f3a377a13d97a, 1186094 reads in, 70072 barcode not in mapping file, 159206 too short, 956812 seqs written, median seq length 445. `seqs_unique_mc2_nonchimera.fasta` md5 22a210083f5c0b8bc7ad11dd76cb1218, 675898 unique seqs, 635969 singetons, 39929 uniques written, 1537 (3.8%) chimeras.
+	- Now: `seqs.fna` md5 d9f4afb3fe83925582569c97c799e534, 750823 reads in, 20113 barcode not in mapping file, 475 too short, 730235 seqs written, median legnth 446. `seqs_unique_mc2_nonchimera.fasta` md5 c0835c3f9d65054e91cfd5b7f45d46ee, 494505 unique seqs, 459986 singletons, 34519 uniques written, 1952 (5.7%) chimeras.
+* `extract_its2.sh`: Run as job 2044533[], run time 43-53 min. Produces `plant_its2_extracted_*`.
+	- Was: `ITSx_out.ITS2.fasta` `a0` 7ff659b170be3cbd5c9319757becc796, `a10` 11d61b33e1082d3ef39466d5a7dfebd7, `a20` c47df0ce8d421ca52841db429dd6e575, `ahmm` 512a041a41465ccb8dacfb25f6c7fd0d. All: 37997 sequences extracted, 36142 of which are full-length and the remainder partial. All are classified as tracheophyta and found on the forward strand. Mean lengths
+	- Now: `a0` e4707ee9a46538606c043efe37805215, `a10` 279db3c34803c44da38b66ebf064af95, `a20` 473a1d33463ed837c6b6c0ac5a219fe0, `ahmm` 0c3a5b5861fdaaa83201de6950b404c0. 32269 seqs extracted, 32225 of which are full-length. All are classified as tracheophyta and found on the forward strand.
+* `pick_otu.sh`: Run as job 2044554[], run time 20 min (80%) to 3:47 (99%). Produces a whole pile of files in `plant_its_otu/`: each anchor/clustering combination produces one each of `otu_*.fasta, *.uc, *.biom, *_blast_taxonomies.txt, otu_*.log, build_*.log, assigntax_*.log`.
+	- Was: 40 (`whole_80`) to 2571 (`a0_99`) clusters, 68% (`a20_99`) to 93% (`whole_80`) of the 956812 reads in `seqs.fna` matched to clusters, 0 (`a10_80, ahmm_80, ahmm_85, whole_80, whole_85`) to 2223 (`a0_99`) clusters with no blast hit. Mean lengths of cluster centroids (calculated as `for f in otu_*.fasta; do echo -n $f; sed -n 'n;p;' $f | awk 'BEGIN{lensum=0} {lensum=lensum+length} END{print " " lensum/NR}'; done`): `a0` 146-205, `a10`  174-225, `a20` 221-246, `ahmm` 261-292, `whole` 320-409. Number of unique species (calculated as `for f in *_blast_taxonomies.txt; do echo -n $f " "; awk -F'\t' '{print $2}' $f |sort |uniq|wc -l; done`) ranges from 31 (`whole_80`) to 103 (`a0_99`).
+	- Now: 34 (`whole_80`) to 1595 (`a20_99`) clusters, 75% (`whole_99`) to 99.94% (`a0_80`) of the 730235 raw reads matched (match rates below 90% only seen from files clustered at 99%), 0 (all files clustered at 80% & 85%) to 1311 (`whole_99`) clusters with no blast hit. Mean lengths of cluster centroids: `a0` 201-223, `a10` 221-242, `a20` 240-262, `ahmm` 288-309, `whole` 423-444. Number of unique species ranges from 32 (`whole_80`) to 81 (`a10_92`).
+* `reblast.sh`: Run as job 2044577[], run time 3h 15m (92%) to 4h 19m (90%), no obvious pattern to which finished first.
+	- Was: with 80% min blast identity, `a0` 1-14 with no hit, `a10` 0-5, `a20` 0-2. `ahmm` and `whole` all have 0 with no blast hit. At 90% min blast identity, `a0` 2-60 with no hit, at 95% min blast identity: 10-474 with no hit. Unique species: 80% 31-200, 90% 32-183, 95% 28-146, always lowest for `whole_80` and highest for `a0_99`.
+	- Now: With 80% min blast identity, `a0, a10, a20` all 0 have with no hit for 80-92% clusters, 1 with no hit for 95-97% clusters,2 with no hit for 99% clusters. `ahmm` and `whole` have 0 at any clustering. With 90% min identity, all anchors have 2-4 with no hit at 80% clustering increasing to 42-57 at 99% clustering. With 95% min blast identity, all anchors have 8-13 with no hit at 80% clustering, increasing to 285-428 with no hit at 99% clustering. Unique species: 80% 32-158, 90% 31-142, 95% 27-114, always lowest for `whole_80` and highest for `a0_99`.
+* remade cluster-number/species-number plots from biom_checking.R. Edited the script to change `SEQS_FNA_LENGTH` from 956182 to 730235, but no other changes.

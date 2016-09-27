@@ -12,7 +12,7 @@ library(dplyr)
 library(ggplot2)
 library(cowplot)
 
-SEQS_FNA_LENGTH = 956812 # only constant if I don't change upstream cleanup steps!
+SEQS_FNA_LENGTH = 730235 # only constant if I don't change upstream cleanup steps!
 
 bioms = list.files("tmp/bioms/")
 b = lapply(bioms, function(x)import_biom(file.path("tmp/bioms", x)))
