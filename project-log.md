@@ -1257,12 +1257,15 @@ Now let's assign taxonomies to each file. Again, it's the same 100 sequences and
 	```
 
 
-Copied the resulting `*.ph` and `*_blasttax.txt` back to my laptop. In R:
+Copied the resulting `*.ph` and `*_blasttax.txt` back to my laptop. In R **(EDITED 2016-09-27 to include all package load commands)**:
 
 	```
 	library(phyloseq)
 	library(tidyr)
 	library(RColorBrewer)
+	library(ggplot2)
+	library(dplyr)
+	library(cowplot)
 
 	# "ih" for "its2 head"
 	ih_names = c("a0", "a10", "a20", "ahmm", "whole")
@@ -1406,3 +1409,21 @@ Apparently all my data analysis for the last month has, somehow, used a version 
 	- Was: with 80% min blast identity, `a0` 1-14 with no hit, `a10` 0-5, `a20` 0-2. `ahmm` and `whole` all have 0 with no blast hit. At 90% min blast identity, `a0` 2-60 with no hit, at 95% min blast identity: 10-474 with no hit. Unique species: 80% 31-200, 90% 32-183, 95% 28-146, always lowest for `whole_80` and highest for `a0_99`.
 	- Now: With 80% min blast identity, `a0, a10, a20` all 0 have with no hit for 80-92% clusters, 1 with no hit for 95-97% clusters,2 with no hit for 99% clusters. `ahmm` and `whole` have 0 at any clustering. With 90% min identity, all anchors have 2-4 with no hit at 80% clustering increasing to 42-57 at 99% clustering. With 95% min blast identity, all anchors have 8-13 with no hit at 80% clustering, increasing to 285-428 with no hit at 99% clustering. Unique species: 80% 32-158, 90% 31-142, 95% 27-114, always lowest for `whole_80` and highest for `a0_99`.
 * remade cluster-number/species-number plots from biom_checking.R. Edited the script to change `SEQS_FNA_LENGTH` from 956182 to 730235, but no other changes.
+
+## 2016-09-27, CKB
+
+Remade clustalw trees of top 100 sequences; same code as recorded 2016-09-17 except: (1) plots saved to `figs/static/biom_checking_20160926/` instead of `figs/static/biom_checking_20160917/`, and (2) adding calls to load `ggplot2`, `dplyr`, and `cowplot`, which I also used last time but neglected to record. Edited 2016-09-17 notes to include these.
+
+Observations while comparing remade trees against the old version: 
+	* All anchor lengths now produce essentially the same tree shape; only difference I see is that *Convolvulus* flips back and forth between branching just below (a0, a20, whole) or just above (a10, ahmm) the split between grasses and legumes. Previous version had genera moving around a lot within families. 
+	* Trees are now *much* closer to fully monophyletic. Families are now all in their own subtree, with the sole exception of one sample that is always grouped with the Solidago but is identified as "Rumex" (Polygonaceae) with anchors 0-20 and as "Solidago" with hmm anchor or whole sequence. Samples assigned to the same genus/species are also in their own substrees, with the sole exception that whole-sequence reassigns all but one of the Sorghastrum subtree as Saccharum, leaving that one Sorghastrum inside the expanded Saccharum subtree.
+	* Remade trees no longer contain any samples identified as "Magnoliophyta environmental sample".
+	* Not new, but noticed for the first time in the remade trees and much harder to see in the old ones: Comparing species-level identities, samples from the same genus are progressively collapsed into fewer and fewer species, until whole-sequence trees have effectively only one species per genus.
+
+## 2016-09-29, CKB
+
+A tentative decision about anchor lengths: I think that I want to use extracted ITS2 rather than whole sequences and that if I'm extracting I might as well use `a0`. My crude clustalw tree-building exercise doesn't show any obvious sign that the alignment quality suffers from a lack of end-anchors, and shorter sequences seem to produce higher-quality BLAST results, for reasons I'll explain below. Once we have Sanger sequences from the voucher tissue, I expect this to matter even less than it does now.
+
+From hand-running a few of the most common sequences through web BLAST, I think I see a pattern in the cases where changing the anchor length produces a change in the highest-scoring BLAST hit: When the highest-identity *database* sequence is a base ITS2 region, it becomes the top hit for a bare-ITS2 query sequence, but for longer queries it gets outscored by ITS1-5.8S-ITS2 contigs that have lower identity but higher query coverage. This is especially evident for sequences that appear to me to be *Silphium*, because most of the *Silphium* in the `nt` database is ITS2 from Clevinger and Panero 2000 (Am J Bot 87(4), 565-572), so the short-anchor seqs get identified as *Silphium* but the best-scoring whole-contig match is a *Helianthus*.  Have only checked this on a few sequences (less than a dozen), but it includes the top five most common seqs in the dataset and it seems to line up with the patterns I see in the clustalw trees. Extracted ITS2 queries always seem to still match welll to longer database sequences, so I see no downside to shorter anchors from a species-identification perspective.
+
+Reworked `extract_its2.sh` and `pick_otu.sh` to use only the bare ITS2 (previously `a0`) and not generate other anchor lengths. While I'm at it, changed output directories from `rawdata/miseq/*` to `data/*` -- these are really not raw data by this point! Should edit some of the further upstream steps too.
