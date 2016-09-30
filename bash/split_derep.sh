@@ -14,7 +14,7 @@ module load qiime
 
 SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
 
-INDIR=data/miseq/plant_its_joined
+INDIR=data/plant_its_joined
 OUTDIR=data/plant_its_sl
 mkdir -p "$OUTDIR"
 

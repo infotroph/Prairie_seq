@@ -6,7 +6,7 @@
 #PBS -M black11@igb.illinois.edu
 #PBS -m abe
 #PBS -j oe
-#PBS -N pair_pandaseq
+#PBS -N pair_ends
 #PBS -d .
 
 SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
