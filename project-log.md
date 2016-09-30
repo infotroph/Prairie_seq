@@ -1438,3 +1438,7 @@ Output from modified `extract_its2.sh` is identical to previous `a0` output. Not
 * Updated input for `extract_its2.sh` (now easy! Only had to edit definition of `$INFILE`).
 * Paths in `pick_otu.sh` *should* all work again now, but they're an ugly mix of relative and absolute paths and future edits will be easier if I collect them into variables. Edited to make PBS execution path be project root (was `data/plant_its2_otu`) and to put all input and output paths into variables at the top of the script.
 * Did not edit `reblast.sh`; it will need a more extensive rewrite if it's going to become part of the regular workflow, but I'm not sure yet whether it will become that.
+
+## 2016-09-30, CKB
+
+Trying to update methods with current numbers of reads, realizing I don't have a way to count the total number of reads accounted for by "borderline" chimeras, i.e. high enough score but not sufficiently diverged from parent -- these are neither include in `seqs_unique_mc2_chimera.fasta` nor in `...nonchimera.fasta`. Edited `split_derep.sh` to write borderline seqs to `seqs_unique_mc2_borderingchimera.fasta`.

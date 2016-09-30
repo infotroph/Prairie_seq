@@ -48,6 +48,7 @@ vsearch \
 | vsearch \
 	--uchime_denovo - \
 	--nonchimeras "$OUTDIR"/seqs_unique_mc2_nonchimera.fasta \
+	--borderline "$OUTDIR"/seqs_unique_mc2_borderingchimera.fasta \
 	--chimeras "$OUTDIR"/seqs_unique_mc2_chimera.fasta \
 	--sizein \
 	--sizeout \
