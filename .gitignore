@@ -1,5 +1,6 @@
 private
 rawdata/miseq
+plant_manuscript/commented_drafts
 
 # in this repo, these are compiled from Markdown.
 *.html
