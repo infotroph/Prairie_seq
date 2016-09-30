@@ -8,7 +8,7 @@
 #PBS -j oe
 #PBS -N plant_its_otu
 #PBS -d .
-#PBS -t 80,85,87,90,92,95,97,99
+#PBS -t 99
 
 # Pick OTUs by de novo clustering with vsearch, look up taxonomy,
 # and assemble into a sample-by-otu table in BIOM format.
@@ -16,9 +16,10 @@
 # We start from dereplicated, chimera-checked ITS2 regions. To prepare these, 
 # run extract_its2.sh before calling this script.
 
-# Trying several different similarity thresholds at once. 
-# Similarities are passed as an array ("#PBS -t" line above) 
-# so that they are run in parallel.
+# Similarity is passed as an array ("#PBS -t" line above)
+# to make it easy to run several in parallel if wanted.
+# To run at multiple similarities, add comma-separated percentages,
+# e.g. "#PBS -t 80,85,87,90,92,95,97,99"
 
 module load vsearch/2.0.4
 
@@ -76,7 +77,7 @@ python Python/assign_taxonomy_by_taxid.py \
 	--id_to_taxonomy_fp "$TAXONOMY_FILE" \
 	--log_fp "$OTU_DIR"/assigntax_"$PBS_ARRAYID"_"$SHORT_JOBID".log \
 	--n_threads 3 \
-	--min_percent_identity "$PBS_ARRAYID"
+	--min_percent_identity 80
 md5sum \
 	"$TAXONOMY_FILE" \
 	"$OTU_DIR"/otu_"$PBS_ARRAYID".fasta \

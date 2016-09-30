@@ -1442,3 +1442,13 @@ Output from modified `extract_its2.sh` is identical to previous `a0` output. Not
 ## 2016-09-30, CKB
 
 Trying to update methods with current numbers of reads, realizing I don't have a way to count the total number of reads accounted for by "borderline" chimeras, i.e. high enough score but not sufficiently diverged from parent -- these are neither include in `seqs_unique_mc2_chimera.fasta` nor in `...nonchimera.fasta`. Edited `split_derep.sh` to write borderline seqs to `seqs_unique_mc2_borderingchimera.fasta`.
+
+Conferred with SAW on anchor length, clustering, blast cutoffs. Conclusions:
+
+	* no anchor bases for the reasons I documented yesterday; SAW endorses fully.
+	* 99% clustering on the grounds that OTUs are just a convenience to reduce the number of BLAST queries to a manageable level -- really we just want to get barcode identities and then collapse by phylotype, so clustering similarity should be higher than the difference between the most similar phylotypes we care about.
+	* 80% blast threshold on the grounds that lowering the threshold never changes the identity of a sequence that has a high-identity match in the database, and in *most* cases a low-identity best hit is still more information about sequence identity that "No blast hit" is. Still slightly concerned about accepting poor identities on the flip side of that "most", but will run with it for now. As always, adding voucher sequences should make this a near non-issue.
+
+Edited `pick_otu.sh` to use fixed 80% blast similarity and reduced array inputs down to one. Kept as an array job, so if we need muliple cluster percentages again in the future they can simply be added to the `PBS -t` line.
+
+Added new script `queue_all_plant_its.sh`, which submits all four read-cleaning Torque scripts to the cluster, with holds so that each one waits to run until the step upstream of it has finished. If I did this right, running `queue_all_plant_its.sh` and waiting a few hours should be sufficient to rerun the whole cleanup pipeline from raw fastq to biom file. Still not sure how to integrate this into the Makefile, but this is at least closer.
