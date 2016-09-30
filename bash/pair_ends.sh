@@ -7,15 +7,15 @@
 #PBS -m abe
 #PBS -j oe
 #PBS -N pair_pandaseq
-#PBS -d rawdata/miseq
+#PBS -d .
 
 SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
 
-RAW_FWDREADS=plant_its/Plant_ITS2_Delucia_Fluidigm_R1.fastq
-RAW_REVREADS=plant_its/Plant_ITS2_Delucia_Fluidigm_R2.fastq
-RAW_INDEX=plant_its/Plant_ITS2_Delucia_Fluidigm_I1.fastq
+RAW_FWDREADS=rawdata/miseq/plant_its/Plant_ITS2_Delucia_Fluidigm_R1.fastq
+RAW_REVREADS=rawdata/miseq/plant_its/Plant_ITS2_Delucia_Fluidigm_R2.fastq
+RAW_INDEX=rawdata/miseq/plant_its/Plant_ITS2_Delucia_Fluidigm_I1.fastq
 
-OUTDIR=plant_its_pandaseq_joined
+OUTDIR=data/plant_its_joined
 mkdir -p "$OUTDIR"
 
 # Joining paired-end reads from all reads sorted as 'Plant ITS2'

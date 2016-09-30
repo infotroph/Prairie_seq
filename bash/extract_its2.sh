@@ -13,7 +13,7 @@
 
 SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
 
-INFILE=rawdata/miseq/plant_its_sl/seqs_unique_mc2_nonchimera.fasta
+INFILE=data/plant_its_sl/seqs_unique_mc2_nonchimera.fasta
 OUTDIR=data/plant_its2_extracted
 LOG=tmp/logs/ITSextract_"$SHORT_JOBID".log
 

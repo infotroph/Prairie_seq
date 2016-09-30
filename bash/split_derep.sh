@@ -14,15 +14,19 @@ module load qiime
 
 SHORT_JOBID=`echo $PBS_JOBID | sed 's/\..*//'`
 
+INDIR=data/miseq/plant_its_joined
+OUTDIR=data/plant_its_sl
+mkdir -p "$OUTDIR"
+
 # Starting from joined-end reads assembled by Pandaseq --
-# prep these by running pair_pandaseq.sh before calling this script.
+# prep these by running pair_ends.sh before calling this script.
 
 # Split libraries. No quality filtering because pandaseq did it already,
 # but do throw out unassigned sequences (=bad barcode reads).
 split_libraries_fastq.py \
-	--sequence_read_fps rawdata/miseq/plant_its_pandaseq_joined/pspaired_cleanid.fastq \
-	--barcode_read_fps rawdata/miseq/plant_its_pandaseq_joined/barcodes_pspaired.fastq \
-	--output_dir rawdata/miseq/plant_its_sl \
+	--sequence_read_fps "$INDIR"/pspaired_cleanid.fastq \
+	--barcode_read_fps "$INDIR"/barcodes_pspaired.fastq \
+	--output_dir "$OUTDIR" \
 	--mapping_fps rawdata/plant_ITS_map.txt \
 	--barcode_type 10 \
 	--phred_quality_threshold 0 \
@@ -33,7 +37,7 @@ module load vsearch/2.0.4
 
 # dereplicate, discard singletons, remove suspected chimeras
 vsearch \
-	--derep_fulllength rawdata/miseq/plant_its_sl/seqs.fna \
+	--derep_fulllength "$OUTDIR"/seqs.fna \
 	--sizeout \
 	--relabel_sha1 \
 	--threads 10 \
@@ -43,8 +47,8 @@ vsearch \
 	--output - \
 | vsearch \
 	--uchime_denovo - \
-	--nonchimeras rawdata/miseq/plant_its_sl/seqs_unique_mc2_nonchimera.fasta \
-	--chimeras rawdata/miseq/plant_its_sl/seqs_unique_mc2_chimera.fasta \
+	--nonchimeras "$OUTDIR"/seqs_unique_mc2_nonchimera.fasta \
+	--chimeras "$OUTDIR"/seqs_unique_mc2_chimera.fasta \
 	--sizein \
 	--sizeout \
 	--fasta_width 0 \
@@ -55,9 +59,9 @@ cat tmp/chimeracheck_"$SHORT_JOBID".log >> tmp/dereplicate_"$SHORT_JOBID".log \
 	&& rm tmp/chimeracheck_"$SHORT_JOBID".log
 (
 echo "input:"
-md5sum rawdata/miseq/plant_its_sl/seqs.fna
+md5sum "$OUTDIR"/seqs.fna
 echo "outputs:"
 md5sum \
-	rawdata/miseq/plant_its_sl/seqs_unique_mc2_nonchimera.fasta \
-	rawdata/miseq/plant_its_sl/seqs_unique_mc2_chimera.fasta
+	"$OUTDIR"/seqs_unique_mc2_nonchimera.fasta \
+	"$OUTDIR"/seqs_unique_mc2_chimera.fasta
 ) >> tmp/dereplicate_"$SHORT_JOBID".log

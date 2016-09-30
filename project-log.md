@@ -1433,3 +1433,8 @@ Output from modified `extract_its2.sh` is identical to previous `a0` output. Not
 ==> `pick_otu.sh` fails on rerun: changed run directory means relative path to `seqs.fna` is broken. OK, fine, let's move all the upstream steps. Having intermediate outputs in `rawdata` was always a bad idea anyway.
 
 * Before editing, renamed `pair_pandaseq.sh` to `pair_ends.sh`.
+* edited `pair_ends.sh` to read unprocessed fastqs from `rawdata` and write paired-end fastqs to `data/plant_its_paired/`.
+* edited `split_derep.sh` to read from `data/plant_its_paired/` adn write to `data/plant_its_sl/`.
+* Updated input for `extract_its2.sh` (now easy! Only had to edit definition of `$INFILE`).
+* Paths in `pick_otu.sh` *should* all work again now, but they're an ugly mix of relative and absolute paths and future edits will be easier if I collect them into variables. Edited to make PBS execution path be project root (was `data/plant_its2_otu`) and to put all input and output paths into variables at the top of the script.
+* Did not edit `reblast.sh`; it will need a more extensive rewrite if it's going to become part of the regular workflow, but I'm not sure yet whether it will become that.
