@@ -1,7 +1,7 @@
 
 ## Results and what Discussion there currently is
 
-The sequencing run returned 1286163 plant ITS2 reads, of which 956812 were successfully end-paired, quality filtered, and assigned back from barcodes to samples. These clean reads contained 675898 unique sequences, of which 635969 were observed only once in the dataset (singletons). Of the 39929 sequences observed at least twice, 1537 were identified as probable PCR chimeras by `vsearch`. These chimeric sequences accounted for a total of 5643 reads, or 1.8% of the raw dataset. A further 1854 sequences were identified as incomplete ITS2 regions by `ITSx`, leaving a total of 36142 sequences to be clustered into OTUs. 
+The sequencing run returned 1286163 plant ITS2 reads, of which 730235 were successfully end-paired, quality filtered, and assigned back from barcodes to samples. These clean reads contained 494505 unique sequences, of which 459986 were observed only once in the dataset (singletons). Of the 34519 sequences observed at least twice, 2219 were identified as probable or borderline PCR chimeras by `vsearch`. These chimeric sequences accounted for a total of [TK this number is just probable chimeras, need to add borderline!] 7271 reads, or TKTK% of the raw dataset. A further 75 sequences were identified as incomplete or undetectable ITS2 regions by `ITSx`, leaving a total of 32225 sequences to be clustered into OTUs. 
 
 We observed more reads from grasses at increasing depths, both relative to other functional types (@Fig:famdepthrel) and in absolute abundance (@Fig:famdepthabs). Forbs from the Asteraceae declined somewhat with depth, while reads from legumes were consistent across depths.
 
