@@ -1452,3 +1452,7 @@ Conferred with SAW on anchor length, clustering, blast cutoffs. Conclusions:
 Edited `pick_otu.sh` to use fixed 80% blast similarity and reduced array inputs down to one. Kept as an array job, so if we need muliple cluster percentages again in the future they can simply be added to the `PBS -t` line.
 
 Added new script `queue_all_plant_its.sh`, which submits all four read-cleaning Torque scripts to the cluster, with holds so that each one waits to run until the step upstream of it has finished. If I did this right, running `queue_all_plant_its.sh` and waiting a few hours should be sufficient to rerun the whole cleanup pipeline from raw fastq to biom file. Still not sure how to integrate this into the Makefile, but this is at least closer.
+
+## 2016-10-02, CKB
+
+Added percent C and N data for bulk soil. `rawdata/bulk_CN.xlsx` is as emailed by Mike Masters on 2016-02-17 (original filename was `Black Prairie Soil CN 2014.xlsx`) and contains four worksheets: One with Mike's detailed QC for each of the three separate analyzer runs he performed, plus one of final data. `rawdata/bulk_CN.csv` is my manual export of the `Final Data` worksheet from `bulk_CN.xlsx`: selected rows 1-133, saved as CSV, opened in Sublime Text, changed line endings from CR to LF, edited column names by removing spaces and changing '%' to 'Pct'.
