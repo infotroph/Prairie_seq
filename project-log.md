@@ -1456,3 +1456,13 @@ Added new script `queue_all_plant_its.sh`, which submits all four read-cleaning 
 ## 2016-10-02, CKB
 
 Added percent C and N data for bulk soil. `rawdata/bulk_CN.xlsx` is as emailed by Mike Masters on 2016-02-17 (original filename was `Black Prairie Soil CN 2014.xlsx`) and contains four worksheets: One with Mike's detailed QC for each of the three separate analyzer runs he performed, plus one of final data. `rawdata/bulk_CN.csv` is my manual export of the `Final Data` worksheet from `bulk_CN.xlsx`: selected rows 1-133, saved as CSV, opened in Sublime Text, changed line endings from CR to LF, edited column names by removing spaces and changing '%' to 'Pct'.
+
+## 2016-10-03, CKB
+
+**Correction to sample mapping**: `plant_ITS_map.txt` contains two samples identified as `4p4 10-30` because of a typo that went uncaught until after samples went to the sequencing center. In `mobio_plates_map.csv`, MoBio plate 2 well G10 was originally recorded as tube 108 (4p4 10-30) but then later corrected to tube 109 (0p7 0-10) after noticing the duplicate "108", consulting the paper lab notebook. and inspecting the physical tubes -- it appears I wrote the "9" on the tube very sloppily and mistranscribed it the first time. Let's trace this through the records.
+	* Notebook: Correct. Tube 108 listed as 4p4 10-30, 109 as 0p7 0-10, 108 extracted in MoBio plate 2 well G5, tube 109 in plate 2 well G10.
+	* `mobio_plates_map.csv`: Fixed before first commit. Plate 2 G10 is '109'.
+	* `Prairie_Fluidigm.xlsx`, as emailed to sequencing center 2015-06-26: MISLABELED. Plate 1 well G5 correctly labeled as '4p4 10-30', plate 2 well G4 labeled as '4p4 10-30' but actually 0p7 0-10.
+	* `Report_Delucia_Fluidigm_2015813.xls`, as emailed from sequencing center 2015-08-13: MISLABELED, but they have noticed the duplication and renamed plate 1 G5 as `4p4_10_30_A` (barcode GATCCTGAGC) and plate 2 G4 as `4p4_10_30_B` (barcode CAGCATCTAG).
+	* `plant_ITS_map.txt`: MISLABELED as I type this, but fixed in this commit. GATCCTGAGC changes from `4p4.10.30.A` to `4p4.10.30`, CAGCATCTAG changes from `4p4.10.30.B` to `0p7.0.10`.
+	* `data/plant_its_otu/*` MISLABELED but should correct automatically once I rerun `split_derep.sh` and downstream scripts with corrected `plant_ITS_map.txt`.
