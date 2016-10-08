@@ -5,14 +5,13 @@ MARKDOWN = \
 	methods.md \
 	results.md \
 	ref_dummy.md \
-	figures.md
+	figures.md \
+	figures_supplement.md
 
 #	abstract.md \
 	keywords.md \
 	discussion.md \
 	acknowledgements.md \
-	priors.md \
-	figures_supplement.md
 
 BIBFILE = prairie_root.bib
 BIBSTYLE = style/ecology.csl

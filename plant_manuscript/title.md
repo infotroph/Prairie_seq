@@ -1,6 +1,6 @@
 
 
-# What species are the roots in these samples from the restored prairie treatment of a perennial bioenergy experiment, anyway?  {label=}
+# Taxonomic partitioning of root resources by depth in a prairie plant community {label=}
 
 #### Christopher K. Black^1,2^, Scott A. Woolbright^2,3^, Taylor L. Pederson^2^, Christopher R. Sligar^2^, Evan H. DeLucia^1,2^
 
@@ -10,7 +10,7 @@
 
 ## Running Head
 
-The Prairie Chapter
+Prairie taxonomic partitioning by depth
 
 ## Corresponding Author
 
