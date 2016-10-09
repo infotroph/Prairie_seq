@@ -25,8 +25,8 @@ nd_merge = merge(
 	by.y=c("datetime", "savedID"),
 	all.x=TRUE)
 
-changed_rows = which(nd_merge$new !="" & !is.na(nd_merge$new))
-stripped_rows = which(nd_merge$new == "" & !is.na(nd_merge$new))
+changed_rows = which(nd_merge$newID !="" & !is.na(nd_merge$newID))
+stripped_rows = which(nd_merge$newID == "" & !is.na(nd_merge$newID))
 
 nd_merge$Sample.ID[changed_rows] = nd_merge$newID[changed_rows]
 nd_merge = nd_merge[-stripped_rows,]
