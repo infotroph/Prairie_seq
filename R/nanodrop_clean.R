@@ -10,13 +10,13 @@ read.nanodrop = function(path){
 	read.delim(path, colClasses=c(rep("character",4), rep("numeric", 9))) 
 }
 nd_raw = do.call("rbind", lapply(args, read.nanodrop))
-nd_raw$datetime = with(nd_raw, parse_date_time(paste(Date, Time), "mdyhm"))
+nd_raw$datetime = with(nd_raw, parse_date_time(paste(Date, Time), "mdyHM"))
 
 corrections = read.csv(
 	"rawdata/nanodrop/nanodrop_corrections.csv", 
 	colClasses=rep("character", 4), 
 	strip.white=TRUE)
-corrections$datetime = parse_date_time(corrections$datetime, "ymdhm")
+corrections$datetime = parse_date_time(corrections$datetime, "ymdHM")
 
 nd_merge = merge(
 	x=nd_raw, 
