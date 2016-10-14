@@ -1470,3 +1470,41 @@ Added percent C and N data for bulk soil. `rawdata/bulk_CN.xlsx` is as emailed b
 While I'm looking at `plant_ITS_map.txt`, let's correct the reverse primer sequence. Currently listed as GGACTACVSGGGTATCTAAT, which is the sequence reported in `Report_Delucia_Fluidigm_2015813.xls` but which I noted as a probable typo way back on 2016-07-11. The actual reverse primer is GACGCTTCTCCAGACTACAAT (Chen et al.), but let's take it a step further: The primer trimming is done in Cutadapt before QIIME ever sees the mapping file, so let's make the mapping file work for any primer set! Removed all entries for LinkerPrimerSequence (was ATGCGATACTTGGTGTGAAT) but left the empty column (it's mandatory in all QIIME mapping files), removed ReversePrimer column altogether. Added multiple lines of commented headers documenting all the possible primer combinations and which filenames contain them; future self, if you need to read this file into R, use something like `read.table(rawdata/plant_ITS_map.txt, header=FALSE, sep="\t", col.names=c("SampleID", "BarcodeSequence", "LinkerPrimerSequence", "Block", "Location", "Depth1", "Depth2", "SampleType", "Description"))` and check that the result has 144 rows.
 
 One more mapping file change: SampleType is currently one of "root", "rhizosphere", or "control", but we really have four different kinds of control sample. Changed all 3 water samples to "nodna", all 4 one-species root vouchers as "onespecies", all 6 andropogon-plus-another-grass spike-ins to "twospecies", and all 3 voucher mixes (=mock communities) to "mock".
+
+## 2016-10-05, CKB
+
+EHD asked for some numbers on prairie root mass, for context when interpreting the species identifications. Extracting these from the deep-core data of my in-prep minirhiozotron paper (md5 hash of tractorcore.csv: 1052b9328c11a5261ea09c1338b829e3, last modified in efrhizo repository commit 78e099af870ddfcf8c68eb0ac85976e40b081161):
+
+```
+(read.csv("~/UI/efrhizo/data/tractorcore.csv")
+%>% group_by(Year, Treatment, Depth=Upper, Block)
+%>% summarize(block_mass = mean(Biomass_root_g_m2, na.rm=T))
+%>% summarize(
+	g_m2 = mean(block_mass),
+	sd=sd(block_mass))
+%>% mutate(
+	pct=g_m2/sum(g_m2)*100,
+	cum_pct=cumsum(g_m2)/sum(g_m2)*100)
+%>% filter(Treatment=="Prairie")
+%>% ungroup()
+%>% select(-Treatment)
+%>% kable(digits=0))
+```
+
+| Year| Depth| g_m2|  sd| pct| cum_pct|
+|----:|-----:|----:|---:|---:|-------:|
+| 2011|     0|  371| 158|  60|      60|
+| 2011|    10|  125|  26|  20|      80|
+| 2011|    30|   50|   8|   8|      88|
+| 2011|    50|   67|  21|  11|      98|
+| 2011|   100|   11|   8|   2|     100|
+| 2014|     0| 1166| 297|  59|      59|
+| 2014|    10|  432| 206|  22|      81|
+| 2014|    30|  147|  15|   7|      89|
+| 2014|    50|  179|  24|   9|      98|
+| 2014|   100|   39|   5|   2|     100|
+
+==> So those deep grass roots I'm so excited about are in layers that only contains about 10% of the total root mass. 
+
+Saved this table as `rawdata/giddings_rootmass.csv`
+ 
