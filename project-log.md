@@ -1507,4 +1507,7 @@ EHD asked for some numbers on prairie root mass, for context when interpreting t
 ==> So those deep grass roots I'm so excited about are in layers that only contains about 10% of the total root mass. 
 
 Saved this table as `rawdata/giddings_rootmass.csv`
- 
+
+## 2016-10-14, CKB
+
+New figure `figs/mass_texture.pdf` showing total root mass from Giddings data added 2016-10-05 (cite Anderson-Teixeira et al 2013 and, once submitted, Black et al rhizotron paper) plus soil texture/bulk density/CN data from 2008 initial sampling. Rather than recompute means from raw soil data, copied the prairie lines directly from Table 1 of Smith et al 2013 as `rawdata/soil_properties_2008.csv`. Plotting code is saved as `R/plot_texture.R`.
