@@ -1511,3 +1511,15 @@ Saved this table as `rawdata/giddings_rootmass.csv`
 ## 2016-10-14, CKB
 
 New figure `figs/mass_texture.pdf` showing total root mass from Giddings data added 2016-10-05 (cite Anderson-Teixeira et al 2013 and, once submitted, Black et al rhizotron paper) plus soil texture/bulk density/CN data from 2008 initial sampling. Rather than recompute means from raw soil data, copied the prairie lines directly from Table 1 of Smith et al 2013 as `rawdata/soil_properties_2008.csv`. Plotting code is saved as `R/plot_texture.R`.
+
+## 2016-10-17, CKB
+
+Very ugly first version of `R/plot_seqs.R`, a script to produce ~all the figures that involve sequence counts. Should probably be broken up into multiple files, but here it is for now. Currently produces the following figures, all writeen to `figs/` but *not* all of which I'm committing to Git yet:
+
+	* mock communities grouped by species (`mock_sp.pdf`, not committed) and genus (`mock_gen.pdf`).
+	* Heatmaps of read abundance by depth (`heatmap_bgdraft.png`) and aboveground cover (`heatmap_abvdraft.pdf`) by genus. Neither one committed, leaning toward thinking this is't a useful visualization -- I was hoping for something that would convery the impression of a bunch of root density profiles arranged side-by-side, but the current result is far from that and may not be worth poking more.
+	* Regressions of aboveground vs. belowground prevalence, binned by genus or species both with (`agbg_genblock.pdf`, `agbg_spblock.pdf`) and without (`agbg_gen.pdf`, `agbg_sp.pdf`) separating by block. Only `agbg_genblock.pdf` committed. Note that the color-coding is currently monocots vs. dicots but with a hard-to-interpret logical string as the legend caption.
+	* Water controls, plotted as raw read counts instead of as sample proportions(`h2o.pdf`, committed). Sure wish I knew why the counts from sample B are so high...
+	* One-species root vouchers and two-species spike-ins, all in one multipanel plot (`spikes.pdf`, committed). Notice that the barcoding thinks the Andropogon sample is probably not a grass at all...
+	* Violin + dot plots of read proportion by depth, binned by genus (`genus_depth.pdf`) or family (`family_depth.pdf`). Both committed.
+	* Extremely rough plots of rhizosphere samples by species, plotted as raw counts (`rhizo_sp.pdf`) or as sample proportions (`rhizo_sp_prop.pdf`). Neither one committed.
