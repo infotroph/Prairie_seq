@@ -1,7 +1,7 @@
 
 ## Introduction
 
-In a rapidly changing world, one of the most pressing questions in ecology is which ecosystem properties promote stability and which lead to rapid state changes. It is now well recognized that diversity generally promotes resilience in ecosystem productivity [@Tilman:2001p114], primarily through functional complementarity that allows more effective partitioning and therefore more complete exploitation of niche space, producing a more stable overall allocation of resources across the community [@Fornara:2008ja; @Fornara:2009ub]. 
+In a rapidly changing world, one of the most pressing questions in ecology is which ecosystem properties promote stability and which lead to rapid state changes. It is now well recognized that diversity generally promotes resilience in ecosystem productivity [@Tilman:2001p114], partly through facilitation but primarily through functional complementarity that allows more effective partitioning and therefore more complete exploitation of niche space, producing a more stable overall allocation of resources across the community [@DeDeyn:2008hv; @Fornara:2008ja; @Fornara:2009ub].
 This implies that the resilience benefits of niche partitioning will only be realized if different species in the community posess functions that are actually complementary to each other.
 For example, N and water availability are often strongly anticorrelated in grassland soils, leading *Festuca ovina* and *Achillea millefolium* to extract N from different depths when competing in mixed-species stands than when they are grown alone, while *Phleum pratense* and *Trifolium pratense* showed no such vertical partitioning [@Jumpponen:2002eg]. 
 
