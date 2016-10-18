@@ -1,0 +1,44 @@
+From: "Band, Mark Robert" <markband@illinois.edu>
+To: "Black, Christopher Kyle" <black11@illinois.edu>
+CC: Scott Woolbright <sawoolbright@ualr.edu>, "Hernandez, Alvaro Gonzalo"
+	<aghernan@illinois.edu>, "Wright, Chris L" <clwright@illinois.edu>
+Subject: RE: Prairie project
+Date: Fri, 31 Jul 2015 12:49:56 -0500
+
+Hi Scott,
+
+In the end we did the 2 step amplification and used the following primers:
+V4
+ITS3-ITS4
+18S
+NS31-AML2
+PlantITS2-Plant ITS4
+
+The amplifications worked incredibly well with only 3 samples that do not show product on the Fragment analyzer. There is the potential for a LOT of sequence.  Attached are the fragment analyzer results of one of the plates.
+In theory the MiSeq should be enough, however I would assume that the 18S and V4 will have a very large portion of the sequences as they both have strong peaks and are the shortest amplicons.  We ran only 3 lanes of 18S (250-300bp peak) and 6 lanes of V4  (400 bp peak) to try to offset this as much as possible.  NS31, 20 lanes; ITS3-4 12 lanes; Plant ITS 7 lanes.
+
+Mark Band
+Director of Functional Genomics
+The Carver Biotechnology Center
+University of Illinois
+1201 W. Gregory Dr.
+Urbana, IL 61801
+Tel. 217 244 3930
+
+-----Original Message-----
+From: Black, Christopher Kyle 
+Sent: Friday, July 31, 2015 11:36 AM
+To: Band, Mark Robert <markband@illinois.edu>
+Cc: Scott Woolbright <sawoolbright@ualr.edu>; Hernandez, Alvaro Gonzalo <aghernan@illinois.edu>; Wright, Chris L <clwright@illinois.edu>
+Subject: Re: Prairie project
+
+Mark,
+
+1. I took the liberty of copying Scott at his new U Arkansas email address, which is the one to use now. Scott, my apologies if you're seeing this twice.
+
+2. I'm still working on getting the account number nailed down -- Getting lots of out-of-office messages. Will update as soon as I have it. Sorry for taking so long on that. 
+
+3. We were wavering on the sequencing format because we seemed very near the middle of the number of reads vs. read length vs. price tradeoff; one piece of information that would help us make the final call is to know how many of the Fluidigm samples amplified successfully (more failures = fewer reads needed = MiSeq gets more attractive.) Do you know how many of the Fluidigm samples produced detectable product, or is that unknown until the sequencing results come back?
+
+Thanks,
+Chris
