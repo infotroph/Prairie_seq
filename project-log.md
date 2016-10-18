@@ -1523,3 +1523,9 @@ Very ugly first version of `R/plot_seqs.R`, a script to produce ~all the figures
 	* One-species root vouchers and two-species spike-ins, all in one multipanel plot (`spikes.pdf`, committed). Notice that the barcoding thinks the Andropogon sample is probably not a grass at all...
 	* Violin + dot plots of read proportion by depth, binned by genus (`genus_depth.pdf`) or family (`family_depth.pdf`). Both committed.
 	* Extremely rough plots of rhizosphere samples by species, plotted as raw counts (`rhizo_sp.pdf`) or as sample proportions (`rhizo_sp_prop.pdf`). Neither one committed.
+
+I'm tired of copying new versions of figures into `plant_manuscript/figures/`. Modifying files to find images in `figs/` instead:
+
+	* Changed figure dependencies in `plant_manuscript/Makefile` from a wildcard (`FIGURES = figures/*.png`) to a list of filepaths all in `../figs/`.
+	* Changed file paths in `figures.md` and `figures_supplement.md` to point to `../figs/` version of each existing image.
+	* Removed entire `plant_manuscript/figures/` directory from Git, including two old heatmaps (`sp_heat_all.png`, `sp_heat_nolowabund.png`) that do not exist elsewhere but I'm confident I'm done with them.

@@ -23,7 +23,14 @@ CROSSREFMETA = \
 	-M chapDelim:"" \
 	-M chapPrefix:""
 
-FIGURES = figures/*.png
+FIGURES = ../figs/mass_texture.pdf \
+	../figs/agbg_genblock.pdf \
+	../figs/family_depth.pdf \
+	../figs/ordination.pdf \
+	../figs/h2o.pdf \
+	../figs/mock_gen.pdf \
+	../figs/spikes.pdf \
+	../figs/genus_depth.pdf
 
 # outputs
 ALL = ckbprairie.docx
