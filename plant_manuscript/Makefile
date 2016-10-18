@@ -6,6 +6,7 @@ MARKDOWN = \
 	results.md \
 	ref_dummy.md \
 	figures.md \
+	supp_dummy.md \
 	figures_supplement.md
 
 #	abstract.md \
