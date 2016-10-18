@@ -74,3 +74,26 @@ Source for our plant ITS2 primers.
 Masella, A.P., Bartram, A.K., Truszkowski, J.M., Brown, D.G, & Neufeld, J.D. (2012) PANDAseq: paired-end assembler for illumina sequences. BMC Bioinformatics, 13, 31. doi: 10.1186/1471-2105-13-31
 
 Presents the end-joining algorithm we're using for plant ITS assembly. Beware that the first equation in the paper contains a statistical error (mistakes p(a|b) for p(b|a)), but it's not clear if the implementation makes the same mistake or not -- see also 10.1093/bioinformatics/btv401 for a harsh flaming of said error, and 10.1093/nar/gkt1244 for an algorithm update.
+
+--------------
+Cole, J. R., Q. Wang, J. A. Fish, B. Chai, D. M. McGarrell, Y. Sun, C. T. Brown, A. Porras-Alfaro, C. R. Kuske, and J. M. Tiedje. 2013. Ribosomal Database Project: data and tools for high throughput rRNA analysis. Nucleic Acids Research 42:D633–D642. doi: 10.1093/nar/gkt1244.
+
+Cite for their update to the Masella et al (2012) end-joining algorithm -- this is the source for the "rdp_mle" alignment algorithm as implemented in Pandaseq.
+
+--------------
+Dickie, I. A. 2010. Insidious effects of sequencing errors on perceived diversity in molecular surveys. New Phytologist 188:916–918. doi: 10.1111/j.1469-8137.2010.03473.x.
+
+A simulation study that shows how completely erroneous singletons inflate species count in *any* large datasets with a nonzero error rate. Probably a good citation for the necessity of removing singletons.
+
+---------------
+Álvarez, I., and J. F. Wendel. 2003. Ribosomal ITS sequences and plant phylogenetic inference. Molecular Phylogenetics and Evolution 29:417–434. doi: 10.1016/S1055-7903(03)00208-2.
+
+Says the ITS region isn't very phylogenetically informative for plants, just as for fungi. Not a problem for us because we're interested in taxonomy rather than phylogeny, but we should make sure to make that clear.
+
+-----------------
+Sagova-Mareckova, M., T. Zadorova, V. Penizek, M. Omelka, V. Tejnecky, P. Pruchova, T. Chuman, O. Drabek, A. Buresova, A. Vanek, and J. Kopecky. 2016. The structure of bacterial communities along two vertical profiles of a deep colluvial soil. Soil Biology and Biochemistry 101:65–73. doi: 10.1016/j.soilbio.2016.06.026.
+
+Looks at bacterial communities in a ~3.5 m profile with a buried A horizon. CKB has skimmed but not read it closely, looks cool but kinda boils down to "the bacteria hang out where the carbon is"
+
+----
+Maybe: Look at Baldwin et al 1995 10.2307/2399880 as the classic highly-cited source for ITS as a marker? But see Álvaez and Wendel above.
