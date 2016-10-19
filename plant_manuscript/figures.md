@@ -1,7 +1,7 @@
 
 ***
 
-![(a) total root mass of prairie plots in 2011 [Replotted from @AndersonTeixeira:2013bx] and 2014 (Replotted from Black et al., in prep). Error bars show mean ± 1 standard deviation of 24 cores. Remaining panels show means of soil properties measured when the plots were established in 2008 [replotted from @Smith:2013cj]: (b) soil texture; (c) soil organic C and N content; (d) soil bulk density.](../figs/mass_texture.pdf){#fig:totmass}
+![(a) total root mass of prairie plots measured in mid-August of 2011 [Replotted from @AndersonTeixeira:2013bx] and 2014 (Replotted from Black et al., in prep). Error bars show mean ± 1 standard deviation of 24 cores. Remaining panels show means of soil properties measured when the plots were established in 2008 [replotted from @Smith:2013cj]: (b) soil texture; (c) soil organic C and N content; (d) soil bulk density.](../figs/mass_texture.pdf){#fig:totmass}
 
 ***
 
@@ -13,6 +13,6 @@
 
 ***
 
-![Nonmetric multidimensional scaling plot showing centroids for all detected species. Red: Poaceae. Green: Asteraceae. Blue: Fabaceae. Black: Other families. Grey crosses: Low-abundance species, unlabeled for figure clarity. Pink ellipses show centroid SD for each depth and pink polygons show enclosing hulls for each depth. TK: Show depth, C, N as arrows instead.](../figs/ordination.pdf){#fig:ordiplot}
+![Nonmetric multidimensional scaling plot showing centroids for all detected species. Red: Poaceae. Green: Asteraceae. Blue: Fabaceae. Black: Other families. Grey crosses: Low-abundance species, unlabeled for figure clarity. Pink arrows show best fits for environmental vectors of depth in soil, organic C and N content, and C:N ratio.](../figs/ordination.pdf){#fig:ordiplot}
 
 ***

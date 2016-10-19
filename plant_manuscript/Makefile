@@ -5,6 +5,7 @@ MARKDOWN = \
 	methods.md \
 	results.md \
 	ref_dummy.md \
+	species_table.md \
 	figures.md \
 	supp_dummy.md \
 	figures_supplement.md

@@ -3,7 +3,9 @@ library("dplyr")
 library("tidyr")
 library("tibble")
 library("ggplot2")
+library("vegan")
 se=plotrix::std.error
+kable=knitr::kable
 
 ## soil C and N concentration
 cn = read.csv("rawdata/bulk_CN.csv")
@@ -265,9 +267,30 @@ print("drafts of heatmaps ✓")
 
 abvabund_spmean = (
 	abvabund
-	%>% group_by(accepted_family, accepted_genus, accepted_name) #for whole-season avg. TODO: try adding date, block with 2013 data
+	%>% group_by(functional_type, accepted_family, accepted_genus, accepted_name, planted) #for whole-season avg. TODO: try adding date, block with 2013 data
 	%>% summarize_each(funs(mean, sd, se), abundance, pct_cover)
 )
+
+abvabund_table=(
+	abvabund_spmean
+	%>% ungroup()
+	%>% select(
+		Species=accepted_name,
+		Family=accepted_family,
+		`Functional type`=functional_type,
+		`Planted?`=planted,
+		`% cover`=pct_cover_mean,
+		`sd`=pct_cover_sd)
+	%>% mutate(
+		Species = paste0("*", Species, "*"),
+		Species=sub(
+			"^\\*Baptisia\\*$",
+			"unidentified *Baptisia* sp.",
+			Species))
+	%>% kable(digits=1)
+	%>% write("data/aboveground_abundance.txt"))
+
+
 abvabund_spblockmean = (
 	abvabund
 	%>% group_by(accepted_family, accepted_genus, accepted_name, block)
@@ -517,3 +540,111 @@ ggsave("figs/rhizo_sp.pdf", rhizo_plot, width=12, height=9)
 ggsave("figs/rhizo_sp_prop.pdf", rhizo_prop_plot, width=12, height=9)
 print("Rhizospheres ✓")
 
+
+
+## Ordination plot + PERMANOVA stats
+# Starting with species-level IDs as previously
+# TODO:
+#	Try genus-level.
+#	p sure this is Bray distance, redo as Jaccard
+#	C / N / depth as vector arrows
+
+# drop observations without usable C/N values
+# (only one 75-100 sample has C:N > 30;
+# This very likely means it contains inorganic C).
+rrp = subset_samples(r_root_prop, !is.na(CN) & CN < 30)
+rrp = prune_taxa(taxa_sums(rrp)>0, rrp)
+
+rrp_otu = t(matrix(otu_table(rrp), nrow=nrow(otu_table(rrp))))
+colnames(rrp_otu) = c(tax_table(rrp)[,"Rank8"])
+rrp_metamds = metaMDS(rrp_otu, distance="jaccard", binary=TRUE)
+
+rrp_points = data.frame(
+	scores(rrp_metamds, display="species"),
+	species=colnames(rrp_otu),
+	shortname=make.cepnames(colnames(rrp_otu)),
+	abundance=colSums(rrp_otu),
+	family=c(tax_table(rrp)[,"Rank6"]),
+	row.names=NULL,
+	stringsAsFactors=FALSE)
+rrp_points$famcolors = c(
+	"Poaceae"="red",
+	"Asteraceae"="green",
+	"Fabaceae"="blue")[rrp_points$family]
+
+# Plot, one layer at a time.
+pdf(
+	file="figs/ordination.pdf",
+	width=9,
+	height=9)
+# Set up a blank frame
+plot(rrp_metamds, display="species", type="n")
+# Add species centroids, labeling in descending order of abundance until space is filled.
+# Unlabeled species are plotted as a grey "+".
+# want to color labels by family, but colors are applied AFTER dropping unlabeled points,
+# so instead label all in black, save the returned vector of which points get labels,
+# add colors by hand.
+# I'm only assigning colors to 3 of the 15 families present -- rest get black text
+torp_labeled = orditorp(
+	x=rrp_metamds,
+	display="species",
+	labels=rrp_points$shortname,
+	priority=rrp_points$abundance,
+	pcol="gray",
+	pch="+",
+	col="black",
+	cex=0.6)
+with(rrp_points[torp_labeled,],
+	text(
+		x=NMDS1,
+		y=NMDS2,
+		labels=shortname,
+		col=famcolors,
+		cex=0.6))
+# Add a hull and spider for each depth centroid
+# ordihull(
+# 	rrp_metamds,
+# 	data.frame(sample_data(rrp))$Depth1,
+# 	col="yellow",
+# 	label=F)
+# ordispider(
+# 	rrp_metamds,
+# 	data.frame(sample_data(rrp))$Depth1,
+# 	col="yellow",
+# 	lty=2,
+# 	label=T)
+# # Or maybe a 1-SD ellipsoidal hull? (prob. don't want spider *and* ellipse -- gets v crowded)
+# ordiellipse(
+# 	rrp_metamds,
+# 	data.frame(sample_data(rrp))$Depth1,
+# 	kind="sd",
+# 	col="pink",
+# 	label=F)
+
+
+# Stratify permutation analyses within soil profiles
+ord_perm = how(
+	nperm=999,
+	blocks=sample_data(rrp)$BlockLoc)
+
+ord_env = envfit(
+	rrp_metamds ~ Depth + PctC + PctN + CN,
+	data=data.frame(sample_data(rrp)),
+	permutations=ord_perm)
+
+plot(ord_env, col="pink")
+
+ord_adon = adonis(
+	rrp_otu ~ Depth * PctC * PctN * CN,
+	data=data.frame(sample_data(rrp)),
+	permutations=ord_perm,
+	method="jaccard",
+	binary=TRUE)
+
+dev.off()
+
+sink("data/adonis_out.txt")
+print(ord_adon)
+sink()
+
+print("Ordinations ✓")
