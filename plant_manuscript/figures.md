@@ -9,6 +9,10 @@
 
 ***
 
+![Standardized effect sizes for observed co-occurrence rates. Each point is one pair of species; violin shapes show density distribution for each group. Vertical axes show family identity of the first species in the pair, panel labels show the family identity of the second species. Co-occurance was defined as mixed root samples with more than 1% of ITS2 reads from both species). Larger positive effect sizes indicate species pairs that are found together in more samples than expected for independently-oocurring species; negative values indicate pairs that are found together less than expected.](../figs/cooccur_effect.pdf){#fig:coeffect}
+
+***
+
 ![Relative abundance (fraction of reads from each sample) as a function of sample depth for each observed plant family. Sequences were clustered at 99% similarity and identified to species according to the closest BLAST match against the Genbank `nt` database. Taxa were then collapsed by family and groups with a mean abundance less than 1% per sample were removed for plotting.](../figs/family_depth.pdf){#fig:famdepthrel}
 
 ***

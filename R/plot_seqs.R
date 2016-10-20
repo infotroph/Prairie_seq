@@ -4,6 +4,8 @@ library("tidyr")
 library("tibble")
 library("ggplot2")
 library("vegan")
+library("cooccur")
+plot_grid=cowplot::plot_grid
 se=plotrix::std.error
 kable=knitr::kable
 
@@ -61,6 +63,7 @@ r_root = subset_samples(r_sp, SampleType=="root")
 # 	3p3 0-10 9 
 # ==> N=110 after pruning. 
 r_root = prune_samples(sample_sums(r_root) > 1000, r_root)
+r_root = prune_taxa(taxa_sums(r_root) > 0, r_root)
 
 # Normalize to proportions within samples
 r_root_prop = transform_sample_counts(r_root, function(x)x/sum(x))
@@ -648,3 +651,86 @@ print(ord_adon)
 sink()
 
 print("Ordinations ✓")
+
+
+
+
+## visualizing co-occurance patterns between pairs of species
+# First some helper functions
+physeq_to_otumat = function(physeq, rank){
+	matrix(
+		otu_table(physeq),
+		nrow=ntaxa(physeq),
+		dimnames=list(
+			c(tax_table(physeq)[,rank]),
+			sample_names(physeq)))
+}
+binarize = function(physeq, cutoff){
+	transform_sample_counts(physeq, function(x)ifelse(x/sum(x) >= cutoff, 1, 0))
+}
+# Let's curry these... default to name by species and filter at 1%:
+phy_spotu = function(physeq, rank="Rank8", cutoff=0.01){
+	physeq_to_otumat(binarize(physeq, cutoff), rank)
+}
+
+rrall = phy_spotu(r_root)
+rrtop = phy_spotu(subset_samples(r_root, Depth1 < 30))
+rrmid = phy_spotu(subset_samples(r_root, Depth1 >=30 & Depth1 < 50))
+rrdeep = phy_spotu(subset_samples(r_root, Depth1 >= 50))
+
+# plotting chokes on full species names, haven't checked why
+# Wild guess: have 4 NA => all named as string "NA", doesn't like duplicate names
+rownames(rrdeep) = vegan::make.cepnames(rownames(rrdeep)) 
+rownames(rrmid) = vegan::make.cepnames(rownames(rrmid))
+rownames(rrtop) = vegan::make.cepnames(rownames(rrtop))
+rownames(rrall) = vegan::make.cepnames(rownames(rrall))
+
+rr_tax = data.frame(tax_table(r_root)) %>% mutate(sppname=vegan::make.cepnames(Rank8))
+
+# Observed co-occurrence vs null model.
+# points near 1:1 line = pairs of species found together about as often
+# as expected if they are randomly distributed and independent of each other.
+# Points far above (below) line: Pairs of species found together much more (less)
+# than expected if random.
+# "true_rand_classifier" sets color-coding of "random" vs not,
+# otherwise defaults to p < 0.1.
+obs_exp_plot = plot_grid(
+	(obs.v.exp(cooccur(rrtop, spp_names=T, true_rand_classifier=0.05))
+		+ ggtitle("0-30 cm")
+		+ theme(legend.position=c(0.2,0.8))),
+	(obs.v.exp(cooccur(rrdeep, spp_names=T, true_rand_classifier=0.05))
+		+ ggtitle("30-50 cm")
+		+ theme(legend.position="none")),
+	(obs.v.exp(cooccur(rrdeep, spp_names=T, true_rand_classifier=0.05))
+		+ ggtitle("50-100 cm")
+		+ theme(legend.position="none")),
+	(obs.v.exp(cooccur(rrall, spp_names=T, true_rand_classifier=0.05))
+		+ ggtitle("All depths")
+		+ theme(legend.position="none")),
+	nrow=2,
+	labels="auto")
+
+ggsave("figs/cooccur_obs_exp.pdf", obs_exp_plot, width=12, height=9)
+
+# Standardized effect sizes, separated by family:
+# Each point is a pairs of species; y-axis is family of sp1, panel label is family of sp2.
+# Points with large effect are species pairs that co-occur at rates
+# much different from random expectation;
+# More often found together if effect is positive, less often if neg.
+co_effect_plot = (effect.sizes(cooccur(rrall, spp_names=T))
+	%>% left_join(rr_tax, by=c("sp1"="sppname"))
+	%>% rename(sp1Fam=Rank6, sp1Gen=Rank7, sp1Sp=Rank8)
+	%>% left_join(rr_tax, by=c("sp2"="sppname"))
+	%>% rename(sp2Fam=Rank6, sp2Gen=Rank7, sp2Sp=Rank8)
+	%>% ggplot(aes(sp1Fam, effects))
+	+ geom_violin()
+	+ geom_point()
+	+ facet_wrap(~sp2Fam)
+	+ geom_hline(yintercept=0)
+	+ xlab(NULL)
+	+ ylab("Co-occurence effect")
+	+ coord_flip()
+	+ theme_bw()
+	+ theme(legend.position="none"))
+
+ggsave("figs/cooccur_effect.pdf", co_effect_plot, width=12, height=9)

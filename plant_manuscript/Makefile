@@ -32,7 +32,9 @@ FIGURES = ../figs/mass_texture.pdf \
 	../figs/h2o.pdf \
 	../figs/mock_gen.pdf \
 	../figs/spikes.pdf \
-	../figs/genus_depth.pdf
+	../figs/genus_depth.pdf \
+	../figs/cooccur_obs_exp.pdf \
+	../figs/cooccur_effect.pdf
 
 # outputs
 ALL = ckbprairie.docx

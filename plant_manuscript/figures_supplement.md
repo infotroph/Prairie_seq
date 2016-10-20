@@ -16,3 +16,5 @@
 ![Relative abundance (fraction of reads from each sample) as a function of sample depth for each observed plant genus. Sequences were clustered at 99% similarity and identified to species according to the closest BLAST match against the Genbank `nt` database. Taxa were then collapsed by genus and groups with a mean abundance less than 1% per sample were removed for plotting.](../figs/genus_depth.pdf){#fig:gendepthrel}
 
 ***
+
+![Observed species co-occurence rates versus the rates expected for independent, randomly distributed species of the same abundance, calculated separately for (a-c) shallow, medium, and deep soil layers, or (d) all samples from all depths. Each point represents one pair of species and the observed co-occurance rate is the number of root samples with at least 1% of reads attributed to each species in the pair. Colors indicate species pairs whose co-occurance rate differs significantly (p<0.05) from the null model.](../figs/cooccur_obs_exp.pdf){#fig:coobsexp}
