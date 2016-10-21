@@ -546,11 +546,6 @@ print("Rhizospheres ✓")
 
 
 ## Ordination plot + PERMANOVA stats
-# Starting with species-level IDs as previously
-# TODO:
-#	Try genus-level.
-#	p sure this is Bray distance, redo as Jaccard
-#	C / N / depth as vector arrows
 
 # drop observations without usable C/N values
 # (only one 75-100 sample has C:N > 30;
@@ -604,25 +599,6 @@ with(rrp_points[torp_labeled,],
 		labels=shortname,
 		col=famcolors,
 		cex=0.6))
-# Add a hull and spider for each depth centroid
-# ordihull(
-# 	rrp_metamds,
-# 	data.frame(sample_data(rrp))$Depth1,
-# 	col="yellow",
-# 	label=F)
-# ordispider(
-# 	rrp_metamds,
-# 	data.frame(sample_data(rrp))$Depth1,
-# 	col="yellow",
-# 	lty=2,
-# 	label=T)
-# # Or maybe a 1-SD ellipsoidal hull? (prob. don't want spider *and* ellipse -- gets v crowded)
-# ordiellipse(
-# 	rrp_metamds,
-# 	data.frame(sample_data(rrp))$Depth1,
-# 	kind="sd",
-# 	col="pink",
-# 	label=F)
 
 
 # Stratify permutation analyses within soil profiles
@@ -631,7 +607,7 @@ ord_perm = how(
 	blocks=sample_data(rrp)$BlockLoc)
 
 ord_env = envfit(
-	rrp_metamds ~ Depth + PctC + PctN + CN,
+	rrp_metamds ~ Depth * PctC * PctN * CN,
 	data=data.frame(sample_data(rrp)),
 	permutations=ord_perm)
 
@@ -643,11 +619,31 @@ ord_adon = adonis(
 	permutations=ord_perm,
 	method="jaccard",
 	binary=TRUE)
-
+ord_adon_freeperm = adonis(
+	rrp_otu ~ Depth * PctC * PctN * CN,
+	data=data.frame(sample_data(rrp)),
+	permutations=999,
+	method="jaccard",
+	binary=TRUE)
+ord_adon_nocn = adonis(
+	rrp_otu ~ Depth,
+	data=data.frame(sample_data(rrp)),
+	permutations=ord_perm,
+	method="jaccard",
+	binary=TRUE)
+ord_adon_nodepth = adonis(
+	rrp_otu ~ PctC * PctN * CN,
+	data=data.frame(sample_data(rrp)),
+	permutations=ord_perm,
+	method="jaccard",
+	binary=TRUE)
 dev.off()
 
 sink("data/adonis_out.txt")
 print(ord_adon)
+print(ord_adon_freeperm)
+print(ord_adon_nocn)
+print(ord_adon_nodepth)
 sink()
 
 print("Ordinations ✓")

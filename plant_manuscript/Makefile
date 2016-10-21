@@ -1,19 +1,17 @@
 # inputs
 MARKDOWN = \
 	title.md \
+	abstract.md \
 	intro.md \
 	methods.md \
 	results.md \
+	discussion.md \
+	acknowledgements.md \
 	ref_dummy.md \
 	species_table.md \
 	figures.md \
 	supp_dummy.md \
 	figures_supplement.md
-
-#	abstract.md \
-	keywords.md \
-	discussion.md \
-	acknowledgements.md \
 
 BIBFILE = prairie_root.bib
 BIBSTYLE = style/ecology.csl
