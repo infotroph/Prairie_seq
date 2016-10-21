@@ -1,7 +1,7 @@
 
 ***
 
-Table: Plant species planted or found present during aboveground vegetation surveys of permanent quadrats in prairie restoration plots at the University of Illinois Energy Farm. Mean and standard deviation of stem abundance and percent cover across growing season 2012 (n = 30 quadrats * 4 sampling days = 120) are realculated from X. Feng et al. (manuscript in prep). {#tbl:splist}
+Table: Plant species planted or found present during aboveground vegetation surveys of permanent quadrats in prairie restoration plots at the University of Illinois Energy Farm. Mean and standard deviation of stem abundance and percent cover across growing season 2012 are realculated from X. Feng et al. (manuscript in prep). {#tbl:splist}
 
 |Functional type |Family         |Species                        |Planted? | % cover|   sd|
 |:---------------|:--------------|:------------------------------|:--------|-------:|----:|
