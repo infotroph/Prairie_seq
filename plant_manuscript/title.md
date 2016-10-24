@@ -1,6 +1,6 @@
 
 
-# Weak taxonomic partitioning of root placement by depth in a prairie plant community {label=}
+# Molecular analysis shows taxonomic partitioning of root placement by depth in a prairie plant community {label=}
 
 #### Christopher K. Black^1,2^, Scott A. Woolbright^2,3^, Taylor L. Pederson^2^, Christopher R. Sligar^2^, Evan H. DeLucia^1,2^
 
