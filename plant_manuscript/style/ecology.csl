@@ -135,8 +135,15 @@
     <choose>
       <if type="article-journal article-magazine article-newspaper" match="any">
         <text variable="container-title" prefix=". "/>
-        <text variable="volume" prefix=" "/>
-        <text variable="page" prefix=":"/>
+        <choose>
+            <if variable="page volume" match="all">
+              <text variable="volume" prefix=" "/>
+              <text variable="page" prefix=":"/>
+            </if>
+            <else>
+              <text variable="doi" prefix=" "/>
+            </else>
+          </choose>
       </if>
       <else-if type="bill book chapter graphic legal_case legislation motion_picture paper-conference report song" match="any">
         <group prefix=". " delimiter=" ">
