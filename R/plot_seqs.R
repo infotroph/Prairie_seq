@@ -5,6 +5,7 @@ library("tibble")
 library("ggplot2")
 library("vegan")
 library("cooccur")
+library("DeLuciatoR")
 plot_grid=cowplot::plot_grid
 se=plotrix::std.error
 kable=knitr::kable
@@ -332,30 +333,46 @@ bgabund_genblockmean = (
 	%>% rename(family=Rank6, genus=Rank7)
 	%>% summarize_each(funs(propmean=mean, propsd=sd, propse=se), Abundance))
 
-rootshoot_abund_sp = merge(
-	x=abvabund_spmean,
-	y=bgabund_spmean,
-	by.x="accepted_name",
-	by.y="species",
-	all=TRUE)
-rootshoot_abund_gen = merge(
-	x=abvabund_genmean,
-	y=bgabund_genmean,
-	by.x="accepted_genus",
-	by.y="genus",
-	all=TRUE)
-rootshoot_abund_spblock = merge(
-	x=abvabund_spblockmean,
-	y=bgabund_spblockmean,
-	by.x=c("accepted_genus", "block"),
-	by.y=c("genus", "Block"),
-	all=TRUE)
-rootshoot_abund_genblock = merge(
-	x=abvabund_genblockmean,
-	y=bgabund_genblockmean,
-	by.x=c("accepted_genus", "block"),
-	by.y=c("genus", "Block"),
-	all=TRUE)
+rootshoot_abund_sp = (
+	merge(
+		x=abvabund_spmean,
+		y=bgabund_spmean,
+		by.x="accepted_name",
+		by.y="species",
+		all=TRUE)
+	%>% mutate(
+		is_poa = if_else(family=="Poaceae", "monocots", "dicots"))
+	%>% filter(!is.na(is_poa)))
+rootshoot_abund_gen = (
+	merge(
+		x=abvabund_genmean,
+		y=bgabund_genmean,
+		by.x="accepted_genus",
+		by.y="genus",
+		all=TRUE)
+	%>% mutate(
+		is_poa = if_else(family=="Poaceae", "monocots", "dicots"))
+	%>% filter(!is.na(is_poa)))
+rootshoot_abund_spblock = (
+	merge(
+		x=abvabund_spblockmean,
+		y=bgabund_spblockmean,
+		by.x=c("accepted_genus", "block"),
+		by.y=c("genus", "Block"),
+		all=TRUE)
+	%>% mutate(
+		is_poa = if_else(family=="Poaceae", "monocots", "dicots"))
+	%>% filter(!is.na(is_poa)))
+rootshoot_abund_genblock = (
+	merge(
+		x=abvabund_genblockmean,
+		y=bgabund_genblockmean,
+		by.x=c("accepted_genus", "block"),
+		by.y=c("genus", "Block"),
+		all=TRUE)
+	%>% mutate(
+		is_poa = if_else(family=="Poaceae", "monocots", "dicots"))
+	%>% filter(!is.na(is_poa)))
 
 # one point per species
 agbg_sp_plot = (ggplot(
@@ -367,15 +384,17 @@ agbg_sp_plot = (ggplot(
 		y=propmean,
 		ymin=propmean-propse,
 		ymax=propmean+propse,
-		color=(family=="Poaceae")))
+		color=is_poa))
 	+ geom_point()
 	+ geom_errorbar()
 	+ geom_errorbarh()
 	+ geom_smooth(method="lm")
 	+ xlab("Percent aboveground cover")
 	+ ylab("Root read proportion")
-	+ theme_bw()
-	+ theme(legend.position=c(0.8, 0.8))
+	+ theme_ggEHD()
+	+ theme(
+		legend.title=element_blank(),
+		legend.position=c(0.8, 0.8))
 )
 # one point per species *from each block*
 agbg_spblock_plot = (ggplot(
@@ -387,15 +406,17 @@ agbg_spblock_plot = (ggplot(
 		y=propmean,
 		ymin=propmean-propse,
 		ymax=propmean+propse,
-		color=(family=="Poaceae")))
+		color=is_poa))
 	+ geom_point()
 	+ geom_errorbar()
 	+ geom_errorbarh()
 	+ geom_smooth(method="lm")
 	+ xlab("Percent aboveground cover")
 	+ ylab("Root read proportion")
-	+ theme_bw()
-	+ theme(legend.position=c(0.8, 0.8))
+	+ theme_ggEHD()
+	+ theme(
+		legend.title=element_blank(),
+		legend.position=c(0.8, 0.8))
 )
 #one point per genus
 agbg_gen_plot = (ggplot(
@@ -407,15 +428,17 @@ agbg_gen_plot = (ggplot(
 		y=propmean,
 		ymin=propmean-propse,
 		ymax=propmean+propse,
-		color=(family=="Poaceae")))
+		color=is_poa))
 	+ geom_point()
 	+ geom_errorbar()
 	+ geom_errorbarh()
 	+ geom_smooth(method="lm")
 	+ xlab("Percent aboveground cover")
 	+ ylab("Root read proportion")
-	+ theme_bw()
-	+ theme(legend.position=c(0.8, 0.8))
+	+ theme_ggEHD()
+	+ theme(
+		legend.title=element_blank(),
+		legend.position=c(0.8, 0.8))
 )
 # one point per genus *from each block*
 agbg_genblock_plot = (ggplot(
@@ -427,15 +450,17 @@ agbg_genblock_plot = (ggplot(
 		y=propmean,
 		ymin=propmean-propse,
 		ymax=propmean+propse,
-		color=(family=="Poaceae")))
+		color=is_poa))
 	+ geom_point()
 	+ geom_errorbar()
 	+ geom_errorbarh()
 	+ geom_smooth(method="lm")
 	+ xlab("Percent aboveground cover")
 	+ ylab("Root read proportion")
-	+ theme_bw()
-	+ theme(legend.position=c(0.8, 0.8))
+	+ theme_ggEHD()
+	+ theme(
+		legend.title=element_blank(),
+		legend.position=c(0.8, 0.8))
 )
 
 ggsave("figs/agbg_sp.pdf", agbg_sp_plot)
