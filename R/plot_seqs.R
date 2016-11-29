@@ -520,12 +520,13 @@ gendepth_plot = (ggplot(
 	+ geom_violin(aes(group=Depth))
 	+ geom_point()
 	+ geom_smooth(method="loess")
-	+ facet_wrap(~famgen)
+	+ facet_wrap(~famgen, ncol=5)
 	+ xlab("Depth, cm")
 	+ ylab("Sample proportion")
 	+ scale_x_reverse()
 	+ coord_flip()
-	+ theme_bw()
+	+ theme_ggEHD(16)
+	+ theme(aspect.ratio=1)
 )
 
 famdepth_plot = (ggplot(
@@ -539,7 +540,8 @@ famdepth_plot = (ggplot(
 	+ ylab("Sample proportion")
 	+ scale_x_reverse()
 	+ coord_flip()
-	+ theme_bw()
+	+ theme_ggEHD()
+	+ theme(aspect.ratio=2)
 )
 
 ggsave("figs/genus_depth.pdf", gendepth_plot, width=12, height=9)
@@ -718,15 +720,19 @@ rr_tax = data.frame(tax_table(r_root)) %>% mutate(sppname=vegan::make.cepnames(R
 obs_exp_plot = plot_grid(
 	(obs.v.exp(cooccur(rrtop, spp_names=T, true_rand_classifier=0.05))
 		+ ggtitle("0-30 cm")
+		+ theme_ggEHD()
 		+ theme(legend.position=c(0.2,0.8))),
 	(obs.v.exp(cooccur(rrdeep, spp_names=T, true_rand_classifier=0.05))
 		+ ggtitle("30-50 cm")
+		+ theme_ggEHD()
 		+ theme(legend.position="none")),
 	(obs.v.exp(cooccur(rrdeep, spp_names=T, true_rand_classifier=0.05))
 		+ ggtitle("50-100 cm")
+		+ theme_ggEHD()
 		+ theme(legend.position="none")),
 	(obs.v.exp(cooccur(rrall, spp_names=T, true_rand_classifier=0.05))
 		+ ggtitle("All depths")
+		+ theme_ggEHD()
 		+ theme(legend.position="none")),
 	nrow=2,
 	labels="auto")
@@ -751,7 +757,7 @@ co_effect_plot = (effect.sizes(cooccur(rrall, spp_names=T))
 	+ xlab(NULL)
 	+ ylab("Co-occurence effect")
 	+ coord_flip()
-	+ theme_bw()
+	+ theme_ggEHD()
 	+ theme(legend.position="none"))
 
 ggsave("figs/cooccur_effect.pdf", co_effect_plot, width=12, height=9)
