@@ -40,4 +40,4 @@ Table: Plant species planted or found present (*) during aboveground vegetation 
 |N fixer         |Fabaceae       |*Lespedeza capitata*           |     0.2|  0.5|
 
 
-^*^Indicates a species not present in the seed mix planted during plot establishment in 2008.
+^\*^Indicates a species not present in the seed mix planted during plot establishment in 2008.
