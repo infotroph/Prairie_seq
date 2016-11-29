@@ -50,13 +50,12 @@ ckbprairie.docx: $(MARKDOWN) $(BIBFILE) $(BIBSTYLE) $(REFDOCX) $(FIGURES) \
 	pandoc -s -S \
 		--filter filters/pandoc-word-sectionbreak \
 		--filter pandoc-crossref \
+		--filter pandoc-citeproc \
+		--filter filters/unmathsub.py \
 		-f markdown+implicit_figures \
 		--bibliography $(BIBFILE) \
 		--csl $(BIBSTYLE) \
+		--reference-docx $(REFDOCX) \
 		$(CROSSREFMETA) \
 		$(MARKDOWN) \
-		-t native | pandoc - \
-			-f native \
-			--filter filters/unmathsub.py \
-			--reference-docx $(REFDOCX) \
-			-o $@
+		-o $@
