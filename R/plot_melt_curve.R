@@ -1,7 +1,6 @@
 library(ggplot2)
 library(grid)
-source("~/R/DeLuciatoR/ggthemes.r")
-source("~/R/ggplot-ticks/mirror.ticks.r")
+library("DeLuciatoR")
 source("R/facetAdjust.R") 	# adjusts bottom axes when panels are aligned ragged.
 							# LICENSE FOR THIS CODE MAY NOT BE BSD-COMPATIBLE -- DO NOT COMMIT TO REPOSITORY until clarified
 theme_set(theme_ggEHD())
@@ -42,6 +41,5 @@ plt=(ggplot(
 		col=guide_legend(title="Times Extracted"),
 		lty=guide_legend(title="Times Extracted"))
 )
-# plot(mirror.ticks(plt))
 facetAdjust(plt,)
 dev.off()

@@ -1,9 +1,8 @@
 library(ggplot2)
 library(grid)
 library(vegan)
+library("DeLuciatoR")
 source("R/order.plate.R")
-source("~/R/DeLuciatoR/ggthemes.r")
-source("~/R/ggplot-ticks/mirror.ticks.r")
 theme_set(theme_ggEHD())
 
 
@@ -108,9 +107,7 @@ pdf(
 	pointsize=12)
 plot(fluor_clust, main="fluorescence", labels=clustlabel)
 plot(slope_clust, main="d(fluorescence)/d(Temperature)", labels=clustlabel)
-#plot(mirror.ticks(fluorplt))
 plot(fluorplt)
-#plot(mirror.ticks(slopeplt))
 plot(slopeplt)
 plot(fluo_mds, main="Fluorescence", type="text")
 plot(fluo_env)
