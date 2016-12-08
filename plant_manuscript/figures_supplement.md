@@ -17,4 +17,4 @@
 
 ***
 
-![Observed species co-occurence rates versus the rates expected for independent, randomly distributed species of the same abundance, calculated separately for (a-c) shallow, medium, and deep soil layers, or (d) all samples from all depths. Each point represents one pair of species and the observed co-occurance rate is the number of root samples with at least 1% of reads attributed to each species in the pair. Colors indicate species pairs whose co-occurance rate differs significantly (p<0.05) from the null model.](../figs/cooccur_obs_exp.pdf){#fig:coobsexp}
+![Observed species co-occurrence rates versus the rates expected for independent, randomly distributed species of the same abundance, calculated separately for (a-c) shallow, medium, and deep soil layers, or (d) all samples from all depths. Each point represents one pair of species and the observed co-occurrence rate is the number of root samples with at least 1% of reads attributed to each species in the pair. Colors indicate species pairs whose co-occurrence rate differs significantly (p<0.05) from the null model.](../figs/cooccur_obs_exp.pdf){#fig:coobsexp}

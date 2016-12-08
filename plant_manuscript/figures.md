@@ -1,15 +1,15 @@
 
 ***
 
-![(a) total root mass of prairie plots measured in mid-August of 2011 [Replotted from @AndersonTeixeira:2013bx] and 2014 (Replotted from Black et al., in prep). Error bars show mean ± 1 standard deviation of 24 cores. Remaining panels show means of soil properties measured when the plots were established in 2008 [replotted from @Smith:2013cj]: (b) soil texture; (c) soil organic C and N content; (d) soil bulk density.](../figs/mass_texture.pdf){#fig:totmass}
+![(a) total root mass of prairie plots measured in mid-August of 2011 [replotted from @AndersonTeixeira:2013bx] and 2014 (replotted from Black et al., in prep). Error bars show mean ± 1 standard deviation of 24 cores. Remaining panels show means of soil properties measured when the plots were established in 2008 [replotted from @Smith:2013cj]: (b) soil texture; (c) soil organic C and N content; (d) soil bulk density.](../figs/mass_texture.pdf){#fig:totmass}
 
 ***
 
-![Correlation between percent aboveground cover (horizonal axis) and read proportion per root sample (vertical axis). Points are genus means for one experimental plot (N=5 plots); bars are 1 standard errors in each direction. Root proportions are averaged across all depths.](../figs/agbg_genblock.pdf){#fig:abovebelowcor}
+![Correlation between percent aboveground cover (horizontal axis) and read proportion per root sample (vertical axis). Points are genus means for one experimental plot (N=5 plots); bars are 1 standard error in each direction. Root proportions are averaged across all depths.](../figs/agbg_genblock.pdf){#fig:abovebelowcor}
 
 ***
 
-![Standardized effect sizes for observed co-occurrence rates. Each point is one pair of species; violin shapes show density distribution for each group. Vertical axes show family identity of the first species in the pair, panel labels show the family identity of the second species. Co-occurance was defined as mixed root samples with more than 1% of ITS2 reads from both species. Larger positive effect sizes indicate species pairs that are found together in more samples than expected for independently-oocurring species; negative values indicate pairs that are found together less than expected.](../figs/cooccur_effect.pdf){#fig:coeffect}
+![Standardized effect sizes for observed co-occurrence rates. Each point is one pair of species; violin shapes show density distribution for each group. Vertical axes show family identity of the first species in the pair, panel labels show the family identity of the second species. Co-occurence was defined as mixed root samples with more than 1% of ITS2 reads from both species. Larger positive effect sizes indicate species pairs that are found together in more samples than expected for independently occurring species; negative values indicate pairs that are found together less than expected.](../figs/cooccur_effect.pdf){#fig:coeffect}
 
 ***
 

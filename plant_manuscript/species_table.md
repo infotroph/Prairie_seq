@@ -1,7 +1,7 @@
 
 ***
 
-Table: Plant species planted or found present (*) during aboveground vegetation surveys of permanent quadrats in prairie restoration plots at the University of Illinois Energy Farm. Mean and standard deviation of stem abundance and percent cover across growing season 2012 were realculated from X. Feng (unpublished data). {#tbl:splist}
+Table: Plant species planted or found present (*) during aboveground vegetation surveys of permanent quadrats in prairie restoration plots at the University of Illinois Energy Farm. Mean and standard deviation of stem abundance and percent cover across growing season 2012 were recalculated from X. Feng (unpublished data). {#tbl:splist}
 
 |Functional type |Family         |Species                        | % cover|   sd|
 |:---------------|:--------------|:------------------------------|-------:|----:|
