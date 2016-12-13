@@ -1,5 +1,5 @@
 
-## Appendix: Supplemental figures
+## Supporting Information
 
 ![Read counts obtained from water controls, binned by assigned genus. Each panel shows reads from a separate aliquot of DNA-free water processed simultaneously through the same DNA extraction, PCR, and sequencing pipeline as the root samples. Notice that the y-axis shows raw read counts (not sample proportions as in other figures) and that the scale differs between panels.](../figs/h2o.pdf){#fig:h2o_control}
 

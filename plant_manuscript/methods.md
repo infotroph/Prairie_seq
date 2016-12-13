@@ -1,5 +1,5 @@
 
-## Methods
+## Materials and Methods
 
 ### Experimental site
 
