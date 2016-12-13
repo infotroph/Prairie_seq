@@ -1,7 +1,7 @@
 
 ***
 
-![(a) total root mass of prairie plots measured in mid-August of 2011 [replotted from @AndersonTeixeira:2013bx] and 2014 (replotted from Black et al., in prep). Error bars show mean ± 1 standard deviation of 24 cores. Remaining panels show means of soil properties measured when the plots were established in 2008 [replotted from @Smith:2013cj]: (b) soil texture; (c) soil organic C and N content; (d) soil bulk density.](../figs/mass_texture.pdf){#fig:totmass}
+![(a) total root mass of prairie plots measured in mid-August of 2011 [replotted from @AndersonTeixeira:2013bx] and 2014 (replotted from Black et al., submitted). Error bars show mean ± 1 standard deviation of 24 cores. Remaining panels show means of soil properties measured when the plots were established in 2008 [replotted from @Smith:2013cj]: (b) soil texture; (c) soil organic C and N content; (d) soil bulk density.](../figs/mass_texture.pdf){#fig:totmass}
 
 ***
 
