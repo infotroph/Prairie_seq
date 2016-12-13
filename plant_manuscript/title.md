@@ -28,8 +28,4 @@ Email: delucia@illinois.edu
 
 CKB, SAW, EHD designed the experiment; CKB, SAW, TLP, CRS collected data; SAW, TLP, CRS developed laboratory protocols; CKB, SAW developed data analysis methods; SAW, EHD provided funding; CKB, SAW, TLP, CRS, EHD wrote the paper.
 
-## Keywords
-
-Niche partitioning, DNA metabarcoding, grassland, root community, biodiversity
-
 ***

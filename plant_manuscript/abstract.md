@@ -9,4 +9,8 @@
 
 * In this managed, high-evenness system on uniform, fertile soils, the relatively small fraction of biomass found as grass roots in deep soil may be disproportionately important for functions such as water uptake, N retention, and C storage that affect the resilience of the whole ecosystem.
 
+## Keywords
+
+Niche partitioning, DNA metabarcoding, grassland, root community, biodiversity
+
 ***
