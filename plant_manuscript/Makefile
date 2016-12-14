@@ -46,7 +46,9 @@ filters/pandoc-word-sectionbreak: filters/pandoc-word-sectionbreak.hs
 	ghc --make $^ -o $@
 
 ckbprairie.docx: $(MARKDOWN) $(BIBFILE) $(BIBSTYLE) $(REFDOCX) $(FIGURES) \
-		filters/pandoc-word-sectionbreak filters/unmathsub.py
+		wordcount.sh filters/pandoc-word-sectionbreak filters/unmathsub.py
+	cp title.md .title_maketmp.md
+	./wordcount.sh >> .title_maketmp.md
 	pandoc -s -S \
 		--filter filters/pandoc-word-sectionbreak \
 		--filter pandoc-crossref \
@@ -57,5 +59,6 @@ ckbprairie.docx: $(MARKDOWN) $(BIBFILE) $(BIBSTYLE) $(REFDOCX) $(FIGURES) \
 		--csl $(BIBSTYLE) \
 		--reference-docx $(REFDOCX) \
 		$(CROSSREFMETA) \
-		$(MARKDOWN) \
+		`echo $(MARKDOWN)|sed 's/title.md/.title_maketmp.md/'` \
 		-o $@
+	rm .title_maketmp.md
