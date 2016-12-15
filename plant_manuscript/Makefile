@@ -15,7 +15,7 @@ MARKDOWN = \
 
 BIBFILE = prairie_root.bib
 BIBSTYLE = style/ecology.csl
-REFDOCX = style/delucia-style.docx
+REFDOCX = style/newphyt-style.docx
 
 CROSSREFMETA = \
 	-M chapters:True \
