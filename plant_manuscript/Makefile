@@ -21,7 +21,11 @@ CROSSREFMETA = \
 	-M chapters:True \
 	-M chaptersDepth:1 \
 	-M chapDelim:"" \
-	-M chapPrefix:""
+	-M chapPrefix:"" \
+	-M figureTitle:"Fig." \
+	-M tableTitle:"Table" \
+	-M tblPrefix:"Table" \
+	-M figPrefix:"Fig."
 
 FIGURES = ../figs/mass_texture.pdf \
 	../figs/agbg_genblock.pdf \
