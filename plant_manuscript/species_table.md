@@ -5,11 +5,11 @@ Table: Plant species planted or found present (*) during aboveground vegetation 
 
 |Functional type |Family         |Species                        | % cover|   sd|
 |:---------------|:--------------|:------------------------------|-------:|----:|
-|C3 grass        |Cyperaceae     |*Carex bicknellii*             |     1.4|  2.3|
-|C3 grass        |Poaceae        |*Elymus canadensis*            |     2.2|  3.4|
-|C4 grass        |Poaceae        |*Andropogon gerardii*          |    34.3| 13.7|
-|C4 grass        |Poaceae        |*Schizachyrium scoparium*      |     3.0|  3.4|
-|C4 grass        |Poaceae        |*Sorghastrum nutans*           |    21.2| 10.5|
+|C~3~ grass      |Cyperaceae     |*Carex bicknellii*             |     1.4|  2.3|
+|C~3~ grass      |Poaceae        |*Elymus canadensis*            |     2.2|  3.4|
+|C~4~ grass      |Poaceae        |*Andropogon gerardii*          |    34.3| 13.7|
+|C~4~ grass      |Poaceae        |*Schizachyrium scoparium*      |     3.0|  3.4|
+|C~4~ grass      |Poaceae        |*Sorghastrum nutans*           |    21.2| 10.5|
 |Forb            |Asteraceae     |*Coreopsis palmata*            |     0.1|  0.5|
 |Forb            |Asteraceae     |*Coreopsis tripteris*          |     4.9|  6.1|
 |Forb            |Asteraceae     |*Echinacea pallida*            |     0.1|  0.4|
