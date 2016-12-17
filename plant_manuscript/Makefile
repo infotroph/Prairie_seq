@@ -14,7 +14,7 @@ MARKDOWN = \
 	figures_supplement.md
 
 BIBFILE = prairie_root.bib
-BIBSTYLE = style/ecology.csl
+BIBSTYLE = style/new-phytologist.csl
 REFDOCX = style/newphyt-style.docx
 
 CROSSREFMETA = \
