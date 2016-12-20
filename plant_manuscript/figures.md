@@ -5,7 +5,7 @@
 
 ***
 
-![Correlation between percent aboveground cover (horizontal axis) and read proportion per root sample (vertical axis). Points are genus means for one experimental plot (N = 5 plots); bars are 1 standard error in each direction. Root proportions are averaged across all depths.](../figs/agbg_genblock.pdf){#fig:abovebelowcor}
+![Correlation between percent aboveground cover (horizontal axis) and read proportion per root sample (vertical axis). Each point shows mean ± 1 standard error for one genus in one experimental plot (N = 5 plots). Root proportions are averaged across all depths.](../figs/agbg_genblock.pdf){#fig:abovebelowcor}
 
 ***
 
