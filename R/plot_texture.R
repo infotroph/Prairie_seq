@@ -17,7 +17,7 @@ texture = (read.csv("rawdata/soil_properties_2008.csv")
 	%>% mutate(DepthBottom=as.numeric(DepthBottom)-0.01)
 	%>% gather(WhichEnd, Depth, DepthTop, DepthBottom) 
 	%>% gather(Class, Pct, PctSand, PctSilt, PctClay)
-	%>% mutate(Class=sub("^Pct", "", Class)))
+	%>% mutate(Class=factor(sub("^Pct", "", Class), levels=c("Sand", "Silt", "Clay"))))
 texture_labels = (texture
 	%>% filter(Depth==10)
 	%>% mutate(Pct=(cumsum(Pct)-0.5*Pct)/100))
@@ -54,7 +54,7 @@ rootplot = (ggplot(coremass,
 	+thm)
 
 tplot = (ggplot(texture, aes(Depth, Pct, fill=Class))
-	+ geom_area(position="fill")
+	+ geom_area(position=position_fill(reverse=TRUE))
 	+ scale_fill_manual(
 		name=NULL,
 		values=c(Sand="lightgrey", Silt="grey", Clay="darkgrey"))
