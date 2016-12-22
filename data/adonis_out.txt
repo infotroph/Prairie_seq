@@ -1,0 +1,92 @@
+
+Call:
+adonis(formula = rrp_otu ~ Depth * PctC * PctN * CN, data = data.frame(sample_data(rrp)),      permutations = ord_perm, method = "jaccard", binary = TRUE) 
+
+Blocks:  sample_data(rrp)$BlockLoc 
+Permutation: free
+Number of permutations: 999
+
+Terms added sequentially (first to last)
+
+                    Df SumsOfSqs MeanSqs F.Model      R2 Pr(>F)    
+Depth                1    1.4508 1.45081  6.3665 0.05554  0.001 ***
+PctC                 1    0.5973 0.59728  2.6210 0.02286  0.346    
+PctN                 1    0.2738 0.27376  1.2014 0.01048  0.204    
+CN                   1    0.2611 0.26112  1.1459 0.01000  0.244    
+Depth:PctC           1    0.2272 0.22720  0.9970 0.00870  0.180    
+Depth:PctN           1    0.3131 0.31306  1.3738 0.01198  0.210    
+PctC:PctN            1    0.2667 0.26665  1.1702 0.01021  0.264    
+Depth:CN             1    0.2739 0.27394  1.2021 0.01049  0.237    
+PctC:CN              1    0.1671 0.16713  0.7334 0.00640  0.776    
+Depth:PctC:PctN      1    0.2427 0.24270  1.0650 0.00929  0.230    
+Depth:PctC:CN        1    0.2610 0.26104  1.1455 0.00999  0.323    
+PctC:PctN:CN         1    0.1814 0.18138  0.7959 0.00694  0.656    
+Depth:PctC:PctN:CN   1    0.1867 0.18667  0.8192 0.00715  0.514    
+Residuals           94   21.4207 0.22788         0.81998           
+Total              107   26.1234                 1.00000           
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Call:
+adonis(formula = rrp_otu ~ Depth * PctC * PctN * CN, data = data.frame(sample_data(rrp)),      permutations = 999, method = "jaccard", binary = TRUE) 
+
+Permutation: free
+Number of permutations: 999
+
+Terms added sequentially (first to last)
+
+                    Df SumsOfSqs MeanSqs F.Model      R2 Pr(>F)    
+Depth                1    1.4508 1.45081  6.3665 0.05554  0.001 ***
+PctC                 1    0.5973 0.59728  2.6210 0.02286  0.001 ***
+PctN                 1    0.2738 0.27376  1.2014 0.01048  0.201    
+CN                   1    0.2611 0.26112  1.1459 0.01000  0.230    
+Depth:PctC           1    0.2272 0.22720  0.9970 0.00870  0.427    
+Depth:PctN           1    0.3131 0.31306  1.3738 0.01198  0.089 .  
+PctC:PctN            1    0.2667 0.26665  1.1702 0.01021  0.253    
+Depth:CN             1    0.2739 0.27394  1.2021 0.01049  0.209    
+PctC:CN              1    0.1671 0.16713  0.7334 0.00640  0.827    
+Depth:PctC:PctN      1    0.2427 0.24270  1.0650 0.00929  0.346    
+Depth:PctC:CN        1    0.2610 0.26104  1.1455 0.00999  0.282    
+PctC:PctN:CN         1    0.1814 0.18138  0.7959 0.00694  0.768    
+Depth:PctC:PctN:CN   1    0.1867 0.18667  0.8192 0.00715  0.721    
+Residuals           94   21.4207 0.22788         0.81998           
+Total              107   26.1234                 1.00000           
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Call:
+adonis(formula = rrp_otu ~ Depth, data = data.frame(sample_data(rrp)),      permutations = ord_perm, method = "jaccard", binary = TRUE) 
+
+Blocks:  sample_data(rrp)$BlockLoc 
+Permutation: free
+Number of permutations: 999
+
+Terms added sequentially (first to last)
+
+           Df SumsOfSqs MeanSqs F.Model      R2 Pr(>F)    
+Depth       1    1.4508 1.45081   6.233 0.05554  0.001 ***
+Residuals 106   24.6726 0.23276         0.94446           
+Total     107   26.1234                 1.00000           
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Call:
+adonis(formula = rrp_otu ~ PctC * PctN * CN, data = data.frame(sample_data(rrp)),      permutations = ord_perm, method = "jaccard", binary = TRUE) 
+
+Blocks:  sample_data(rrp)$BlockLoc 
+Permutation: free
+Number of permutations: 999
+
+Terms added sequentially (first to last)
+
+              Df SumsOfSqs MeanSqs F.Model      R2 Pr(>F)    
+PctC           1    1.5117 1.51175  6.5063 0.05787  0.001 ***
+PctN           1    0.2583 0.25827  1.1115 0.00989  0.641    
+CN             1    0.1994 0.19942  0.8583 0.00763  0.364    
+PctC:PctN      1    0.3293 0.32927  1.4171 0.01260  0.395    
+PctC:CN        1    0.1891 0.18912  0.8139 0.00724  0.565    
+PctC:PctN:CN   1    0.1679 0.16793  0.7227 0.00643  0.931    
+Residuals    101   23.4677 0.23235         0.89834           
+Total        107   26.1234                 1.00000           
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
