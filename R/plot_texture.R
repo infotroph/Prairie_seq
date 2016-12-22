@@ -47,8 +47,8 @@ rootplot = (ggplot(coremass,
 	+ geom_errorbar(width=2)
 	+ geom_line()
 	+ geom_text(data=core_labels, aes(label=Year))
-	+ xlab("Depth, cm")
-	+ ylab(expression(g~root~m^{-2}))
+	+ xlab("Depth (cm)")
+	+ ylab(expression("Root biomass ("*g~m^{-2}*")"))
 	+ coord_flip()
 	+ scale_x_reverse(limits=depth_range)
 	+thm)
@@ -61,7 +61,7 @@ tplot = (ggplot(texture, aes(Depth, Pct, fill=Class))
 	+ geom_text(
 		data=texture_labels,
 		aes(label=Class))
-	+ xlab("Depth, cm")
+	+ xlab("Depth (cm)")
 	+ ylab("Particle proportion")
 	+ coord_flip()
 	+ scale_x_reverse(limits=depth_range)
@@ -72,16 +72,16 @@ cnplot = (ggplot(org, aes(Depth, gkg, group=Element))
 	+ geom_line()
 	+ geom_text(data=org_labels, aes(label=Element))
 	+ coord_flip()
-	+ xlab("Depth, cm")
-	+ ylab(expression(g~kg^{-3}))
+	+ xlab("Depth (cm)")
+	+ ylab(expression("Organic C or N (g"~kg^{-3}*")"))
 	+ scale_x_reverse(limits=depth_range)
 	+ thm)
 
 bdplot = (ggplot(texture, aes(Depth, BulkDens))
 	+ geom_line()
 	+ coord_flip()
-	+ xlab("Depth, cm")
-	+ ylab(expression("Bulk density, g"~cm^{-3}))
+	+ xlab("Depth (cm)")
+	+ ylab(expression("Bulk density (g"~cm^{-3}*")"))
 	+ scale_x_reverse(limits=depth_range)
 	+ thm)
 
@@ -91,7 +91,8 @@ plots = plot_grid(
 	mirror_ticks(cnplot),
 	mirror_ticks(bdplot),
 	nrow=2,
-	labels="auto")
+	labels=c("(a)", "(b)", "(c)", "(d)"),
+	align="hv")
 
 ggsave(
 	"figs/mass_texture.pdf",
