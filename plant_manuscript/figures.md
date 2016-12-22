@@ -17,6 +17,6 @@
 
 ***
 
-![Nonmetric multidimensional scaling plot showing centroids for all detected species. Red: Poaceae. Green: Asteraceae. Blue: Fabaceae. Black: Other families. Grey crosses: Low-abundance species, unlabeled for figure clarity. Pink arrows show best fits for environmental vectors of depth in soil, organic C and N content, and C:N ratio.](../figs/ordination.pdf){#fig:ordiplot}
+![Nonmetric multidimensional scaling plot showing centroids for all detected species. Each text label indicates the centroid for one species, identified by short species code and colored by family. Each cross indicates the centroid for a low-abundance species, colored by family but left unlabeled for figure clarity. Black arrows show best fits for environmental vectors of depth in soil, organic C and N content, and C:N ratio.](../figs/ordination.pdf){#fig:ordiplot}
 
 ***

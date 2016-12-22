@@ -5,6 +5,7 @@ library("tibble")
 library("ggplot2")
 library("vegan")
 library("cooccur")
+library("viridis")
 library("DeLuciatoR")
 plot_grid=cowplot::plot_grid
 se=plotrix::std.error
@@ -132,7 +133,7 @@ print("files read ✓")
 
 
 
-# Looking at mock community controls
+## Looking at mock community controls
 r_mock = subset_samples(r_sp, SampleType=="mock")
 r_mock = prune_taxa(taxa_sums(r_mock)>0, r_mock)
 r_mock_prop = transform_sample_counts(r_mock, function(x)x/sum(x))
@@ -162,43 +163,69 @@ mock_exp_gen = (
 	%>% group_by(genus)
 	%>% summarize(Abundance=n()/nrow(.)))
 
-mock_sp_plot = (plot_bar(
-	r_mock_prop,
-	x="Rank8",
-	facet_grid=Sample~.)
+mock_sp_plot = (ggplot(
+	psmelt(r_mock_prop),
+	aes(x=Rank8, weight=Abundance))
++ geom_bar(aes(fill="observed"), position="stack")
++ facet_grid(Sample~.)
 + geom_point(
 	data=mock_exp_sp,
 	mapping=aes(
 		x=species,
 		y=Abundance,
-		color="expected proportion"))
-+ scale_color_manual(name=NULL, values="green")
+		color="expected"))
++ scale_color_manual(
+	name=NULL,
+	values=c("observed"="black", "expected"="green"),
+	guide=guide_legend(order=1))
++ scale_fill_manual(
+	name=NULL,
+	values=c("observed"="black", "expected"="green"),
+	guide=guide_legend(order=2))
 + xlab("Species")
 + ylab("Proportion of sample")
++ theme_ggEHD(10)
 + theme(
-	panel.background=element_blank(),
-	legend.position=c(0.2, 0.6)))
+	aspect.ratio=0.33,
+	legend.position=c(0.15, 0.92),
+	legend.margin=margin(0,0,0,0,"cm"),
+	legend.spacing=unit(0, "cm"),
+	axis.text.x=element_text(angle=270, hjust=0, margin=margin(t=1, unit="lines")),
+	axis.ticks.x=element_blank()))
 
 
-mock_gen_plot = (plot_bar(
-	r_mock_prop,
-	x="Rank7",
-	facet_grid=Sample~.)
+mock_gen_plot = (ggplot(
+	psmelt(r_mock_prop),
+	aes(x=Rank7, weight=Abundance))
++ geom_bar(aes(fill="observed"), position="stack")
++ facet_grid(Sample~.)
 + geom_point(
 	data=mock_exp_gen,
 	mapping=aes(
 		x=genus,
 		y=Abundance,
-		color="expected proportion"))
-+ scale_color_manual(name=NULL, values="green")
+		color="expected"))
++ scale_color_manual(
+	name=NULL,
+	values=c("observed"="black", "expected"="green"),
+	guide=guide_legend(order=1))
++ scale_fill_manual(
+	name=NULL,
+	values=c("observed"="black", "expected"="green"),
+	guide=guide_legend(order=2))
 + xlab("Genus")
 + ylab("Proportion of sample")
++ theme_ggEHD(14)
 + theme(
-	panel.background=element_blank(),
-	legend.position=c(0.2, 0.6)))
+	aspect.ratio=0.33,
+	legend.position=c(0.15, 0.92),
+	legend.margin=margin(0,0,0,0,"cm"),
+	legend.spacing=unit(0, "cm"),
+	axis.text.x=element_text(angle=270, hjust=0, margin=margin(t=1, unit="lines")),
+	axis.ticks.x=element_blank()))
 
-ggsave("figs/mock_sp.pdf", mock_sp_plot)
-ggsave("figs/mock_gen.pdf", mock_gen_plot)
+ggsave_fitmax("figs/mock_sp.pdf", mock_sp_plot, maxwidth=6.5, maxheight=9)
+ggsave_fitmax("figs/mock_gen.pdf", mock_gen_plot, maxwidth=6.5, maxheight=9)
 
 print("mock communities ✓")
 
@@ -211,7 +238,7 @@ print("mock communities ✓")
 
 
 
- # Draft species-by-depth heatmap. Needs lots of work.
+## Draft species-by-depth heatmap. Needs lots of work.
 rr_heat = tax_glom(merge_samples(r_root, "Depth1"), "Rank7")
 	# Warns about NAs introduced by coercion -- need to consider how to treat unresolved taxa
 rr_heatpct = transform_sample_counts(rr_heat, function(x)100*x/sum(x))
@@ -236,7 +263,7 @@ heatmap_draft1 = (
 		sample.order=rrhdepth,
 		taxa.order=rrhtax,
 		na.value="darkgrey", low="brown", high="yellow")
-	+ xlab("Depth, cm")
+	+ xlab("Depth (cm)")
 	+ coord_flip())
 heatmap_abvdraft = (
 	ggplot(
@@ -265,9 +292,7 @@ print("drafts of heatmaps ✓")
 
 
 
-## First try at aboveground/belowground comparison
-
-
+## Aboveground/belowground comparison
 
 abvabund_spmean = (
 	abvabund
@@ -389,9 +414,9 @@ agbg_sp_plot = (ggplot(
 	+ geom_errorbar()
 	+ geom_errorbarh()
 	+ geom_smooth(method="lm")
-	+ xlab("Percent aboveground cover")
-	+ ylab("Root read proportion")
-	+ theme_ggEHD()
+	+ xlab("Aboveground dominance (percent cover)")
+	+ ylab("Belowground dominance (read proportion)")
+	+ theme_ggEHD(14)
 	+ theme(
 		legend.title=element_blank(),
 		legend.position=c(0.8, 0.8))
@@ -411,9 +436,9 @@ agbg_spblock_plot = (ggplot(
 	+ geom_errorbar()
 	+ geom_errorbarh()
 	+ geom_smooth(method="lm")
-	+ xlab("Percent aboveground cover")
-	+ ylab("Root read proportion")
-	+ theme_ggEHD()
+	+ xlab("Aboveground dominance (percent cover)")
+	+ ylab("Belowground dominance (read proportion)")
+	+ theme_ggEHD(14)
 	+ theme(
 		legend.title=element_blank(),
 		legend.position=c(0.8, 0.8))
@@ -433,9 +458,9 @@ agbg_gen_plot = (ggplot(
 	+ geom_errorbar()
 	+ geom_errorbarh()
 	+ geom_smooth(method="lm")
-	+ xlab("Percent aboveground cover")
-	+ ylab("Root read proportion")
-	+ theme_ggEHD()
+	+ xlab("Aboveground dominance (percent cover)")
+	+ ylab("Belowground dominance (read proportion)")
+	+ theme_ggEHD(14)
 	+ theme(
 		legend.title=element_blank(),
 		legend.position=c(0.8, 0.8))
@@ -455,18 +480,18 @@ agbg_genblock_plot = (ggplot(
 	+ geom_errorbar()
 	+ geom_errorbarh()
 	+ geom_smooth(method="lm")
-	+ xlab("Percent aboveground cover")
-	+ ylab("Root read proportion")
-	+ theme_ggEHD()
+	+ xlab("Aboveground dominance (percent cover)")
+	+ ylab("Belowground dominance (read proportion)")
+	+ theme_ggEHD(14)
 	+ theme(
 		legend.title=element_blank(),
 		legend.position=c(0.8, 0.8))
 )
 
-ggsave("figs/agbg_sp.pdf", agbg_sp_plot)
-ggsave("figs/agbg_gen.pdf", agbg_gen_plot)
-ggsave("figs/agbg_genblock.pdf", agbg_genblock_plot)
-ggsave("figs/agbg_spblock.pdf", agbg_spblock_plot)
+ggsave_fitmax("figs/agbg_sp.pdf", agbg_sp_plot, maxwidth=6, maxheight=9)
+ggsave_fitmax("figs/agbg_gen.pdf", agbg_gen_plot, maxwidth=6, maxheight=9)
+ggsave_fitmax("figs/agbg_genblock.pdf", agbg_genblock_plot, maxwidth=6, maxheight=9)
+ggsave_fitmax("figs/agbg_spblock.pdf", agbg_spblock_plot, maxwidth=6, maxheight=9)
 
 print("draft of aboveground-belowground correlation ✓")
 
@@ -485,8 +510,17 @@ print("draft of aboveground-belowground correlation ✓")
 # but may be worth looking harder.
 r_h2o = subset_samples(r_sp, SampleType=="nodna")
 r_h2o = prune_taxa(taxa_sums(r_h2o)>0, r_h2o)
-water_bar_plot = plot_bar(r_h2o, x="Rank8")+facet_grid(Sample~., scale="free_y")
-ggsave("figs/h2o.pdf", water_bar_plot)
+water_bar_plot = (
+	plot_bar(r_h2o, x="Rank8")
+		+ facet_grid(Sample~., scale="free_y")
+		+ ylab("Read count")
+		+ xlab(NULL)
+		+ theme_ggEHD(14)
+		+ theme(
+			axis.ticks.x=element_blank(),
+			axis.text.x=element_text(angle=270, hjust=0),
+			aspect.ratio=0.33))
+ggsave_fitmax("figs/h2o.pdf", water_bar_plot, maxwidth=6.5, maxheight=9)
 print("Water controls ✓")
 
 
@@ -495,14 +529,55 @@ r_indiv = subset_samples(r_sp, SampleType %in% c("onespecies", "twospecies"))
 # TODO: Couldn't I just normalize once and take all SampleType subsets from that?
 r_indiv_prop = transform_sample_counts(r_indiv, function(x)x/sum(x))
 r_indiv_prop_1pct = filter_taxa(r_indiv_prop, function(x)max(x)>0.01, prune=TRUE)
+
+# Assign clearer display names.
+# BUGBUG: To sort facets so one-species and two-species samples go in different rows, 
+# I'm relying on manual factor ordering (same order as the rows in `spikenames`, NOT alphabetical),
+# plus ggplot facet ordering (when as.table=TRUE: top->bottom, panels L->R in each row),
+# plus a manually set 2-column layout.
+# This is probably a bad idea and may break if ggplot facet sorting changes.
+spikedat = psmelt(r_indiv_prop_1pct)
+spikenames = read.csv(
+	text='
+		Sample, Sample_label
+		Andropogon.gerardii, italic(Andropogon~gerardii)~(Ange)
+		Silphium.perfoliatum, italic(Silphium~perfoliatum)~(Sipu)
+		Elymus.canadensis, italic(Elymus~canadensis)~(Elca)
+		Sorghastrum.nutans, italic(Sorghastrum~nutans)~(Sonu)
+		Spike.Elymus.1, Ange + """1%"""~Elca
+		Spike.Sorghastrum.1, Ange + """1%"""~Sonu
+		Spike.Elymus.5, Ange + """5%"""~Elca
+		Spike.Sorghastrum.5, Ange + """5%"""~Sonu
+		Spike.Elymus.10, Ange + """10%"""~Elca
+		Spike.Sorghastrum.10, Ange + """10%"""~Sonu		
+	',
+	stringsAsFactors=FALSE,
+	strip.white=TRUE)
+spikenames$Sample_label=factor(spikenames$Sample_label, levels=spikenames$Sample_label)
+spikedat = merge(spikedat, spikenames)
+
 indiv_spike_plot = (
-	plot_bar(r_indiv_prop_1pct, x="Rank8")
-	+ facet_wrap(~Sample)
+	ggplot(spikedat, aes(x=Rank8, weight=Abundance))
+	+ geom_bar(position="stack")
+	+ facet_wrap(
+		~Sample_label,
+		ncol=2,
+		labeller=label_parsed) 
 	+ ylab("Read proportion")
-	+ xlab("Species")
-	+ coord_flip()
-	+ theme_bw())
-ggsave("figs/spikes.pdf", indiv_spike_plot, width=12, height=9)
+	+ xlab(NULL)
+	+ theme_ggEHD(10)
+	+ theme( # "theme_squeeze_too_many_x_entries()"
+		aspect.ratio=0.33,
+		panel.spacing=unit(0.1, "lines"),
+		axis.title.y=element_text(margin=margin(l=0,r=0.1, unit="lines")),
+		axis.text.y=element_text(margin=margin(r=1, unit="lines")),
+		axis.text.x=element_text(
+			angle=270,
+			hjust=0,
+			size=8, # >:(
+			margin=margin(t=1, unit="lines")),
+		axis.ticks.x=element_blank()))
+ggsave_fitmax("figs/spikes.pdf", indiv_spike_plot, maxwidth=6.5, maxheight=9)
 print("Spike-ins ✓")
 	
 
@@ -521,7 +596,7 @@ gendepth_plot = (ggplot(
 	+ geom_point()
 	+ geom_smooth(method="loess")
 	+ facet_wrap(~famgen, ncol=5)
-	+ xlab("Depth, cm")
+	+ xlab("Depth (cm)")
 	+ ylab("Sample proportion")
 	+ scale_x_reverse()
 	+ coord_flip()
@@ -536,7 +611,7 @@ famdepth_plot = (ggplot(
 	+ geom_point()
 	+ geom_smooth(method="loess")
 	+ facet_wrap(~Rank6)
-	+ xlab("Depth, cm")
+	+ xlab("Depth (cm)")
 	+ ylab("Sample proportion")
 	+ scale_x_reverse()
 	+ coord_flip()
@@ -544,8 +619,8 @@ famdepth_plot = (ggplot(
 	+ theme(aspect.ratio=2)
 )
 
-ggsave("figs/genus_depth.pdf", gendepth_plot, width=12, height=9)
-ggsave("figs/family_depth.pdf", famdepth_plot, width=12, height=9)
+ggsave_fitmax("figs/genus_depth.pdf", gendepth_plot, maxwidth=12, maxheight=9)
+ggsave_fitmax("figs/family_depth.pdf", famdepth_plot, maxwidth=12, maxheight=9)
 print("taxon by depth ✓")
 
 
@@ -592,10 +667,14 @@ rrp_points = data.frame(
 	family=c(tax_table(rrp)[,"Rank6"]),
 	row.names=NULL,
 	stringsAsFactors=FALSE)
-rrp_points$famcolors = c(
-	"Poaceae"="red",
-	"Asteraceae"="green",
-	"Fabaceae"="blue")[rrp_points$family]
+# Assign colors by a method deep in the uncanny valley between manual and automated:
+# I'm only assigning colors to 3 of the 15 families present -- rest get lumped together.
+# Also I want to use the Viridis palette, but am most interested in contrasting grass vs aster,
+# so I'm hand-assigning the colors in an order that gives these the greatest perceptual difference.
+fam_ord_colors = viridis(4)[c(4,1,3,2)]
+names(fam_ord_colors) = c("Poaceae", "Asteraceae", "Fabaceae", "Other")
+rrp_points$famcolors = fam_ord_colors[rrp_points$family]
+rrp_points$famcolors[is.na(rrp_points$famcolors)] = fam_ord_colors["Other"]
 
 # Plot, one layer at a time.
 pdf(
@@ -605,27 +684,34 @@ pdf(
 # Set up a blank frame
 plot(rrp_metamds, display="species", type="n")
 # Add species centroids, labeling in descending order of abundance until space is filled.
-# Unlabeled species are plotted as a grey "+".
-# want to color labels by family, but colors are applied AFTER dropping unlabeled points,
-# so instead label all in black, save the returned vector of which points get labels,
-# add colors by hand.
-# I'm only assigning colors to 3 of the 15 families present -- rest get black text
+# Species given no label (=lower abund than others nearby in ordination space) are plotted as "+".
+# want to color labels and points by family, but colors are applied AFTER dropping unlabeled points!
+# I don't know how to calculate this without plotting,
+# so instead plot all in white, save the returned vector of which points get labels,
+# add colors by hand by overplotting.
 torp_labeled = orditorp(
 	x=rrp_metamds,
 	display="species",
 	labels=rrp_points$shortname,
 	priority=rrp_points$abundance,
-	pcol="gray",
+	pcol="white",
 	pch="+",
-	col="black",
-	cex=0.6)
+	col="white",
+	cex=0.8)
 with(rrp_points[torp_labeled,],
 	text(
 		x=NMDS1,
 		y=NMDS2,
 		labels=shortname,
 		col=famcolors,
-		cex=0.6))
+		cex=0.8))
+with(rrp_points[setdiff(seq_len(nrow(rrp_points)), torp_labeled),],
+	points(
+		x=NMDS1,
+		y=NMDS2,
+		col=famcolors,
+		pch="+",
+		cex=0.8))
 
 
 # Stratify permutation analyses within soil profiles
@@ -638,7 +724,11 @@ ord_env = envfit(
 	data=data.frame(sample_data(rrp)),
 	permutations=ord_perm)
 
-plot(ord_env, col="pink")
+plot(ord_env, col="black")
+legend(
+	x="topleft",
+	legend=names(fam_ord_colors),
+	text.col=fam_ord_colors)
 
 ord_adon = adonis(
 	rrp_otu ~ Depth * PctC * PctN * CN,
@@ -737,7 +827,7 @@ obs_exp_plot = plot_grid(
 	nrow=2,
 	labels="auto")
 
-ggsave("figs/cooccur_obs_exp.pdf", obs_exp_plot, width=12, height=9)
+ggsave_fitmax("figs/cooccur_obs_exp.pdf", obs_exp_plot, maxwidth=12, maxheight=9)
 
 # Standardized effect sizes, separated by family:
 # Each point is a pairs of species; y-axis is family of sp1, panel label is family of sp2.
@@ -760,4 +850,4 @@ co_effect_plot = (effect.sizes(cooccur(rrall, spp_names=T))
 	+ theme_ggEHD()
 	+ theme(legend.position="none"))
 
-ggsave("figs/cooccur_effect.pdf", co_effect_plot, width=12, height=9)
+ggsave_fitmax("figs/cooccur_effect.pdf", co_effect_plot, maxwidth=12, maxheight=9)
