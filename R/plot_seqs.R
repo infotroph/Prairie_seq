@@ -337,23 +337,24 @@ abvabund_genblockmean = (
 )
 
 # get mean belowground abundance (ignores depth, blocks, etc)
+r_root_prop_df = psmelt(r_root_prop)
 bgabund_spmean = (
-	psmelt(r_root_prop)
+	r_root_prop_df
 	%>% group_by(Rank6, Rank7, Rank8)
 	%>% rename(family=Rank6, genus=Rank7, species=Rank8)
 	%>% summarize_each(funs(propmean=mean, propsd=sd, propse=se), Abundance))
 bgabund_genmean = (
-	psmelt(r_root_prop)
+	r_root_prop_df
 	%>% group_by(Rank6, Rank7)
 	%>% rename(family=Rank6, genus=Rank7)
 	%>% summarize_each(funs(propmean=mean, propsd=sd, propse=se), Abundance))
 bgabund_spblockmean = (
-	psmelt(r_root_prop)
+	r_root_prop_df
 	%>% group_by(Rank6, Rank7, Rank8, Block)
 	%>% rename(family=Rank6, genus=Rank7, species=Rank8)
 	%>% summarize_each(funs(propmean=mean, propsd=sd, propse=se), Abundance))
 bgabund_genblockmean = (
-	psmelt(r_root_prop)
+	r_root_prop_df
 	%>% group_by(Rank6, Rank7, Block)
 	%>% rename(family=Rank6, genus=Rank7)
 	%>% summarize_each(funs(propmean=mean, propsd=sd, propse=se), Abundance))
