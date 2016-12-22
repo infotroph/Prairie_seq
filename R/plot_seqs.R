@@ -11,6 +11,8 @@ plot_grid=cowplot::plot_grid
 se=plotrix::std.error
 kable=knitr::kable
 
+set.seed(123546876)
+
 ## soil C and N concentration
 cn = read.csv("rawdata/bulk_CN.csv")
 # Remove empty capsules (they were a zero check for the analyzer), 
