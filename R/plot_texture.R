@@ -23,13 +23,12 @@ texture_labels = (texture
 	%>% mutate(Pct=(cumsum(Pct)-0.5*Pct)/100))
 
 org = (texture
+	%>% filter(Class=="Sand") # we triplicated organic measurements when we reshaped above
 	%>% select(Depth, starts_with("g_Org"))
 	%>% gather(Element, gkg, starts_with("g_Org"))
 	%>% mutate(Element=sub("g_(Org[CN])_kg", "\\1", Element)))
 org_labels = (org
-	%>% filter(Depth==10)
-	%>% mutate(gkg=0.9*gkg)
-	)
+	%>% filter(Depth==10))
 
 # Want all depths on the same scale.
 # Note order: must be (max, min) for use with scale_x_reverse
@@ -46,7 +45,11 @@ rootplot = (ggplot(coremass,
 	+ geom_point()
 	+ geom_errorbar(width=2)
 	+ geom_line()
-	+ geom_text(data=core_labels, aes(label=Year))
+	+ geom_text(
+		data=core_labels,
+		aes(label=Year),
+		size=6,
+		hjust="left")
 	+ xlab("Depth (cm)")
 	+ ylab(expression("Root biomass ("*g~m^{-2}*")"))
 	+ coord_flip()
@@ -60,7 +63,9 @@ tplot = (ggplot(texture, aes(Depth, Pct, fill=Class))
 		values=c(Sand="lightgrey", Silt="grey", Clay="darkgrey"))
 	+ geom_text(
 		data=texture_labels,
-		aes(label=Class))
+		aes(label=Class),
+		size=6,
+		vjust="bottom")
 	+ xlab("Depth (cm)")
 	+ ylab("Particle proportion")
 	+ coord_flip()
@@ -70,7 +75,12 @@ tplot = (ggplot(texture, aes(Depth, Pct, fill=Class))
 
 cnplot = (ggplot(org, aes(Depth, gkg, group=Element))
 	+ geom_line()
-	+ geom_text(data=org_labels, aes(label=Element))
+	+ geom_text(
+		data=org_labels,
+		aes(label=Element),
+		size=6,
+		vjust="bottom",
+		hjust=c("right", "left"))
 	+ coord_flip()
 	+ xlab("Depth (cm)")
 	+ ylab(expression("Organic C or N (g"~kg^{-3}*")"))

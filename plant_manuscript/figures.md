@@ -5,7 +5,7 @@
 
 ***
 
-![Correlation between percent aboveground cover (horizontal axis) and read proportion per root sample (vertical axis). Each point shows mean ± 1 standard error for one genus in one experimental plot (N = 5 plots). Root proportions are averaged across all depths.](../figs/agbg_genblock.pdf){#fig:abovebelowcor}
+![Correlation between percent aboveground cover (horizontal axis) and percent of reads per root sample (vertical axis). Each point shows mean ± 1 standard error for one genus in one experimental plot (N = 5 plots). Belowground read percentages are averaged across all depths. Separate regression fits are shown for dicot and monocot genera; shaded areas show 95% confidence bands for the line of fit.](../figs/agbg_genblock.pdf){#fig:abovebelowcor}
 
 ***
 

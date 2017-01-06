@@ -359,7 +359,8 @@ bgabund_genblockmean = (
 	r_root_prop_df
 	%>% group_by(Rank6, Rank7, Block)
 	%>% rename(family=Rank6, genus=Rank7)
-	%>% summarize_each(funs(propmean=mean, propsd=sd, propse=se), Abundance))
+	%>% mutate(pct_abund=Abundance*100)
+	%>% summarize_each(funs(pct_reads_mean=mean, pct_reads_sd=sd, pct_reads_se=se), pct_abund))
 
 rootshoot_abund_sp = (
 	merge(
@@ -401,6 +402,20 @@ rootshoot_abund_genblock = (
 	%>% mutate(
 		is_poa = if_else(family=="Poaceae", "monocots", "dicots"))
 	%>% filter(!is.na(is_poa)))
+rootshoot_abund_genblock_lms = (
+	rootshoot_abund_genblock
+	%>% group_by(is_poa)
+	%>% do(lmfit = lm(pct_reads_mean ~ pct_cover_mean, data=.))
+	%>% summarize(
+		is_poa=is_poa,
+		label = paste0(
+			is_poa,
+			"~y*'='*",
+			signif(coef(lmfit)["(Intercept)"], 2),
+			"*'+'*",
+			signif(coef(lmfit)["pct_cover_mean"], 2),
+			"*x*','~R^2*'='*",
+			signif(summary(lmfit)$r.squared, 2))))
 
 # one point per species
 agbg_sp_plot = (ggplot(
@@ -475,20 +490,24 @@ agbg_genblock_plot = (ggplot(
 		x=pct_cover_mean,
 		xmin=pct_cover_mean-pct_cover_se,
 		xmax=pct_cover_mean+pct_cover_se,
-		y=propmean,
-		ymin=propmean-propse,
-		ymax=propmean+propse,
+		y=pct_reads_mean,
+		ymin=pct_reads_mean-pct_reads_se,
+		ymax=pct_reads_mean+pct_reads_se,
 		color=is_poa))
 	+ geom_point()
 	+ geom_errorbar()
 	+ geom_errorbarh()
 	+ geom_smooth(method="lm")
 	+ xlab("Aboveground dominance (percent cover)")
-	+ ylab("Belowground dominance (read proportion)")
+	+ ylab("Belowground dominance (percent reads)")
+	+ scale_color_discrete(
+		breaks=rootshoot_abund_genblock_lms$is_poa,
+		labels=parse(text=rootshoot_abund_genblock_lms$label))
 	+ theme_ggEHD(14)
 	+ theme(
 		legend.title=element_blank(),
-		legend.position=c(0.8, 0.8))
+		legend.position=c(0.6, 0.9),
+		legend.text.align=0) # 0=left-aligned
 )
 
 ggsave_fitmax("figs/agbg_sp.pdf", agbg_sp_plot, maxwidth=6, maxheight=9)
