@@ -338,23 +338,8 @@ abvabund_genblockmean = (
 	%>% summarize_each(funs(mean, sd, se), abundance, pct_cover)
 )
 
-# get mean belowground abundance (ignores depth, blocks, etc)
+# get mean belowground abundance (averaging all depths)
 r_root_prop_df = psmelt(r_root_prop)
-bgabund_spmean = (
-	r_root_prop_df
-	%>% group_by(Rank6, Rank7, Rank8)
-	%>% rename(family=Rank6, genus=Rank7, species=Rank8)
-	%>% summarize_each(funs(propmean=mean, propsd=sd, propse=se), Abundance))
-bgabund_genmean = (
-	r_root_prop_df
-	%>% group_by(Rank6, Rank7)
-	%>% rename(family=Rank6, genus=Rank7)
-	%>% summarize_each(funs(propmean=mean, propsd=sd, propse=se), Abundance))
-bgabund_spblockmean = (
-	r_root_prop_df
-	%>% group_by(Rank6, Rank7, Rank8, Block)
-	%>% rename(family=Rank6, genus=Rank7, species=Rank8)
-	%>% summarize_each(funs(propmean=mean, propsd=sd, propse=se), Abundance))
 bgabund_genblockmean = (
 	r_root_prop_df
 	%>% group_by(Rank6, Rank7, Block)
@@ -362,36 +347,6 @@ bgabund_genblockmean = (
 	%>% mutate(pct_abund=Abundance*100)
 	%>% summarize_each(funs(pct_reads_mean=mean, pct_reads_sd=sd, pct_reads_se=se), pct_abund))
 
-rootshoot_abund_sp = (
-	merge(
-		x=abvabund_spmean,
-		y=bgabund_spmean,
-		by.x="accepted_name",
-		by.y="species",
-		all=TRUE)
-	%>% mutate(
-		is_poa = if_else(family=="Poaceae", "monocots", "dicots"))
-	%>% filter(!is.na(is_poa)))
-rootshoot_abund_gen = (
-	merge(
-		x=abvabund_genmean,
-		y=bgabund_genmean,
-		by.x="accepted_genus",
-		by.y="genus",
-		all=TRUE)
-	%>% mutate(
-		is_poa = if_else(family=="Poaceae", "monocots", "dicots"))
-	%>% filter(!is.na(is_poa)))
-rootshoot_abund_spblock = (
-	merge(
-		x=abvabund_spblockmean,
-		y=bgabund_spblockmean,
-		by.x=c("accepted_genus", "block"),
-		by.y=c("genus", "Block"),
-		all=TRUE)
-	%>% mutate(
-		is_poa = if_else(family=="Poaceae", "monocots", "dicots"))
-	%>% filter(!is.na(is_poa)))
 rootshoot_abund_genblock = (
 	merge(
 		x=abvabund_genblockmean,
@@ -417,72 +372,6 @@ rootshoot_abund_genblock_lms = (
 			"*x*','~R^2*'='*",
 			signif(summary(lmfit)$r.squared, 2))))
 
-# one point per species
-agbg_sp_plot = (ggplot(
-	rootshoot_abund_sp,
-	aes(
-		x=pct_cover_mean,
-		xmin=pct_cover_mean-pct_cover_se,
-		xmax=pct_cover_mean+pct_cover_se,
-		y=propmean,
-		ymin=propmean-propse,
-		ymax=propmean+propse,
-		color=is_poa))
-	+ geom_point()
-	+ geom_errorbar()
-	+ geom_errorbarh()
-	+ geom_smooth(method="lm")
-	+ xlab("Aboveground dominance (percent cover)")
-	+ ylab("Belowground dominance (read proportion)")
-	+ theme_ggEHD(14)
-	+ theme(
-		legend.title=element_blank(),
-		legend.position=c(0.8, 0.8))
-)
-# one point per species *from each block*
-agbg_spblock_plot = (ggplot(
-	rootshoot_abund_spblock,
-	aes(
-		x=pct_cover_mean,
-		xmin=pct_cover_mean-pct_cover_se,
-		xmax=pct_cover_mean+pct_cover_se,
-		y=propmean,
-		ymin=propmean-propse,
-		ymax=propmean+propse,
-		color=is_poa))
-	+ geom_point()
-	+ geom_errorbar()
-	+ geom_errorbarh()
-	+ geom_smooth(method="lm")
-	+ xlab("Aboveground dominance (percent cover)")
-	+ ylab("Belowground dominance (read proportion)")
-	+ theme_ggEHD(14)
-	+ theme(
-		legend.title=element_blank(),
-		legend.position=c(0.8, 0.8))
-)
-#one point per genus
-agbg_gen_plot = (ggplot(
-	rootshoot_abund_gen,
-	aes(
-		x=pct_cover_mean,
-		xmin=pct_cover_mean-pct_cover_se,
-		xmax=pct_cover_mean+pct_cover_se,
-		y=propmean,
-		ymin=propmean-propse,
-		ymax=propmean+propse,
-		color=is_poa))
-	+ geom_point()
-	+ geom_errorbar()
-	+ geom_errorbarh()
-	+ geom_smooth(method="lm")
-	+ xlab("Aboveground dominance (percent cover)")
-	+ ylab("Belowground dominance (read proportion)")
-	+ theme_ggEHD(14)
-	+ theme(
-		legend.title=element_blank(),
-		legend.position=c(0.8, 0.8))
-)
 # one point per genus *from each block*
 agbg_genblock_plot = (ggplot(
 	rootshoot_abund_genblock,
@@ -510,12 +399,9 @@ agbg_genblock_plot = (ggplot(
 		legend.text.align=0) # 0=left-aligned
 )
 
-ggsave_fitmax("figs/agbg_sp.pdf", agbg_sp_plot, maxwidth=6, maxheight=9)
-ggsave_fitmax("figs/agbg_gen.pdf", agbg_gen_plot, maxwidth=6, maxheight=9)
 ggsave_fitmax("figs/agbg_genblock.pdf", agbg_genblock_plot, maxwidth=6, maxheight=9)
-ggsave_fitmax("figs/agbg_spblock.pdf", agbg_spblock_plot, maxwidth=6, maxheight=9)
 
-print("draft of aboveground-belowground correlation ✓")
+print("aboveground-belowground correlation ✓")
 
 
 
