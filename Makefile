@@ -27,7 +27,21 @@ QPCR = data/multi_ctab_melt_summary-20150421.csv \
 	figs/multi_ctab_melt_curves-20150421.pdf \
 	figs/multi_ctab_melt_distance-20150421.pdf
 
-ALL = $(GELS) $(NANODROP) $(QPCR)
+TEXTURE = figs/mass_texture.pdf
+
+SEQPLOTS = figs/mock_gen.pdf \
+	data/aboveground_abundance.txt \
+	figs/agbg_genblock.pdf \
+	figs/h2o.pdf \
+	figs/spikes.pdf \
+	figs/genus_depth.pdf \
+	figs/family_depth.pdf \
+	figs/ordination.pdf \
+	data/adonis_out.txt \
+	figs/cooccur_obs_exp.pdf \
+	figs/cooccur_effect.pdf
+
+ALL = $(GELS) $(NANODROP) $(QPCR) $(TEXTURE) $(SEQPLOTS)
 
 # Phony rules to let us build subsets by themselves
 all: $(ALL)
@@ -105,3 +119,14 @@ figs/multi_ctab_melt_distance-20150421.pdf data/multi_ctab_melt_distance_ordresu
 		R/plot_melt_distance.R \
 		data/multi_ctab_melt_curves-20150421.csv
 	Rscript $^
+
+figs/mass_texture.pdf: R/plot_texture.R rawdata/giddings_rootmass.csv rawdata/soil_properties_2008.csv
+		Rscript R/plot_texture.R
+
+$(SEQPLOTS): R/plot_seqs.R \
+		rawdata/bulk_CN.csv \
+		data/plant_its2_otu/plant_its2_99.biom \
+		rawdata/vouchers/root_voucher_fate.csv \
+		rawdata/vouchers/accepted_names.csv \
+		private/Xiaohui_species_comp/surveys_clean.csv
+	Rscript R/plot_seqs.R
