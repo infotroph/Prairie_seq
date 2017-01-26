@@ -2,7 +2,7 @@
 
 printf "\n## Section information\n\n"
 
-printf "| Text Section | Words | | Nontext Section | Count | In color? |\n"
+printf "| Text Section | Words | | Non-text Section | Count | In color? |\n"
 printf "|-|-|-|-|-|-|\n" 
 
 # Word counts for each section.
