@@ -5,4 +5,4 @@ We thank Xiaohui Feng for plant species identifications, Xiaohui Feng and Michae
 
 Author contributions: CKB, SAW, EHD designed the experiment; CKB, SAW, TLP, CRS collected data; SAW, TLP, CRS developed laboratory protocols; CKB, SAW developed data analysis methods; SAW, EHD provided funding; CKB, SAW, TLP, CRS, EHD wrote the paper.
 
-This project was partially funded by the Energy Biosciences Institute and by an award to SAW through the Institute for Genomic Biology Fellows program.
+This project was partially funded by the Energy Biosciences Institute and by an award to SAW through the Institute for Genomic Biology Fellows program, Genomic Ecology of Global Change theme.
