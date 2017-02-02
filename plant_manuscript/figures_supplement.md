@@ -9,7 +9,7 @@
 
 ***
 
-![Species identities of internal transcribed spacer (ITS2) reads obtained from (top row) DNA extracted from single-species root samples, and (second two rows) DNA from the '*Andropogon gerardii*' sample spiked with 1%, 5%, or 10% *Elymus canadensis* or *Sorghastrum nutans* DNA. Notice that the barcoding assignment identifies the dominant sequence from the '*Andropogon gerardii*' sample as *Solidago*, not a grass!](../figs/spikes.pdf){#fig:spike_control}
+![Species identities of internal transcribed spacer (ITS2) reads obtained from (top row) DNA extracted from single-species root samples, and (second two rows) DNA from the '*Andropogon gerardii*' sample spiked with 1%, 5%, or 10% *Elymus canadensis* or *Sorghastrum nutans* DNA.](../figs/spikes.pdf){#fig:spike_control}
 
 ***
 
