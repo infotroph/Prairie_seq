@@ -109,3 +109,4 @@ ggsave(
 	plots,
 	width=9,
 	height=12)
+embedFonts("figs/mass_texture.pdf")

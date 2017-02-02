@@ -227,7 +227,9 @@ mock_gen_plot = (ggplot(
 	axis.ticks.x=element_blank()))
 
 ggsave_fitmax("figs/mock_sp.pdf", mock_sp_plot, maxwidth=6.5, maxheight=9)
+embedFonts("figs/mock_sp.pdf")
 ggsave_fitmax("figs/mock_gen.pdf", mock_gen_plot, maxwidth=6.5, maxheight=9)
+embedFonts("figs/mock_gen.pdf")
 
 print("mock communities ✓")
 
@@ -285,6 +287,7 @@ ggsave("figs/heatmap_bgdraft.png", heatmap_draft1, width=12, height=8)
 	# unregognizeably fuzzy tiles, but all other elements crisp.
 	# Fix eventually, use PNG until then.
 ggsave("figs/heatmap_abvdraft.pdf", heatmap_abvdraft)
+embedFonts("figs/heatmap_abvdraft.pdf")
 
 print("drafts of heatmaps ✓")
 
@@ -400,6 +403,7 @@ agbg_genblock_plot = (ggplot(
 )
 
 ggsave_fitmax("figs/agbg_genblock.pdf", agbg_genblock_plot, maxwidth=6, maxheight=9)
+embedFonts("figs/agbg_genblock.pdf")
 
 print("aboveground-belowground correlation ✓")
 
@@ -429,6 +433,7 @@ water_bar_plot = (
 			axis.text.x=element_text(angle=270, hjust=0),
 			aspect.ratio=0.33))
 ggsave_fitmax("figs/h2o.pdf", water_bar_plot, maxwidth=6.5, maxheight=9)
+embedFonts("figs/h2o.pdf")
 print("Water controls ✓")
 
 
@@ -486,6 +491,7 @@ indiv_spike_plot = (
 			margin=margin(t=1, unit="lines")),
 		axis.ticks.x=element_blank()))
 ggsave_fitmax("figs/spikes.pdf", indiv_spike_plot, maxwidth=6.5, maxheight=9)
+embedFonts("figs/spikes.pdf")
 print("Spike-ins ✓")
 	
 
@@ -528,7 +534,9 @@ famdepth_plot = (ggplot(
 )
 
 ggsave_fitmax("figs/genus_depth.pdf", gendepth_plot, maxwidth=12, maxheight=9)
+embedFonts("figs/genus_depth.pdf")
 ggsave_fitmax("figs/family_depth.pdf", famdepth_plot, maxwidth=12, maxheight=9)
+embedFonts("figs/family_depth.pdf")
 print("taxon by depth ✓")
 
 
@@ -550,7 +558,9 @@ rhizo_prop_plot = (
 
 
 ggsave("figs/rhizo_sp.pdf", rhizo_plot, width=12, height=9)
+embedFonts("figs/rhizo_sp.pdf")
 ggsave("figs/rhizo_sp_prop.pdf", rhizo_prop_plot, width=12, height=9)
+embedFonts("figs/rhizo_sp_prop.pdf")
 print("Rhizospheres ✓")
 
 
@@ -663,6 +673,7 @@ ord_adon_nodepth = adonis(
 	method="jaccard",
 	binary=TRUE)
 dev.off()
+embedFonts("figs/ordination.pdf")
 
 sink("data/adonis_out.txt")
 print(ord_adon)
@@ -736,6 +747,7 @@ obs_exp_plot = plot_grid(
 	labels="auto")
 
 ggsave_fitmax("figs/cooccur_obs_exp.pdf", obs_exp_plot, maxwidth=12, maxheight=9)
+embedFonts("figs/cooccur_obs_exp.pdf")
 
 # Standardized effect sizes, separated by family:
 # Each point is a pairs of species; y-axis is family of sp1, panel label is family of sp2.
@@ -759,3 +771,4 @@ co_effect_plot = (effect.sizes(cooccur(rrall, spp_names=T))
 	+ theme(legend.position="none"))
 
 ggsave_fitmax("figs/cooccur_effect.pdf", co_effect_plot, maxwidth=12, maxheight=9)
+embedFonts("figs/cooccur_effect.pdf")
