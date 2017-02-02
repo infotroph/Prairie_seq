@@ -1,0 +1,35 @@
+|Species                        |Family         |Functional type |Planted? | % cover|   sd|
+|:------------------------------|:--------------|:---------------|:--------|-------:|----:|
+|*Carex bicknellii*             |Cyperaceae     |C3 grass        |y        |     1.4|  2.3|
+|*Elymus canadensis*            |Poaceae        |C3 grass        |y        |     2.2|  3.4|
+|*Andropogon gerardii*          |Poaceae        |C4 grass        |y        |    34.3| 13.7|
+|*Schizachyrium scoparium*      |Poaceae        |C4 grass        |y        |     3.0|  3.4|
+|*Sorghastrum nutans*           |Poaceae        |C4 grass        |y        |    21.2| 10.5|
+|*Coreopsis palmata*            |Asteraceae     |Forb            |y        |     0.1|  0.5|
+|*Coreopsis tripteris*          |Asteraceae     |Forb            |y        |     4.9|  6.1|
+|*Echinacea pallida*            |Asteraceae     |Forb            |y        |     0.1|  0.4|
+|*Felicia hirta*                |Asteraceae     |Forb            |         |     0.3|  0.8|
+|*Helianthus grosseserratus*    |Asteraceae     |Forb            |y        |     7.2|  8.2|
+|*Heliopsis helianthoides*      |Asteraceae     |Forb            |y        |     0.1|  0.3|
+|*Parthenium integrifolium*     |Asteraceae     |Forb            |y        |     0.4|  1.2|
+|*Ratibida pinnata*             |Asteraceae     |Forb            |y        |     8.3|  5.4|
+|*Rudbeckia hirta*              |Asteraceae     |Forb            |         |     0.0|  0.2|
+|*Rudbeckia subtomentosa*       |Asteraceae     |Forb            |y        |     2.9|  4.2|
+|*Silphium integrifolium*       |Asteraceae     |Forb            |y        |     1.6|  2.8|
+|*Silphium laciniatum*          |Asteraceae     |Forb            |y        |     0.2|  0.8|
+|*Silphium perfoliatum*         |Asteraceae     |Forb            |y        |     0.5|  2.0|
+|*Silphium terebinthinaceum*    |Asteraceae     |Forb            |y        |     0.1|  0.7|
+|*Solidago canadensis*          |Asteraceae     |Forb            |         |     3.2|  6.4|
+|*Solidago rigida*              |Asteraceae     |Forb            |y        |     1.3|  2.7|
+|*Symphyotrichum novae-angliae* |Asteraceae     |Forb            |y        |     4.0|  3.8|
+|*Taraxacum officinale*         |Asteraceae     |Forb            |         |     0.1|  0.5|
+|*Monarda fistulosa*            |Lamiaceae      |Forb            |y        |     1.0|  2.0|
+|*Pycnanthemum virginianum*     |Lamiaceae      |Forb            |y        |     0.6|  0.8|
+|*Penstemon digitalis*          |Plantaginaceae |Forb            |y        |     0.5|  2.2|
+|*Veronicastrum virginicum*     |Plantaginaceae |Forb            |y        |     0.2|  0.8|
+|*Astragalus canadensis*        |Fabaceae       |N fixer         |y        |     0.0|  0.2|
+|unidentified *Baptisia* sp.    |Fabaceae       |N fixer         |         |     0.1|  0.4|
+|*Baptisia alba*                |Fabaceae       |N fixer         |y        |     0.7|  1.5|
+|*Dalea purpurea*               |Fabaceae       |N fixer         |y        |     0.2|  0.6|
+|*Desmodium canadense*          |Fabaceae       |N fixer         |y        |     4.8|  5.7|
+|*Lespedeza capitata*           |Fabaceae       |N fixer         |y        |     0.2|  0.5|

@@ -1538,3 +1538,7 @@ Added three files to Git that all really should have been there a long time ago:
 		2. I deleted a worksheet named "FTP Information" that included login names and passwords for the DeLucia lab account on the sequencing center server. The information from that sheet is now stored as `private/keck_ftp_info.txt` but not committed to Git.
 	* `notes/fluidigm_lane_count_email.txt` is two messages from a longer email thread between CKB, SAW, and function genomics center director (AKA Fluidigm wizard) Mark Band, saved because it contains information not repeated elsewhere on how many Fluidigm lanes they used for each primer set in order to balance the amount of sequence obtained -- if they used equal numbers for each, we'd expect the shorter 18S and 16S fragments to overwhelm the others and we'd get very few sequences from the longer ITS and NS31 primers. The key sentence: "We ran only 3 lanes of 18S (250-300bp peak) and 6 lanes of V4  (400 bp peak) to try to offset this as much as possible.  NS31, 20 lanes; ITS3-4 12 lanes; Plant ITS 7 lanes."
 	* `protocols/powersoil_cleanup.txt` is an email containing instructions for post-extraction DNA cleanup using the PowerSoil kit reagents, as emailed by MoBio tech Eddie Adams. Consult paper lab notebook for details on what we actually did, but if memory serves it was very close to this.
+
+## 2017-02-02, CKB
+
+Manuscript is ready for submission to New Phytologist; see Git log for writing process. 
