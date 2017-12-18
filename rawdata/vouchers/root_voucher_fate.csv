@@ -1,7 +1,7 @@
 binomial,Tube id,mg tissue,plate,ID,Type,Tube number,Notes,Row,Column,Include in voucher mix?,Include as one-species?,Include in spike-in?
 Andropogon gerardii,V1,75,1,B5,"Voucher, Common",1,,B,5,NO,"y, 13 uL Plt3-C4 after adding B8 C4 C5& 30 uL buf","y, after adding B8 C4 C5& 30 uL buf"
 Sorghastrum nutans,V7,55,1,B6,"Voucher, Common",7,,B,6,y,NO,NO
-Elymus canadensis,V14,147,1,B7,"Voucher, Common",14,,B,7,"y, after diluting","y, 19 uL plt3-D1 after diluting","y, after diluting"
+Elymus canadensis,V14,147,1,B7,"Voucher, Common",14,,B,7,"y, after diluting","y, 19 uL plt3-D4 after diluting","y, after diluting"
 Andropogon gerardii,V3,94,1,B8,"Voucher, Common",3,,B,8,NO,included as B5,included as B5
 Ratibida pinnata,V25,159,1,B9,"Voucher, Common",25,,B,9,NO,,
 Sorghastrum nutans,V8,70,1,B10,"Voucher, Common",8,,B,10,NO,NO,"y, after diluting"
